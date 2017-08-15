@@ -1,0 +1,24 @@
+{
+  "name": "RiftDiscordBot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rhicu/RiftDiscordBot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rhicu/RiftDiscordBot/issues"
+  },
+  "homepage": "https://github.com/rhicu/RiftDiscordBot#readme",
+  "dependencies": {
+    "discord.js": "^11.1.0"
+  }
+}
