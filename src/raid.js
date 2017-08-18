@@ -42,4 +42,4 @@ class raid {
     }
 }
 
-module.exports = td;
+module.exports = raid;
