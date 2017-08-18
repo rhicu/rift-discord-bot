@@ -16,6 +16,14 @@ class util {
         }
         return string;
     }
+
+    static getDay(string) {
+        return string;
+    }
+
+    static getDate(string) {
+        return string;
+    }
 }
 
 module.exports = util;

@@ -1,3 +1,5 @@
+const enums = require("./enums");
+
 class player {
     constructor(id, ingameName, riftClass, roles) {
         this.id = id;
