@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const config = require("./config.json");
 const raid = require("./raid");
 const player = require("./player");
+const util = require("./util");
 const N = "\n";
 
 var debug = true;
@@ -42,8 +43,8 @@ class messageHandler {
             // Errors: ['time'] treats ending because of the time limit as an error
             msg.channel.awaitMessages(filter, { max: 2, time: 60000, errors: ['time'] })
                 .then(collected => {
-                    newRaid.day = utils.getDay(collected.last.content.split(";")[0]);
-                    newRaid.date = utils.getDate(collected.last.content.split(";")[1]);
+                    newRaid.day = util.getDay(collected.last.content.split(";")[0]);
+                    newRaid.date = util.getDate(collected.last.content.split(";")[1]);
                 })
                 .catch(error => console.log(`addRaid/getDate ${error}`));
 
@@ -55,9 +56,9 @@ class messageHandler {
             // Errors: ['time'] treats ending because of the time limit as an error
             msg.channel.awaitMessages(filter, { max: 2, time: 60000, errors: ['time'] })
                 .then(collected => {
-                    newRaid.start = utils.getDay(collected.last.content.split(";")[0]);
-                    newRaid.end = utils.getDate(collected.last.content.split(";")[1]);
-                    newRaid.invite = utils.getDate(collected.last.content.split(";")[2]);
+                    newRaid.start = collected.last.content.split(";")[0];
+                    newRaid.end = collected.last.content.split(";")[1];
+                    newRaid.invite = collected.last.content.split(";")[2];
                 })
                 .catch(error => console.log(`addRaid/getDate ${error}`));
             if(newRaid.isValid()) {
