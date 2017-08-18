@@ -52,8 +52,6 @@ class messageHandler {
             */
             msg.reply(`Just need some additional infos for your new raid instance of '${configPath.name}'.${
                     N}Please define a starting, ending and inviting time with the pattern '<hh:mm>;<hh:mm>;<hh:mm>'`);
-            // Await not empty messages
-            const filter = m => m.content !== "";
             // Errors: ['time'] treats ending because of the time limit as an error
             msg.channel.awaitMessages(filter, { max: 1, time: 60000, errors: ['time'] })
                 .then(collected => {
