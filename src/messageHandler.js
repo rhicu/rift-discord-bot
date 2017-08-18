@@ -40,10 +40,10 @@ class messageHandler {
             // Await not empty messages
             const filter = m => m.content !== "";
             // Errors: ['time'] treats ending because of the time limit as an error
-            msg.channel.awaitMessages(filter, { max: 1, time: 60000, errors: ['time'] })
+            msg.channel.awaitMessages(filter, { max: 2, time: 60000, errors: ['time'] })
                 .then(collected => {
-                    newRaid.day = utils.getDay(collected.first.content.split(";")[0]);
-                    newRaid.date = utils.getDate(collected.first.content.split(";")[1]);
+                    newRaid.day = utils.getDay(collected.last.content.split(";")[0]);
+                    newRaid.date = utils.getDate(collected.last.content.split(";")[1]);
                 })
                 .catch(error => console.log(`addRaid/getDate ${error}`));
 
@@ -53,18 +53,18 @@ class messageHandler {
             msg.reply(`Just need some additional infos for your new raid instance of '${configPath.name}'.${
                     N}Please define a starting, ending and inviting time with the pattern '<hh:mm>;<hh:mm>;<hh:mm>'`);
             // Errors: ['time'] treats ending because of the time limit as an error
-            msg.channel.awaitMessages(filter, { max: 1, time: 60000, errors: ['time'] })
+            msg.channel.awaitMessages(filter, { max: 2, time: 60000, errors: ['time'] })
                 .then(collected => {
-                    newRaid.start = utils.getDay(collected.first.content.split(";")[0]);
-                    newRaid.end = utils.getDate(collected.first.content.split(";")[1]);
-                    newRaid.invite = utils.getDate(collected.first.content.split(";")[2]);
+                    newRaid.start = utils.getDay(collected.last.content.split(";")[0]);
+                    newRaid.end = utils.getDate(collected.last.content.split(";")[1]);
+                    newRaid.invite = utils.getDate(collected.last.content.split(";")[2]);
                 })
                 .catch(error => console.log(`addRaid/getDate ${error}`));
             if(newRaid.isValid()) {
                 msg.reply(`Please verify: <yes / no>\n\n${newRaid.generateRaidOutput()}`);
-                msg.channel.awaitMessages(filter, { max: 1, time: 60000, errors: ['time'] })
+                msg.channel.awaitMessages(filter, { max: 2, time: 60000, errors: ['time'] })
                     .then(collected => {
-                        if (collected.first.content === "yes") {
+                        if (collected.last.content === "yes") {
                             this.raids.push(newRaid);
                             msg.reply(`raid "${newRaid.name}" added`);
                             this.printRaids(msg);
@@ -286,12 +286,12 @@ class messageHandler {
 
     help(isOffi) {
         var string = "usage:\n\n"
-        string = `${string}register <raid>;<day>;<ingameName>;<class>;<roles>, e.g. 'register irotp;Mittwoch;Blub@Typhiria;Krieger;DD,Tank,Heal'\n${
+        string = `${string}register <raid>;<day>;<ingameName>;<class>;<roles>, e.g. 'register irotp;Mittwoch;Blub@Typhiria;Krieger;DD,Tank,Heal'${
                 N}help\n`;
         if (isOffi) {
-            string = `${string}\n${
-                    N}addRaid <irotp / td>\n${
-                    N}printRaids\n${
+            string = `${string}${
+                    N}addRaid <irotp / td>${
+                    N}printRaids${
                     N}deleteRaid <irotp / td> <day>${
                     N}updateRaid <irotp / td> <day> <day / date / start / end / invite> <data>${
                     N}clearRaidChannel\n`
