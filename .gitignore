@@ -39,4 +39,4 @@ Thumbs.db
 # Special Rules #
 #################
 
-./src/config.json
+config.json
