@@ -5,7 +5,8 @@ const player = require("./player");
 const util = require("./util");
 const N = "\n";
 
-var debug = true;
+const debug = true;
+const communicationPrefix = config.communicationPrefix;
 
 class messageHandler {
     constructor(bot) {
@@ -32,51 +33,47 @@ class messageHandler {
                     return;
             }
             var newRaid = new raid(configPath, type);
+            (async (msg, configPath, type) => {
+                try {
+                    /*
+                    * Asking user for day and date
+                    */
+                    await msg.reply(`You are about to crate a new raid instance of '${configPath.name}'.${
+                            N}Please define a day and date with the pattern '# <day> <dd.mm.yyyy>'`);
+                    // Await not empty messages
+                    const filter = m => !m.author.bot && m.content.startsWith(communicationPrefix);
+                    // Errors: ['time'] treats ending because of the time limit as an error
+                    var collected = await msg.channel.awaitMessages(filter, { max: 1, time: 60000, errors: ['time'] });
+                    newRaid.day = util.getDay(collected.first().content.split(" ")[1]);
+                    newRaid.date = util.getDate(collected.first().content.split(" ")[2]);
 
-            /*
-            * Asking user for day and date
-            */
-            msg.reply(`You are about to crate a new raid instance of '${configPath.name}'.${
-                    N}Please define a day and date with the pattern '<day>;<dd.mm.yyyy>'`);
-            // Await not empty messages
-            const filter = m => m.content !== "";
-            // Errors: ['time'] treats ending because of the time limit as an error
-            msg.channel.awaitMessages(filter, { max: 2, time: 60000, errors: ['time'] })
-                .then(collected => {
-                    newRaid.day = util.getDay(collected.last.content.split(";")[0]);
-                    newRaid.date = util.getDate(collected.last.content.split(";")[1]);
-                })
-                .catch(error => console.log(`addRaid/getDate ${error}`));
-
-            /*
-            * Asking user for time data
-            */
-            msg.reply(`Just need some additional infos for your new raid instance of '${configPath.name}'.${
-                    N}Please define a starting, ending and inviting time with the pattern '<hh:mm>;<hh:mm>;<hh:mm>'`);
-            // Errors: ['time'] treats ending because of the time limit as an error
-            msg.channel.awaitMessages(filter, { max: 2, time: 60000, errors: ['time'] })
-                .then(collected => {
-                    newRaid.start = collected.last.content.split(";")[0];
-                    newRaid.end = collected.last.content.split(";")[1];
-                    newRaid.invite = collected.last.content.split(";")[2];
-                })
-                .catch(error => console.log(`addRaid/getDate ${error}`));
-            if(newRaid.isValid()) {
-                msg.reply(`Please verify: <yes / no>\n\n${newRaid.generateRaidOutput()}`);
-                msg.channel.awaitMessages(filter, { max: 2, time: 60000, errors: ['time'] })
-                    .then(collected => {
-                        if (collected.last.content === "yes") {
+                    /*
+                    * Asking user for time data
+                    */
+                    await msg.reply(`Just need some additional infos for your new raid instance of '${configPath.name}'.${
+                            N}Please define a starting, ending and inviting time with the pattern '# <hh:mm> <hh:mm> <hh:mm>'`);
+                    // Errors: ['time'] treats ending because of the time limit as an error
+                    collected = await msg.channel.awaitMessages(filter, { max: 1, time: 60000, errors: ['time'] })
+                    newRaid.start = collected.first().content.split(" ")[1];
+                    newRaid.end = collected.first().content.split(" ")[2];
+                    newRaid.invite = collected.first().content.split(" ")[3];
+                    if(newRaid.isValid()) {
+                        msg.reply(`Please verify: '# <yes / no>'\n\n${newRaid.generateRaidOutput()}`);
+                        collected = await msg.channel.awaitMessages(filter, { max: 1, time: 60000, errors: ['time'] })
+                        if (collected.first().content === `${communicationPrefix} yes`) {
                             this.raids.push(newRaid);
                             msg.reply(`raid "${newRaid.name}" added`);
                             this.printRaids(msg);
                         } else {
                             msg.reply("Abort by user!");
                         }
-                    })
-                    .catch(error => console.log(`addRaid/verifySetup ${error}`));
-            } else {
-                msg.reply(`Couldn't create raid because of missing data. Please try again!`);
-            }
+                    } else {
+                        msg.reply(`Couldn't create raid because of missing data. Please try again!`);
+                    }
+                } catch(error) {
+                    console.log(`addRaid/user communication ${error}`);
+                }
+            })(msg, configPath, type);
         } catch(error) {
             console.log(`addRaid: ${error}`);
             msg.reply("Couldn't create raid");
@@ -227,7 +224,7 @@ class messageHandler {
                     this.raids[i].registeredPlayer.push(newPlayer);
                     this.updatePrintedRaid(this.raids[i], msg.channel);
                     registerFailed = false;
-                    msg.reply(`You are now registered for raid ${raidInstance} on ${day}! Please be there in time!`);
+                    msg.reply(`You are now registered for raid ${this.raids[i].name} on ${this.raids[i].day}! Please be there in time!`);
                     break;
                 }
             }
@@ -265,8 +262,8 @@ class messageHandler {
             }
 
             for(var i = 0; i < this.raids.length; i++) {
-                if(this.raids.messageID !== "") {
-                    channel.fetchMessage(this.raids.messageID)
+                if(this.raids[i].messageID !== "") {
+                    channel.fetchMessage(this.raids[i].messageID)
                         .then(message => message.delete())
                         .catch(error => console.log(`printRaids/delete message: ${error}`));
                 }
