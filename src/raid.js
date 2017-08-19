@@ -9,9 +9,9 @@ class raid {
         this.config = config;
         this.day = "";
         this.date = "";
-        this.invite = "";
-        this.start = "";
-        this.end = "";
+        this.invite = "18:45";
+        this.start = "19:00";
+        this.end = "21:30";
         this.img = config.imgPath;
         this.name = config.name;
         this.shortName = config.shortName;

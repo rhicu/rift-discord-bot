@@ -5,7 +5,7 @@ const player = require("./player");
 const util = require("./util");
 const N = "\n";
 
-const debug = true;
+const debug = false;
 const communicationPrefix = config.communicationPrefix;
 
 class messageHandler {
@@ -16,10 +16,10 @@ class messageHandler {
 
     addRaid(msg) {
         try {
-            var raidInstance = msg.content.split(" ");
+            var message = msg.content.split(" ");
             var configPath;
             var type;
-            switch(raidInstance[1]) {
+            switch(message[1]) {
                 case "irotp":
                     configPath = config.raids.irotp;
                     type = "irotp";
@@ -33,47 +33,16 @@ class messageHandler {
                     return;
             }
             var newRaid = new raid(configPath, type);
-            (async (msg, configPath, type) => {
-                try {
-                    /*
-                    * Asking user for day and date
-                    */
-                    await msg.reply(`You are about to crate a new raid instance of '${configPath.name}'.${
-                            N}Please define a day and date with the pattern '# <day> <dd.mm.yyyy>'`);
-                    // Await not empty messages
-                    const filter = m => !m.author.bot && m.content.startsWith(communicationPrefix);
-                    // Errors: ['time'] treats ending because of the time limit as an error
-                    var collected = await msg.channel.awaitMessages(filter, { max: 1, time: 60000, errors: ['time'] });
-                    newRaid.day = util.getDay(collected.first().content.split(" ")[1]);
-                    newRaid.date = util.getDate(collected.first().content.split(" ")[2]);
+            newRaid.day = util.getDay(message[2]);
+            newRaid.date = util.getDate(message[3]);
 
-                    /*
-                    * Asking user for time data
-                    */
-                    await msg.reply(`Just need some additional infos for your new raid instance of '${configPath.name}'.${
-                            N}Please define a starting, ending and inviting time with the pattern '# <hh:mm> <hh:mm> <hh:mm>'`);
-                    // Errors: ['time'] treats ending because of the time limit as an error
-                    collected = await msg.channel.awaitMessages(filter, { max: 1, time: 60000, errors: ['time'] })
-                    newRaid.start = collected.first().content.split(" ")[1];
-                    newRaid.end = collected.first().content.split(" ")[2];
-                    newRaid.invite = collected.first().content.split(" ")[3];
-                    if(newRaid.isValid()) {
-                        msg.reply(`Please verify: '# <yes / no>'\n\n${newRaid.generateRaidOutput()}`);
-                        collected = await msg.channel.awaitMessages(filter, { max: 1, time: 60000, errors: ['time'] })
-                        if (collected.first().content === `${communicationPrefix} yes`) {
-                            this.raids.push(newRaid);
-                            msg.reply(`raid "${newRaid.name}" added`);
-                            this.printRaids(msg);
-                        } else {
-                            msg.reply("Abort by user!");
-                        }
-                    } else {
-                        msg.reply(`Couldn't create raid because of missing data. Please try again!`);
-                    }
-                } catch(error) {
-                    console.log(`addRaid/user communication ${error}`);
-                }
-            })(msg, configPath, type);
+            if(newRaid.isValid()) {
+                this.raids.push(newRaid);
+                msg.reply(`raid "${newRaid.name}" added`);
+                this.printRaids(msg);
+            } else {
+                msg.reply(`Couldn't create raid because of missing data. Please try again!`);
+            }
         } catch(error) {
             console.log(`addRaid: ${error}`);
             msg.reply("Couldn't create raid");
@@ -82,9 +51,8 @@ class messageHandler {
 
     deleteRaid(msg) {
         try {
-            var message = msg.content.split(" ")[1];
-            message = message.split(";");
-            if(message.length != 2) {
+            var message = msg.content.split(" ");
+            if(message.length != 3) {
                 msg.reply("Invalid number of Arguments! Please verify your input!");
                 return;
             }
@@ -96,11 +64,9 @@ class messageHandler {
                 channel = this.bot.guilds.find("id", config.serverID).channels.find("id", config.raidPlannerChannelID);
             }
 
-            var raidInstance = message[0];
-            var day = message[1];
-            var deletionFailed = true;
-            var i = 0;
-            for(; i < this.raids.length; i++) {
+            var raidInstance = message[1];
+            var day = message[2];
+            for(var i = 0; i < this.raids.length; i++) {
                 if(this.raids[i].shortName === raidInstance && this.raids[i].day === day) {
                     if(this.raids[i].messageID === "") {
                         this.raids.splice(i, 1);
@@ -110,16 +76,11 @@ class messageHandler {
                             .catch(error => console.log(`deleteRaid: ${error}`));
                         this.raids.splice(i, 1);
                     }
-                    deletionFailed = false;
                     msg.reply(`You successfully deleted raid ${raidInstance} on ${day}!`);
-                    break;
+                    return;
                 }
             }
-            if(i == this.raids.length) {
-                msg.reply("Couldn't find the raid you wanted to delete!");
-            } else if(deletionFailed) {
-                msg.reply("Error while trying to delete raid!");
-            }
+            msg.reply("Error while trying to delete raid! Maybe the raid does not esist?");
         } catch(error) {
             console.log(`deleteRaid: ${error}`);
             msg.reply(`something bad happened :(`);
@@ -134,9 +95,7 @@ class messageHandler {
             }
             var raidInstance = msg.conent.split(" ")[1];
             var day = msg.content.split(" ")[2];
-            var updateFailed = true;
-            var i = 0;
-            for(; i < this.raids.length; i++) {
+            for(var i = 0; i < this.raids.length; i++) {
                 if(this.raids[i].shortName === raidInstance && this.raids[i].day === day) {
                     var option = msg.content.split(" ")[3];
                     var value = msg.content.split(" ")[4];
@@ -161,16 +120,11 @@ class messageHandler {
                             return;
                     }
                     this.updatePrintedRaid(this.raids[i], msg.channel);
-                    updateFailed = false;
                     msg.reply(`Raid ${raids[i].name} on ${raids[i].date} is updated!`);
-                    break;
+                    return;
                 }
             }
-            if(i == this.raids.length) {
-                msg.reply("Couldn't find the raid you wanted to update!");
-            } else if(updateFailed) {
-                msg.reply("Error while trying to update raid!");
-            }
+            msg.reply("Error while trying to update raid! Maybe the raid does not esist?");
         } catch(error) {
             console.log(`register: ${error}`);
             msg.reply("something bad happened :(");
@@ -217,22 +171,15 @@ class messageHandler {
             var roles = message[4];
             var id = msg.author.id;
             var newPlayer = new player(id , ingameName, riftClass, roles);
-            var registerFailed = true;
-            var i = 0;
-            for(; i < this.raids.length; i++) {
+            for(var i = 0; i < this.raids.length; i++) {
                 if(this.raids[i].shortName === raidInstance && this.raids[i].day === day) {
                     this.raids[i].registeredPlayer.push(newPlayer);
                     this.updatePrintedRaid(this.raids[i], msg.channel);
-                    registerFailed = false;
                     msg.reply(`You are now registered for raid ${this.raids[i].name} on ${this.raids[i].day}! Please be there in time!`);
-                    break;
+                    return;
                 }
             }
-            if(i == this.raids.length) {
-                msg.reply("Couldn't find the raid you wanted to get registered to!");
-            } else if(registerFailed) {
-                msg.reply("Error while trying to register you to raid!");
-            }
+            msg.reply("Error while trying to register you to raid! Maybe the raid does not esist?");
         } catch(error) {
             console.log(`register: ${error}`);
             msg.reply("something bad happened :(");
@@ -259,23 +206,23 @@ class messageHandler {
                 channel = msg.channel;
             } else {
                 channel = this.bot.guilds.find("id", config.serverID).channels.find("id", config.raidPlannerChannelID);
+                this.clearChannel(msg);
             }
-
-            for(var i = 0; i < this.raids.length; i++) {
-                if(this.raids[i].messageID !== "") {
-                    channel.fetchMessage(this.raids[i].messageID)
-                        .then(message => message.delete())
-                        .catch(error => console.log(`printRaids/delete message: ${error}`));
+            (async () => {
+                for(var i = 0; i < this.raids.length; i++) {
+                    var pos = i;
+                    var embed = new Discord.RichEmbed()
+                        .addField(this.raids[pos].name, this.raids[pos].generateRaidOutput())
+                        .setColor(this.raids[pos].embedColor)
+                        .attachFile(this.raids[pos].img);
+                    await channel.send({embed})
+                        .then(message => {
+                            console.log(`print Raid ${this.raids[pos].name} form pos ${pos}`);
+                            this.raids[pos].messageID = message.id;
+                        })
+                        .catch(error => console.log(`printRaids/sending message: ${error}`));
                 }
-                var embed = new Discord.RichEmbed()
-                    .addField(this.raids[i].name, this.raids[i].generateRaidOutput())
-                    .setColor(this.raids[i].embedColor)
-                    .attachFile(this.raids[i].img);
-                var pos = i;
-                channel.send({embed})
-                    .then(message => this.raids[pos].messageID = message.id)
-                    .catch(error => console.log(`printRaids/sending message: ${error}`));
-            }
+            })();
         } catch(error) {
             console.log(`printRaids: ${error}`);
             msg.reply(`something bad happened :(`);
@@ -288,7 +235,7 @@ class messageHandler {
                 N}help\n`;
         if (isOffi) {
             string = `${string}${
-                    N}addRaid <irotp / td>${
+                    N}addRaid <irotp / td> <day> <date>${
                     N}printRaids${
                     N}deleteRaid <irotp / td> <day>${
                     N}updateRaid <irotp / td> <day> <day / date / start / end / invite> <data>${
