@@ -5,7 +5,7 @@ const player = require("./player");
 const util = require("./util");
 const N = "\n";
 
-const debug = false;
+const debug = true;
 const communicationPrefix = config.communicationPrefix;
 
 class messageHandler {
@@ -157,18 +157,17 @@ class messageHandler {
 
     register(msg) {
         try {
-            var message = msg.content.split(" ")[1];
-            message = message.split(";");
-            if(message.length != 5) {
+            var message = msg.content.split(" ");
+            if(message.length != 6) {
                 msg.reply("Invalid number of Arguments! Please verify your input!");
                 return;
             }
 
-            var raidInstance = message[0];
-            var day = message[1];
-            var ingameName = message[2];
-            var riftClass = message[3];
-            var roles = message[4];
+            var raidInstance = message[1];
+            var day = message[2];
+            var ingameName = message[3];
+            var riftClass = message[4];
+            var roles = message[5];
             var id = msg.author.id;
             var newPlayer = new player(id , ingameName, riftClass, roles);
             for(var i = 0; i < this.raids.length; i++) {
@@ -177,6 +176,36 @@ class messageHandler {
                     this.updatePrintedRaid(this.raids[i], msg.channel);
                     msg.reply(`You are now registered for raid ${this.raids[i].name} on ${this.raids[i].day}! Please be there in time!`);
                     return;
+                }
+            }
+            msg.reply("Error while trying to register you to raid! Maybe the raid does not esist?");
+        } catch(error) {
+            console.log(`register: ${error}`);
+            msg.reply("something bad happened :(");
+        }
+    }
+
+    deregister(msg) {
+        try {
+            var message = msg.content.split(" ");
+            if(message.length != 3) {
+                msg.reply("Invalid number of Arguments! Please verify your input!");
+                return;
+            }
+
+            var raidInstance = message[1];
+            var day = message[2];
+            var id = msg.author.id;
+            for(var i = 0; i < this.raids.length; i++) {
+                if(this.raids[i].shortName === raidInstance && this.raids[i].day === day) {
+                    for(var j = 0; j < this.raids[i].registeredPlayer.length; j++) {
+                        if(this.raids[i].registeredPlayer[j].id === id) {
+                            this.raids[i].registeredPlayer.splice(j, 1);
+                            this.updatePrintedRaid(this.raids[i], msg.channel);
+                            msg.reply(`You are now deregistered from raid ${this.raids[i].name} on ${this.raids[i].day}!`);
+                            return;
+                        }
+                    }
                 }
             }
             msg.reply("Error while trying to register you to raid! Maybe the raid does not esist?");
@@ -217,7 +246,6 @@ class messageHandler {
                         .attachFile(this.raids[pos].img);
                     await channel.send({embed})
                         .then(message => {
-                            console.log(`print Raid ${this.raids[pos].name} form pos ${pos}`);
                             this.raids[pos].messageID = message.id;
                         })
                         .catch(error => console.log(`printRaids/sending message: ${error}`));
@@ -231,10 +259,11 @@ class messageHandler {
 
     help(isOffi) {
         var string = "usage:\n\n"
-        string = `${string}register <raid>;<day>;<ingameName>;<class>;<roles>, e.g. 'register irotp;Mittwoch;Blub@Typhiria;Krieger;DD,Tank,Heal'${
-                N}help\n`;
+        string = `${string}register <raid> <day> <ingameName> <class> <roles>, e.g. 'register irotp Mittwoch Blub@Typhiria Krieger DD,Tank,Heal'${
+                N}deregister <raid> <day>, e.g. 'deregister irotp Mittwoch'${
+                N}help`;
         if (isOffi) {
-            string = `${string}${
+            string = `${string}${N}${
                     N}addRaid <irotp / td> <day> <date>${
                     N}printRaids${
                     N}deleteRaid <irotp / td> <day>${
@@ -249,6 +278,9 @@ class messageHandler {
         switch(command) {
             case "register":
                 this.register(msg);
+                break;
+            case "deregister":
+                this.deregister(msg);
                 break;
             case "help":
                 msg.reply(this.help(true))
@@ -275,6 +307,9 @@ class messageHandler {
                 break;
             case "register":
                 this.register(msg);
+				break;
+			case "deregister":
+                this.deregister(msg);
                 break;
             case "help":
                 msg.reply(this.help(true))
