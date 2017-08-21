@@ -10,9 +10,11 @@ Now you have to install the following packages:
 Finally you have to create a new file in the "src"-folder named "privateConfig.json".
 Open the file and write:
 
+```json
 {
     "token": "<ur generated bot token>"
 }
+```
 
 save, exit and you are done.
 
