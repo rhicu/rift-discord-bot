@@ -216,6 +216,10 @@ class messageHandler {
     }
 
     clearChannel(msg) {
+        if(debug) {
+            msg.reply("Not possible in debug mode!");
+            return;
+        }
         try {
             var channel = this.bot.guilds.find("id", config.serverID).channels.find("id", config.raidPlannerChannelID);
             channel.fetchMessages()
