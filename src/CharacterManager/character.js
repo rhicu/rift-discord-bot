@@ -36,13 +36,13 @@ RiftCharacter.prototype = {
   },
   toString: function(){
     var charAsString = "";
-    charAsString = "Character: " + this.name + "@" this.shard "\n";
-    charAsString = "Player: " + this.owner + "\n";
-    charAsString = "Roles: " + this.riftClass + "\n";
-    charAsString = "Roles: " + this.roles.join(", ") + "\n";
+    charAsString = "Character: ${this.name}@${this.shard}\n"
+        + "Player: ${this.owner}\n"
+        + "Roles: ${this.riftClass}\n"
+        + "Roles: ${this.roles.join(", ")}\n";
 
     return charAsString;
-  }
+  },
   store: function(){
     //stub for persisting characters when MongoDB is available ;-)
   }
