@@ -8,43 +8,66 @@
  */
 
 //Public
-module.exports = RiftCharacter;
-function RiftCharacter(n, acc) {
-    this.name = n;
-    this.owner = acc;
-    this.roles = [];
+module.exports = riftCharacter;
+
+class riftCharacter{
+    var charName, owner, shard, charClass;
+    var roles[];
+
+    constructor(cName, playerName){
+        this.charName = cName;
+        this.owner = playerName;
+    }
+
+    setShard(shard){
+        this.shard = shard;
+    }
+
+    setRoles(roles) {
+        this.roles = roles;
+    }
+
+    addRole(role) {
+        this.roles.push(role);
+    }
+
+    removeRole(role){
+        var index = array.indexOf(role);
+        if(index != -1){
+            this.roles.splice(index, 1);
+        }
+
+    }
+
+    clearRoles() {
+        this.roles = [];
+    }
+
+
+
+    setClass(riftClass) {
+        this.riftClass = riftClass;
+    }
+
+    toJSON() {
+        return JSON.stringify(this);
+    }
+
+    toString(){
+        var charAsString = "";
+        charAsString = "Character: ${this.name}@${this.shard}\n"
+            + "Player: ${this.owner}\n"
+            + "Roles: ${this.riftClass}\n"
+            + "Roles: ${this.roles.join(", ")}\n";
+
+        return charAsString;
+    }
+
+    store(){
+        //stub for persisting characters when MongoDB is available ;-)
+    }
+
+
+
+
 }
-
-RiftCharacter.prototype = {
-  setShard: function (shard) {
-    this.shard = shard;
-  },
-  setRoles: function (roles) {
-    this.roles = roles;
-  },
-  addRole: function (role) {
-    this.roles.push(role);
-  },
-  clearRoles: function () {
-    this.roles = [];
-  },
-  setClass: function (riftClass) {
-    this.riftClass = riftClass;
-  },
-  toJSON: function() {
-    return JSON.stringify(this);
-  },
-  toString: function(){
-    var charAsString = "";
-    charAsString = "Character: ${this.name}@${this.shard}\n"
-        + "Player: ${this.owner}\n"
-        + "Roles: ${this.riftClass}\n"
-        + "Roles: ${this.roles.join(", ")}\n";
-
-    return charAsString;
-  },
-  store: function(){
-    //stub for persisting characters when MongoDB is available ;-)
-  }
-
-};
