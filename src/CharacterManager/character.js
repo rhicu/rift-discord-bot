@@ -7,13 +7,7 @@
  *
  */
 
-//Public
-module.exports = riftCharacter;
-
 class riftCharacter{
-    var charName, owner, shard, charClass;
-    var roles[];
-
     constructor(cName, playerName){
         this.charName = cName;
         this.owner = playerName;
@@ -32,7 +26,7 @@ class riftCharacter{
     }
 
     removeRole(role){
-        var index = array.indexOf(role);
+        var index = this.roles.indexOf(role);
         if(index != -1){
             this.roles.splice(index, 1);
         }
@@ -55,7 +49,7 @@ class riftCharacter{
 
     toString(){
         var charAsString = "";
-        charAsString = "Character: ${this.name}@${this.shard}\n"
+        charAsString = "Character: ${this.charName}@${this.shard}\n"
             + "Player: ${this.owner}\n"
             + "Roles: ${this.riftClass}\n"
             + "Roles: ${this.roles.join(", ")}\n";
@@ -67,7 +61,6 @@ class riftCharacter{
         //stub for persisting characters when MongoDB is available ;-)
     }
 
-
-
-
 }
+
+module.exports = riftCharacter;

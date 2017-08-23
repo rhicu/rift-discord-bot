@@ -43,3 +43,7 @@ privateConfig.json
 node_modules/
 package.json
 package-lock.json
+/.vs/config/applicationhost.config
+/.vs/RiftDiscordBot/v15/.suo
+/.vs/ProjectSettings.json
+/.vs
