@@ -5,7 +5,7 @@ After it open a terminal, navigate to the bot folder and use the command "npm in
 Now you have to install the following packages:
 
 * discord.js - "npm install --save discord.js"
-* PersistentCollections - "npm install --save djs-collection-persistent"
+* sqlite - "npm install --save sqlite"
 
 Finally you have to create a new file in the "src"-folder named "privateConfig.json".
 Open the file and write:

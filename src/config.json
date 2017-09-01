@@ -1,12 +1,12 @@
 {
     "prefix": ">",
     "communicationPrefix": "#",
-    "serverID": "325779168405094410",
+    "serverID": "335113819028193283",
     "roles": {
-        "offi": "335116773181489152",
-        "member": "335123824859152385"
+        "offi": "350270627543908353",
+        "member": "350270637790724096"
     },
-    "raidPlannerChannelID": "336073501540876288",
+    "raidPlannerChannelID": "350273001230434315",
     "raids": {
         "irotp": {
             "name": "Aufstieg des Phönix",
@@ -32,5 +32,6 @@
             "numberDD": 5,
             "embedColor": "0xFF0000"
         }
-    }
+    },
+    "dbPath": "D:\\Git\\RiftDiscordBot\\src\\database\\"
 }

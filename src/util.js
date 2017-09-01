@@ -2,7 +2,7 @@ class util {
     constructor() {}
 
     static multiLineStringFromArray(array) {
-        var string = "";
+        let string = "";
         for(var i = 0; i < array.length; i++) {
             string = `${string}${array[i]}\n`
         }
@@ -10,7 +10,7 @@ class util {
     }
 
     static multiLineStringFromPlayerArray(array) {
-        var string = "";
+        let string = "";
         for(var i = 0; i < array.length; i++) {
             string = `${string}${array[i].toString()}\n`
         }

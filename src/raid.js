@@ -1,21 +1,33 @@
 const util = require("./util");
 const player = require("./player");
 const enums = require("./enums");
+const config = require("./config.json");
 const N = "\n";
 
 class raid {
-    constructor(config, type) {
+    constructor(type) {
+
+        switch(type) {
+            case "irotp":
+                this.config = config.raids.irotp;
+                break;
+            case "td":
+                this.config = config.raids.td;
+                break;
+            default:
+                this.config = config.raids.td;
+                return;
+        }
         this.type = type;
-        this.config = config;
         this.day = "";
         this.date = "";
         this.invite = "18:45";
         this.start = "19:00";
         this.end = "21:30";
-        this.img = config.imgPath;
-        this.name = config.name;
-        this.shortName = config.shortName;
-        this.embedColor = config.embedColor;
+        this.img = this.config.imgPath;
+        this.name = this.config.name;
+        this.shortName = this.config.shortName;
+        this.embedColor = this.config.embedColor;
         this.registeredPlayer = [];
         this.messageID = "";
     }
@@ -25,7 +37,7 @@ class raid {
     }
 
     generateRaidOutput() {
-        var plannedRaids =  `${this.name} - ${this.day}, ${this.date}${
+        const plannedRaids = `${this.name} - ${this.day}, ${this.date}${
                             N}${
                             N}Raidinvite: ${this.invite}${
                             N}Raidstart: ${this.start} - Raidende : ${this.end}${
