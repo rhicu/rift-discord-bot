@@ -7,7 +7,7 @@
  *
  */
 
-class riftCharacter{
+class RiftCharacter{
     constructor(cName, playerName){
         this.charName = cName;
         this.owner = playerName;
@@ -63,4 +63,4 @@ class riftCharacter{
 
 }
 
-module.exports = riftCharacter;
+module.exports = RiftCharacter;
