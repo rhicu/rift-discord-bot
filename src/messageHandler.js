@@ -21,7 +21,7 @@ class messageHandler {
                 const rowsOfRaids = await db.all(`SELECT * FROM raids`)
                     .catch((error) => {
                         console.log(error);
-                        db.run("CREATE TABLE IF NOT EXISTS raids (raidID TEXT, name TEXT, type TEXT, day TEXT, date TEXT)");
+                        db.run("CREATE TABLE IF NOT EXISTS raids (raidID Integer, name TEXT, type TEXT, day TEXT, date TEXT)");
                     });
                 if (rowsOfRaids !== undefined && rowsOfRaids.length !== 0) {
                     for (const raidInstance of rowsOfRaids) {
@@ -34,7 +34,7 @@ class messageHandler {
                         const rowsOfPlayer = await db.all(`Select * FROM registered WHERE raidID = "${raidInstance.raidID}"`)
                             .catch((error) => {
                                 console.log(error);
-                                db.run("CREATE TABLE IF NOT EXISTS registered (raidID TEXT, userID TEXT, shortName TEXT)");
+                                db.run("CREATE TABLE IF NOT EXISTS registered (raidID INTEGER, userID TEXT, shortName TEXT)");
                             });
                         console.log(rowsOfPlayer);
                         if(rowsOfPlayer !== undefined && rowsOfPlayer.length !== 0) {
@@ -52,7 +52,7 @@ class messageHandler {
                     })
                     .catch((error) => {
                         console.log(error);
-                        db.run("CREATE TABLE IF NOT EXISTS data (name TEXT, intValue Integer, stringValue TEXT)").then(() => {
+                        db.run("CREATE TABLE IF NOT EXISTS data (name TEXT, intValue INTEGER, stringValue TEXT)").then(() => {
                             db.run("INSERT INTO data (name, intValue, stringValue) VALUES (?, ?, ?)", ["actualRaidID", 1000, ""]);
                         });
                     });
@@ -95,7 +95,7 @@ class messageHandler {
                     await db.run("INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)", [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date])
                         .catch((error) => {
                             console.log(error);
-                            db.run("CREATE TABLE IF NOT EXISTS raids (raidID TEXT, name TEXT, type TEXT, day TEXT, date TEXT)").then(() => {
+                            db.run("CREATE TABLE IF NOT EXISTS raids (raidID INTEGER, name TEXT, type TEXT, day TEXT, date TEXT)").then(() => {
                                 db.run("INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)", [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date]);
                             });
                         });
