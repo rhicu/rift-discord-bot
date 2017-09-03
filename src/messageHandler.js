@@ -17,68 +17,51 @@ class messageHandler {
         this.bot = bot;
         (async() => {
             try {
-                await db.open(`${config.dbPath}riftCharacter.sqlite`);
+                await db.open(`${config.dbPath}riftDiscordBot.sqlite`);
                 const rowsOfRaids = await db.all(`SELECT * FROM raids`)
-                    .catch(() => {
-                        console.error;
+                    .catch((error) => {
+                        console.log(error);
                         db.run("CREATE TABLE IF NOT EXISTS raids (raidID TEXT, name TEXT, type TEXT, day TEXT, date TEXT)");
                     });
-                console.log(rowsOfRaids);
-                if (rowsOfRaids.length !== 0) {
-                    rowsOfRaids.forEach(async(row) => {
-                        let newRaid = new raid(row.type);
+                if (rowsOfRaids !== undefined && rowsOfRaids.length !== 0) {
+                    for (const raidInstance of rowsOfRaids) {
+                        console.log(raidInstance);
+                        let newRaid = new raid(raidInstance.type);
+                        newRaid.id = raidInstance.raidID;
+                        newRaid.date = raidInstance.date;
+                        newRaid.day = raidInstance.day;
                         this.raids.push(newRaid);
-                        db.all(`Select * FROM registered WHERE raidID = ${row.raidID}`).then(rows => {
-                            console.log(rows);
-                            if(rows.length !== 0) {
-                                rows.forEach(row => {
-                                    const newPlayer = createPlayerFromDatabase(row.playerID, row.shortName);
-                                }, this);
-                            }
-                        }).catch(() => {
-                            console.error;
-                            db.run("CREATE TABLE IF NOT EXISTS registered (raidID TEXT, playerID TEXT, shortName TEXT)");
-                        });
-                    }, this);
+                        const rowsOfPlayer = await db.all(`Select * FROM registered WHERE raidID = "${raidInstance.raidID}"`)
+                            .catch((error) => {
+                                console.log(error);
+                                db.run("CREATE TABLE IF NOT EXISTS registered (raidID TEXT, userID TEXT, shortName TEXT)");
+                            });
+                        console.log(rowsOfPlayer);
+                        if(rowsOfPlayer !== undefined && rowsOfPlayer.length !== 0) {
+                            for (const player of rowsOfPlayer) {
+                                const newPlayer = await this.createPlayerFromDatabase(player.userID, player.shortName);
+                                newRaid.registeredPlayer.push(newPlayer);
+                            };
+                        }
+                    }
                 }
+                this.actualRaidID = 1000;
+                await db.get(`SELECT * FROM data WHERE name = "actualRaidID"`)
+                    .then((row) => {
+                        this.actualRaidID = row.intValue;
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        db.run("CREATE TABLE IF NOT EXISTS data (name TEXT, intValue Integer, stringValue TEXT)").then(() => {
+                            db.run("INSERT INTO data (name, intValue, stringValue) VALUES (?, ?, ?)", ["actualRaidID", 1000, ""]);
+                        });
+                    });
             } catch(error) {
                 console.log(`constructor: ${error}`);
                 throw new Error("Something went badly wrong!");
-            }
-            
+            }           
         })();
-        db.open(`${config.dbPath}riftCharacter.sqlite`)
-            .then(() => {
-                try {
-                    db.all(`SELECT * FROM raids`).then(async(rows) => {
-                        console.log(rows);
-                        if (rows.length !== 0) {
-                            rows.forEach(row => {
-                                let newRaid = new raid(row.type);
-                                this.raids.push(newRaid);
-                                db.all(`Select * FROM registered WHERE raidID = ${row.raidID}`).then(rows => {
-                                    console.log(rows);
-                                    if(rows.length !== 0) {
-                                        rows.forEach(row => {
-                                            const newPlayer = createPlayerFromDatabase(row.playerID, row.shortName);
-                                        }, this);
-                                    }
-                                }).catch(() => {
-                                    console.error;
-                                    db.run("CREATE TABLE IF NOT EXISTS registered (raidID TEXT, playerID TEXT, shortName TEXT)");
-                                });
-                            }, this);
-                        }
-                    }).catch(() => {
-                        console.error;
-                        db.run("CREATE TABLE IF NOT EXISTS raids (raidID TEXT, name TEXT, type TEXT, day TEXT, date TEXT)");
-                    });
-                } catch(error) {
-                    console.log(`constructor: ${error}`);
-                    msg.reply("Unable to handle database");
-                    return;
-                }
-            });
+        // this.printRaids();
     }
 
     addRaid(msg) {
@@ -103,9 +86,21 @@ class messageHandler {
             const newRaid = new raid(type);
             newRaid.day = util.getDay(message[2]);
             newRaid.date = util.getDate(message[3]);
+            newRaid.id = this.actualRaidID + 1;
 
             if(newRaid.isValid()) {
                 this.raids.push(newRaid);
+                this.actualRaidID++;
+                (async() => {
+                    await db.run("INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)", [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date])
+                        .catch((error) => {
+                            console.log(error);
+                            db.run("CREATE TABLE IF NOT EXISTS raids (raidID TEXT, name TEXT, type TEXT, day TEXT, date TEXT)").then(() => {
+                                db.run("INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)", [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date]);
+                            });
+                        });
+                    await db.run(`UPDATE data SET intValue = ${this.actualRaidID} WHERE name = "actualRaidID"`)
+                })();
                 msg.reply(`raid "${newRaid.name}" added`);
                 this.printRaids(msg);
             } else {
@@ -119,8 +114,8 @@ class messageHandler {
 
     deleteRaid(msg) {
         try {
-            var message = msg.content.split(" ");
-            if(message.length != 3) {
+            const message = msg.content.split(" ");
+            if(message.length != 2) {
                 msg.reply("Invalid number of Arguments! Please verify your input!");
                 return;
             }
@@ -132,23 +127,23 @@ class messageHandler {
                 channel = this.bot.guilds.find("id", config.serverID).channels.find("id", config.raidPlannerChannelID);
             }
 
-            var raidInstance = message[1];
-            var day = message[2];
-            for(var i = 0; i < this.raids.length; i++) {
-                if(this.raids[i].shortName === raidInstance && this.raids[i].day === day) {
-                    if(this.raids[i].messageID === "") {
-                        this.raids.splice(i, 1);
-                    } else {
-                        channel.fetchMessage(this.raids[i].messageID)
-                            .then(message => message.delete())
-                            .catch(error => console.log(`deleteRaid: ${error}`));
-                        this.raids.splice(i, 1);
-                    }
-                    msg.reply(`You successfully deleted raid ${raidInstance} on ${day}!`);
-                    return;
+            const raidID = message[1];
+
+            const index = this.raids.findIndex(r => r.id === raidID);
+            if(index === -1) {
+                msg.reply("Couldn't find the raid you wanted to delete!");
+            } else {
+                const raid = this.raids[index];
+                if(raid.messageID !== "") {
+                    channel.fetchMessage(raid.messageID)
+                        .then(message => message.delete())
+                        .catch(error => console.log(`deleteRaid: ${error}`));
                 }
+                this.raids.splice(index, 1);
+                db.run(`DELETE FROM raids WHERE raidID = "${raid.id}"`);
+                db.run(`DELETE FROM registered WHERE raidID = "${raid.id}"`);
+                msg.reply(`You successfully deleted raid ${raid.name} on ${raid.day}!`);
             }
-            msg.reply("Error while trying to delete raid! Maybe the raid does not esist?");
         } catch(error) {
             console.log(`deleteRaid: ${error}`);
             msg.reply(`something bad happened :(`);
@@ -157,16 +152,15 @@ class messageHandler {
 
     updateRaid(msg) {
         try {
-            if(msg.content.split(" ").length !== 5) {
+            if(msg.content.split(" ").length !== 4) {
                 msg.reply("Invalid number of arguments!");
                 return;
             }
             var raidInstance = msg.conent.split(" ")[1];
-            var day = msg.content.split(" ")[2];
             for(var i = 0; i < this.raids.length; i++) {
-                if(this.raids[i].shortName === raidInstance && this.raids[i].day === day) {
-                    var option = msg.content.split(" ")[3];
-                    var value = msg.content.split(" ")[4];
+                if(this.raids[i].id === id) {
+                    var option = msg.content.split(" ")[2];
+                    var value = msg.content.split(" ")[3];
                     switch(option) {
                         case "day":
                             this.raids[i].day = value;
@@ -243,28 +237,40 @@ class messageHandler {
         (async() => {
             try {
                 const message = msg.content.split(" ");
-                if(message.length != 4) {
+                if(message.length != 3) {
                     msg.reply("Invalid number of Arguments! Please verify your input!");
                     return;
                 }
 
-                const newPlayer = await this.createPlayerFromDatabase(msg.author.id, message[3]);
+                const newPlayer = await this.createPlayerFromDatabase(msg.author.id, message[2]);
                 if(newPlayer === null) {
                     msg.reply(`No characters created yet or no character of yours with short name ${message[3]} found!`);
                     return;
                 }
 
-                const raidInstance = message[1];
-                const day = util.getDay(message[2]);
+                const raidID = message[1];
 
                 const raid = this.raids
-                    .filter(r => r.shortName === raidInstance)
-                    .filter(r => r.day === day);
+                    .filter(r => r.id === raidID)
                 if(raid.length === 0) {
                     msg.reply("Couldn't find the raid you wanted to get registered to!");
                 } else if(raid[0].registeredPlayer.find(p => p.id === newPlayer.id)) {
                     msg.reply("You are already registered for this raid!");
                 } else {
+                    console.log("register...");
+                    db.get(`Select * FROM registered WHERE raidID = "${raid[0].id}" AND userID = "${newPlayer.id}"`)
+                        .then(row => {
+                            console.log(row);
+                            if(!row) {
+                                db.run("INSERT INTO registered (raidID, userID, shortName) VALUES (?, ?, ?)", [raid[0].id, newPlayer.id, newPlayer.shortName]);
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            db.run("CREATE TABLE IF NOT EXISTS registered (raidID TEXT, userID TEXT, shortName TEXT)").them(() => {
+                                db.run("INSERT INTO registered (raidID, userID, shortName) VALUE (?, ?, ?)", [raid[0].id, newPlayer.id, newPlayer.shortName]);
+                            });
+                        });
                     raid[0].registeredPlayer.push(newPlayer);
                     this.updatePrintedRaid(raid[0], msg.channel);
                     msg.reply(`You are now registered for raid "${raid[0].name}" at "${raid[0].day}"! Please be there in time!`);
@@ -284,17 +290,16 @@ class messageHandler {
                 return;
             }
 
-            const raidInstance = message[1];
-            const day = message[2];
-            const id = msg.author.id;
-            
+            const raidID = message[1];
+            const playerID = msg.author.id;
+
             const raid = this.raids
-                .filter(r => r.shortName === raidInstance)
-                .filter(r => r.day === day);
+                .filter(r => r.id === raidID)
             if(raid.length === 0) {
                 msg.reply("Couldn't find the raid you wanted to get deregistered from!");
-            } else if(raid[0].registeredPlayer.find(p => p.id === id)) {
-                const index = raid[0].registeredPlayer.findIndex(p => p.id === id);
+            } else if(raid[0].registeredPlayer.find(p => p.id === playerID)) {
+                db.run(`DELETE FROM registered WHERE raidID = "${raid[0].id}" AND userID = "playerID"`);
+                const index = raid[0].registeredPlayer.findIndex(p => p.id === playerID);
                 raid[0].registeredPlayer.splice(index, 1);
                 this.updatePrintedRaid(raid[0], msg.channel);
                 msg.reply(`You are now deregistered from raid "${raid[0].name}" on "${raid[0].day}"!`);

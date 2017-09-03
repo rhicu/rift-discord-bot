@@ -30,6 +30,7 @@ class raid {
         this.embedColor = this.config.embedColor;
         this.registeredPlayer = [];
         this.messageID = "";
+        this.id = 0;
     }
 
     isValid() {
@@ -38,7 +39,7 @@ class raid {
 
     generateRaidOutput() {
         const plannedRaids = `${this.name} - ${this.day}, ${this.date}${
-                            N}${
+                            N}AnmeldeID: ${this.id}${N}${
                             N}Raidinvite: ${this.invite}${
                             N}Raidstart: ${this.start} - Raidende : ${this.end}${
                             N}${
