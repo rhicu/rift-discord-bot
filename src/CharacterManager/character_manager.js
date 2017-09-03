@@ -11,14 +11,14 @@
 class CharacterManager {
     constructor(option){
         this.characterModel = option;
-        var characterList = [];
+        this.characterList = [];
     }
 
     registerCharacter(characterData) {
-        var character = new this.characterModel(characterData.name, characterData.owner);
+        var character = new this.characterModel(characterData.charName, characterData.owner);
         character.setShard(characterData.shard);
         character.setRoles(characterData.roles);
-        character.setClass(characterData.class);
+        character.setClass(characterData.riftClass);
 
         this.characterList.push(character);
 
