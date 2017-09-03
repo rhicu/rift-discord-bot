@@ -41,7 +41,7 @@ class messageHandler {
                             for (const player of rowsOfPlayer) {
                                 const newPlayer = await this.createPlayerFromDatabase(player.userID, player.shortName);
                                 newRaid.registeredPlayer.push(newPlayer);
-                            };
+                            }
                         }
                     }
                 }
@@ -257,17 +257,15 @@ class messageHandler {
                 } else if(raid[0].registeredPlayer.find(p => p.id === newPlayer.id)) {
                     msg.reply("You are already registered for this raid!");
                 } else {
-                    console.log("register...");
                     db.get(`Select * FROM registered WHERE raidID = "${raid[0].id}" AND userID = "${newPlayer.id}"`)
                         .then(row => {
-                            console.log(row);
                             if(!row) {
                                 db.run("INSERT INTO registered (raidID, userID, shortName) VALUES (?, ?, ?)", [raid[0].id, newPlayer.id, newPlayer.shortName]);
                             }
                         })
                         .catch((error) => {
                             console.log(error);
-                            db.run("CREATE TABLE IF NOT EXISTS registered (raidID TEXT, userID TEXT, shortName TEXT)").them(() => {
+                            db.run("CREATE TABLE IF NOT EXISTS registered (raidID TEXT, userID TEXT, shortName TEXT)").then(() => {
                                 db.run("INSERT INTO registered (raidID, userID, shortName) VALUE (?, ?, ?)", [raid[0].id, newPlayer.id, newPlayer.shortName]);
                             });
                         });
