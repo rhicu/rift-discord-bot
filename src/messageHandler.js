@@ -127,7 +127,7 @@ class messageHandler {
                 channel = this.bot.guilds.find("id", config.serverID).channels.find("id", config.raidPlannerChannelID);
             }
 
-            const raidID = message[1];
+            const raidID = parseInt(message[1]);
 
             const index = this.raids.findIndex(r => r.id === raidID);
             if(index === -1) {
@@ -248,7 +248,7 @@ class messageHandler {
                     return;
                 }
 
-                const raidID = message[1];
+                const raidID = parseInt(message[1]);
 
                 const raid = this.raids
                     .filter(r => r.id === raidID)
@@ -391,10 +391,10 @@ class messageHandler {
 
     help(isOffi) {
         var string = "usage:\n\n"
-        string = `${string}register <raid> <day> <ingameName> <class> <roles>, e.g. 'register irotp Mittwoch Blub@Typhiria Krieger DD,Tank,Heal'${
-                N}deregister <raid> <day>, e.g. 'deregister irotp Mittwoch'${
+        string = `${string}register <raidID> <shortName>, e.g. 'register 1001 main'${
+                N}deregister <raidID>, e.g. 'deregister 1003'${
                 N}help${
-                N}create <name> <class> <roles> <shortName>`;
+                N}create <name@shard> <class> <roles> <shortName>`;
         if (isOffi) {
             string = `${string}${N}${
                     N}addRaid <irotp / td> <day> <date>${
