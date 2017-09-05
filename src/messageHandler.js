@@ -389,16 +389,41 @@ class messageHandler {
 
     help(isOffi) {
         var string = "usage:\n\n"
-        string = `${string}register <raidID> <shortName>, e.g. 'register 1001 main'${
-                N}deregister <raidID>, e.g. 'deregister 1003'${
-                N}help${
-                N}create <name@shard> <class> <roles> <shortName>`;
+        string = `${string}help - show this message${
+                N}${
+                N}1. Create your Character: (You have to do this once for every raiding charakter.)${
+                N}   create <name@shard> <class> <roles> <shortName>${
+                N}   e.g.: 'create Paxie@Brutwacht Kleriker Tank,DD,Heal,Support Pax'${
+                N}${
+                N}2. Register your character for incoming raid:${
+                N}   register <raidID> <shortName>${
+                N}   e.g. 'register 1001 Pax'${
+                N}${
+                N}3. Deregister your character for incoming raid:${
+                N}   deregister${
+                N}   e.g. 'deregister 1003'`;
+
         if (isOffi) {
-            string = `${string}${N}${
+            string = `${string}${
+                    N}${
+                    N}Admin Settings:${
+                    N}${
+                    N}Create a new raid instance:${
                     N}addRaid <irotp / td> <day> <date>${
+                    N}e.g. 'addRaid td Wednesday 01.01.1970'${
+                    N}${
+                    N}updates an existing raid instance: (one property per command)${
+                    N}updateRaid <raidID> <day / date / start / end / invite> <data>${
+                    N}e.g. 'updateRaid 1000 start 18:00'${
+                    N}${
+                    N}deletes a raid instance:${
+                    N}deleteRaid <raidID>${
+                    N}e.g. 'deleteRaid 1000'${
+                    N}${
+                    N}Delete all messages in raid planner channel and print all active raids again:${
                     N}printRaids${
-                    N}deleteRaid <irotp / td> <day>${
-                    N}updateRaid <irotp / td> <day> <day / date / start / end / invite> <data>${
+                    N}${
+                    N}Deletes all messages in raid planner channel${
                     N}clearRaidChannel`;
         }
         return string;
@@ -421,7 +446,7 @@ class messageHandler {
                 this.newCharacter(msg);
                 break;
             default:
-                msg.reply(`unknown command!\n\n${this.help(true)}`)
+                msg.reply(`unknown command!Use 'help' for info!`)
                     .catch(error => console.log(`help: ${error}`));
                 break;
         }
@@ -459,7 +484,7 @@ class messageHandler {
                 this.newCharacter(msg);
                 break;
             default:
-                msg.reply(`unknown command!\n\n${this.help(true)}`)
+                msg.reply(`unknown command!Use 'help' for info!`)
                     .catch(error => console.log(`help: ${error}`));
                 break;
         }
