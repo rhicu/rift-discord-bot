@@ -387,6 +387,30 @@ class messageHandler {
         }
     }
 
+    confirmRegisteredEventMemberForEvent(msg) {
+        const message = msg.content.split(" ");
+        if(message.length != 3) {
+            msg.reply("Invalid number of Arguments! Please verify your input!");
+            return;
+        }
+
+        const registerNumber = parseInt(message[1]) - 1;
+        const raidID = message[2];
+
+        const raid = this.raids.find(r => r.id === raidID);
+        if(raid === null || raid === undefined) {
+            msg.reply("Couldn't find raid! Please check your input!");
+        } else if (raid.length <= registerNumber) {
+            msg.reply("Your mentioned player number seems to be too high! Please check your input!");
+        } else {
+            const player = raid.registeredPlayer[registerNumber];
+            raid.registeredPlayer.splice(registerNumber, 1);
+            raid.confirmedPlayer.push(player);
+
+            msg.reply(`Confirmed '${player.name}' for raid '${raid.name}' with ID '${raid.id}'`);
+        }
+    }
+
     help(isOffi) {
         var string = "usage:\n\n"
         string = `${string}help - show this message${
@@ -419,6 +443,10 @@ class messageHandler {
                     N}deletes a raid instance:${
                     N}deleteRaid <raidID>${
                     N}e.g. 'deleteRaid 1000'${
+                    N}${
+                    N}confirm a player for raid:${
+                    N}confirm <number of player in registered list> <raidID>${
+                    N}e.g. 'confirm 8 1000'${
                     N}${
                     N}Delete all messages in raid planner channel and print all active raids again:${
                     N}printRaids${
@@ -482,6 +510,9 @@ class messageHandler {
                 break;
             case "create":
                 this.newCharacter(msg);
+                break;
+            case "confirm":
+                this.confirmRegisteredEventMemberForEvent(msg);
                 break;
             default:
                 msg.reply(`unknown command!Use 'help' for info!`)
