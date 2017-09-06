@@ -50,7 +50,7 @@ class raid {
                             N}Benötigt: ${this.config.numberTank}x Tank, ${this.config.numberHeal}x Heal, ${this.config.numberSupport}x Supp, ${this.config.numberDD}x DD${
                             N}${
                             N}Angemeldet:${
-                            N}${util.multiLineStringFromArray(this.registeredPlayer)}`;
+                            N}${util.numberedMultiLineStringFromArray(this.registeredPlayer)}`;
         return plannedRaids;
     }
 }
