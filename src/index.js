@@ -19,11 +19,13 @@ bot.on('message', msg => {
     if(msg.channel.type === 'dm' && !msg.author.bot) {
         guildMember = bot.guilds.find("id", config.serverID).member(msg.author);
         if (guildMember) {
-            if(guildMember.roles.has(config.roles.member)) {
-                messageHandler.memberCommand(msg);
-            }
             if(guildMember.roles.has(config.roles.offi)) {
                 messageHandler.offiCommand(msg);
+            // quickfix for guest users
+            //} else if(guildMember.roles.has(config.roles.member)) {
+            //    messageHandler.memberCommand(msg);
+            } else {
+                messageHandler.memberCommand(msg);
             }
         }
     }
