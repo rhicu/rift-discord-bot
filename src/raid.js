@@ -52,7 +52,6 @@ class raid {
                             N}${
                             N}Angemeldet:${
                             N}${util.multiLineStringFromArray(this.registeredPlayer)}${
-                            N}${
                             N}Bestätigt:${
                             N}${util.multiLineStringFromArray(this.confirmedPlayer)}`;
         return plannedRaids;
