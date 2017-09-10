@@ -149,6 +149,7 @@ class messageHandler {
                 this.raids.splice(index, 1);
                 db.run(`DELETE FROM raids WHERE raidID = ${raid.id}`);
                 db.run(`DELETE FROM registered WHERE raidID = ${raid.id}`);
+                db.run(`DELETE FROM confirmed WHERE raidID = ${raid.id}`);
                 msg.reply(`You successfully deleted raid ${raid.name} on ${raid.day}!`);
             }
         } catch(error) {
@@ -419,8 +420,6 @@ class messageHandler {
 
             if(!raid) {
                 msg.reply("Couldn't find raid! Please check your input!");
-            //} else if (raid.length <= playerNumbersToConfirm) {
-            //    msg.reply("Your mentioned player number seems to be too high! Please check your input!");
             } else {
                 playerNumbersToConfirm.forEach(number => {
                     const index = parseInt(number) - 1;
