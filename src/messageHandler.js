@@ -261,6 +261,8 @@ class messageHandler {
                     msg.reply("Couldn't find the raid you wanted to get registered to!");
                 } else if(raid[0].registeredPlayer.find(p => p.id === newPlayer.id)) {
                     msg.reply("You are already registered for this raid!");
+                } else if(raid[0].confirmedPlayer.find(p => p.id === newPlayer.id)) {
+                    msg.reply("You are already confirmed for this raid!");
                 } else {
                     db.get(`Select * FROM registered WHERE raidID = ${raid[0].id} AND userID = "${newPlayer.id}"`)
                         .then(row => {
@@ -413,6 +415,7 @@ class messageHandler {
             const raid = this.raids.find(r => r.id === raidID);
             let playerNumbersToConfirm = message;
             playerNumbersToConfirm.splice(0, 2);
+            let numberOfSuccessfulConfirmations = 0;
 
             if(!raid) {
                 msg.reply("Couldn't find raid! Please check your input!");
@@ -425,14 +428,15 @@ class messageHandler {
                         const player = raid.registeredPlayer[index];
                         raid.registeredPlayer.splice(index, 1);
                         raid.confirmedPlayer.push(player);
+                        numberOfSuccessfulConfirmations++;
                         this.databaseConfirm(raidID, player);
                     }
                 });
                 this.updatePrintedRaid(raid);
-                msg.reply(`Confirmed ${playerNumbersToConfirm.length} player(s) for raid '${raid.name}' with ID '${raid.id}'`);
+                msg.reply(`Confirmed ${numberOfSuccessfulConfirmations} player(s) for raid '${raid.name}' with ID '${raid.id}'`);
             }
         } catch(error) {
-            console.log(`confirm: ${error}`)
+            console.log(`confirm: ${error}`);
         }
     }
 
