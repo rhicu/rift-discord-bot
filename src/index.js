@@ -6,8 +6,7 @@ const db = require("sqlite");
 
 const bot = new Discord.Client();
 const prefix = config.prefix;
-
-var messageHandler = new messagehandler(bot);
+let messageHandler;
 
 bot.on('ready', () => {
     console.log(`Logged in as ${bot.user.tag}!`);
@@ -33,4 +32,7 @@ bot.on('message', msg => {
     if(!msg.content.startsWith(prefix) || msg.author.bot) return;
 });
 
-bot.login(`${privateConfig.token}`);
+bot.login(`${privateConfig.token}`)
+    .then(() => {
+        messageHandler = new messagehandler(bot);
+    });
