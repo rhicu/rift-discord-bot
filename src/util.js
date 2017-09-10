@@ -3,16 +3,16 @@ class util {
 
     static multiLineStringFromArray(array) {
         let string = "";
-        for(var i = 0; i < array.length; i++) {
+        for(let i = 0; i < array.length; i++) {
             string = `${string}${array[i]}\n`
         }
         return string;
     }
 
-    static multiLineStringFromPlayerArray(array) {
+    static numberedMultiLineStringFromArray(array) {
         let string = "";
-        for(var i = 0; i < array.length; i++) {
-            string = `${string}${array[i].toString()}\n`
+        for(let i = 0; i < array.length; i++) {
+            string = `${string}${i}. ${array[i]}\n`
         }
         return string;
     }
