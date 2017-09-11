@@ -12,7 +12,7 @@ class util {
     static numberedMultiLineStringFromArray(array) {
         let string = "";
         for(let i = 0; i < array.length; i++) {
-            string = `${string}${i}. ${array[i]}\n`
+            string = `${string}${i+1}. ${array[i]}\n`
         }
         return string;
     }

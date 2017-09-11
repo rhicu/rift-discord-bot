@@ -29,6 +29,7 @@ class raid {
         this.shortName = this.config.shortName;
         this.embedColor = this.config.embedColor;
         this.registeredPlayer = [];
+        this.confirmedPlayer = [];
         this.messageID = "";
         this.id = 0;
     }
@@ -50,7 +51,9 @@ class raid {
                             N}Benötigt: ${this.config.numberTank}x Tank, ${this.config.numberHeal}x Heal, ${this.config.numberSupport}x Supp, ${this.config.numberDD}x DD${
                             N}${
                             N}Angemeldet:${
-                            N}${util.numberedMultiLineStringFromArray(this.registeredPlayer)}`;
+                            N}${util.numberedMultiLineStringFromArray(this.registeredPlayer)}${
+                            N}Bestätigt:${
+                            N}${util.numberedMultiLineStringFromArray(this.confirmedPlayer)}`;
         return plannedRaids;
     }
 }
