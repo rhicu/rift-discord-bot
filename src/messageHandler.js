@@ -164,11 +164,11 @@ class messageHandler {
                 msg.reply("Invalid number of arguments!");
                 return;
             }
-            var raidInstance = msg.content.split(" ")[1];
-            for(var i = 0; i < this.raids.length; i++) {
+            const id = msg.content.split(" ")[1];
+            for(let i = 0; i < this.raids.length; i++) {
                 if(this.raids[i].id === id) {
-                    var option = msg.content.split(" ")[2];
-                    var value = msg.content.split(" ")[3];
+                    const option = msg.content.split(" ")[2];
+                    const value = msg.content.split(" ")[3];
                     switch(option) {
                         case "day":
                             this.raids[i].day = value;
