@@ -177,13 +177,13 @@ class messageHandler {
                             this.raids[i].date = value;
                             break;
                         case "start":
-                            this.raids[i].day = value;
+                            this.raids[i].start = value;
                             break;
                         case "end":
-                            this.raids[i].day = value;
+                            this.raids[i].end = value;
                             break;
                         case "invite":
-                            this.raids[i].day = value;
+                            this.raids[i].invite = value;
                             break;
                         default:
                             msg.reply(`'${option}' is not a property which can be updated!`);
