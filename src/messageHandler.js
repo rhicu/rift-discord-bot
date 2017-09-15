@@ -190,13 +190,13 @@ class messageHandler {
                             return;
                     }
                     this.updatePrintedRaid(this.raids[i]);
-                    msg.reply(`Raid ${raids[i].name} on ${raids[i].date} is updated!`);
+                    msg.reply(`Raid ${this.raids[i].name} on ${this.raids[i].date} is updated!`);
                     return;
                 }
             }
             msg.reply("Error while trying to update raid! Maybe the raid does not esist?");
         } catch(error) {
-            console.log(`register: ${error}`);
+            console.log(`updateRaid: ${error}`);
             msg.reply("something bad happened :(");
         }        
     }
