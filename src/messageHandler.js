@@ -164,7 +164,7 @@ class messageHandler {
                 msg.reply("Invalid number of arguments!");
                 return;
             }
-            const id = msg.content.split(" ")[1];
+            const id = parseInt(msg.content.split(" ")[1]);
             for(let i = 0; i < this.raids.length; i++) {
                 if(this.raids[i].id === id) {
                     const option = msg.content.split(" ")[2];
