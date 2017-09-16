@@ -1,7 +1,7 @@
-const util = require("./util");
+const util = require("../utils/util");
 const player = require("./player");
 const enums = require("./enums");
-const config = require("./config.json");
+const config = require("../config.json");
 const N = "\n";
 
 class raid {

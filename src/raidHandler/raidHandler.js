@@ -1,11 +1,9 @@
-"use strict";
-
 const Discord = require("discord.js");
 const db = require("sqlite");
-const config = require("./config.json");
+const config = require("../config.json");
 const raid = require("./raid");
 const player = require("./player");
-const util = require("./utils/util");
+const util = require("../utils/util");
 const N = "\n";
 
 const communicationPrefix = config.communicationPrefix;
@@ -17,11 +15,7 @@ class messageHandler {
         (async() => {
             try {
                 await db.open(`${config.dbPath}riftDiscordBot.sqlite`);
-                const rowsOfRaids = await db.all(`SELECT * FROM raids`)
-                    .catch((error) => {
-                        console.log(error);
-                        db.run("CREATE TABLE IF NOT EXISTS raids (raidID Integer, name TEXT, type TEXT, day TEXT, date TEXT)");
-                    });
+                const rowsOfRaids = await getSavedRaids();
                 if (rowsOfRaids && rowsOfRaids.length !== 0) {
                     for (const raidInstance of rowsOfRaids) {
                         let newRaid = new raid(raidInstance.type);
