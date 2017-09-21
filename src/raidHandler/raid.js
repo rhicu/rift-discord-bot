@@ -8,15 +8,15 @@ class raid {
     constructor(type) {
 
         switch(type) {
-            case "irotp":
-                this.config = config.raids.irotp;
-                break;
-            case "td":
-                this.config = config.raids.td;
-                break;
-            default:
-                this.config = config.raids.td;
-                return;
+        case "irotp":
+            this.config = config.raids.irotp;
+            break;
+        case "td":
+            this.config = config.raids.td;
+            break;
+        default:
+            this.config = config.raids.td;
+            return;
         }
         this.type = type;
         this.day = "";
@@ -40,20 +40,20 @@ class raid {
 
     generateRaidOutput() {
         const plannedRaids = `${this.name} - ${this.day}, ${this.date}${
-                            N}AnmeldeID: ${this.id}${N}${
-                            N}Raidinvite: ${this.invite}${
-                            N}Raidstart: ${this.start} - Raidende : ${this.end}${
-                            N}${
-                            N}Vorraussetzung:${
-                            N}${util.multiLineStringFromArray(this.config.requirements)}${
-                            N}Insgesamt verfügbare Plätze: ${this.config.numberPlayer}${
-                            N}${
-                            N}Benötigt: ${this.config.numberTank}x Tank, ${this.config.numberHeal}x Heal, ${this.config.numberSupport}x Supp, ${this.config.numberDD}x DD${
-                            N}${
-                            N}Angemeldet:${
-                            N}${util.numberedMultiLineStringFromArray(this.registeredPlayer)}${
-                            N}Bestätigt:${
-                            N}${util.numberedMultiLineStringFromArray(this.confirmedPlayer)}`;
+            N}AnmeldeID: ${this.id}${N}${
+            N}Raidinvite: ${this.invite}${
+            N}Raidstart: ${this.start} - Raidende : ${this.end}${
+            N}${
+            N}Vorraussetzung:${
+            N}${util.multiLineStringFromArray(this.config.requirements)}${
+            N}Insgesamt verfügbare Plätze: ${this.config.numberPlayer}${
+            N}${
+            N}Benötigt: ${this.config.numberTank}x Tank, ${this.config.numberHeal}x Heal, ${this.config.numberSupport}x Supp, ${this.config.numberDD}x DD${
+            N}${
+            N}Angemeldet:${
+            N}${util.numberedMultiLineStringFromArray(this.registeredPlayer)}${
+            N}Bestätigt:${
+            N}${util.numberedMultiLineStringFromArray(this.confirmedPlayer)}`;
         return plannedRaids;
     }
 }

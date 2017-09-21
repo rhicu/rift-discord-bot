@@ -2,14 +2,15 @@ const Discord = require("discord.js");
 const config = require("./config.json");
 const privateConfig = require("./privateConfig.json");
 const raidHandler = require("./raidHandler/raidHandler");
+const database = require("./db/database");
 const fs = require("fs");
 
 const bot = new Discord.Client();
-require('./utils/eventLoader')(bot);
+require("./utils/eventLoader")(bot);
 
-const prefix = config.prefix;
+// const prefix = config.prefix;
 
-bot.on('ready', () => {
+bot.on("ready", () => {
     console.log(`Logged in as ${bot.user.tag}!`);
 });
 
@@ -30,7 +31,7 @@ fs.readdir(config.commandsFolderPath, (error, files) => {
 
 bot.elevation = msg => {
     /* This function should resolve to an ELEVATION level which
-       is then sent to the command handler for verification*/
+        is then sent to the command handler for verification*/
     const guildMember = bot.guilds.find("id", config.serverID).member(msg.author);
     let permlvl = 0;
     if (guildMember.roles.has(config.roles.member)) permlvl = 1;
@@ -38,10 +39,11 @@ bot.elevation = msg => {
     if (guildMember.roles.has(config.roles.admin)) permlvl = 3;
     //if (msg.author.id === config.ownerid) permlvl = 4;
     return permlvl;
-  };
+};
 
 bot.login(`${privateConfig.token}`)
     .then(() => {
-        bot.db = new database();
-        bot.raidManager = new raidHandler(bot);
+        const channel = bot.guilds.find("id", config.serverID).channels.find("id", config.raidPlannerChannelID);
+        bot.db = new database(config.dbPath);
+        bot.raidManager = new raidHandler(channel);
     });

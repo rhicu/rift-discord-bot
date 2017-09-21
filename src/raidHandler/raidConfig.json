@@ -1,0 +1,26 @@
+{
+    "raids": {
+        "irotp": {
+            "name": "Aufstieg des Phönix",
+            "shortName": "irotp",
+            "requirements": ["500k dps an der Puppe", "2,2k Hit"],
+            "numberPlayer": 10,
+            "numberTank": 2,
+            "numberHeal": 2,
+            "numberSupport": 1,
+            "numberDD": 5,
+            "embedColor": "0x00FF00"
+        },
+        "td": {
+            "name": "Tartarische Tiefen",
+            "shortName": "td",
+            "requirements": ["650k dps an der Puppe", "2,2k Hit"],
+            "numberPlayer": 10,
+            "numberTank": 2,
+            "numberHeal": 2,
+            "numberSupport": 1,
+            "numberDD": 5,
+            "embedColor": "0xFF0000"
+        }
+    }
+}
