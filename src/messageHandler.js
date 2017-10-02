@@ -8,7 +8,7 @@ const player = require("./player");
 const util = require("./utils/util");
 const N = "\n";
 
-const communicationPrefix = config.communicationPrefix;
+// const communicationPrefix = config.communicationPrefix;
 
 class messageHandler {
     constructor(bot) {
@@ -17,7 +17,7 @@ class messageHandler {
         (async() => {
             try {
                 await db.open(`${config.dbPath}riftDiscordBot.sqlite`);
-                const rowsOfRaids = await db.all(`SELECT * FROM raids`)
+                const rowsOfRaids = await db.all("SELECT * FROM raids")
                     .catch((error) => {
                         console.log(error);
                         db.run("CREATE TABLE IF NOT EXISTS raids (raidID Integer, name TEXT, type TEXT, day TEXT, date TEXT)");
@@ -58,7 +58,7 @@ class messageHandler {
                     }
                 }
                 this.actualRaidID = 1000;
-                await db.get(`SELECT * FROM data WHERE name = "actualRaidID"`)
+                await db.get("SELECT * FROM data WHERE name = \"actualRaidID\"")
                     .then((row) => {
                         this.actualRaidID = row.intValue;
                     })
@@ -85,15 +85,15 @@ class messageHandler {
         try {
             let type;
             switch(message[1]) {
-                case "irotp":
-                    type = "irotp";
-                    break;
-                case "td":
-                    type = "td";
-                    break;
-                default:
-                    msg.reply("unknown raid, use 'irotp' or 'td'");
-                    return;
+            case "irotp":
+                type = "irotp";
+                break;
+            case "td":
+                type = "td";
+                break;
+            default:
+                msg.reply("unknown raid, use 'irotp' or 'td'");
+                return;
             }
             const newRaid = new raid(type);
             newRaid.day = util.getDay(message[2]);
@@ -111,12 +111,12 @@ class messageHandler {
                                 db.run("INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)", [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date]);
                             });
                         });
-                    await db.run(`UPDATE data SET intValue = ${this.actualRaidID} WHERE name = "actualRaidID"`)
+                    await db.run(`UPDATE data SET intValue = ${this.actualRaidID} WHERE name = "actualRaidID"`);
                 })();
                 msg.reply(`raid "${newRaid.name}" added`);
                 this.printRaids();
             } else {
-                msg.reply(`Couldn't create raid because of missing data. Please try again!`);
+                msg.reply("Couldn't create raid because of missing data. Please try again!");
             }
         } catch(error) {
             console.log(`addRaid: ${error}`);
@@ -154,7 +154,7 @@ class messageHandler {
             }
         } catch(error) {
             console.log(`deleteRaid: ${error}`);
-            msg.reply(`something bad happened :(`);
+            msg.reply("something bad happened :(");
         }
     }
 
@@ -170,24 +170,24 @@ class messageHandler {
                     const option = msg.content.split(" ")[2];
                     const value = msg.content.split(" ")[3];
                     switch(option) {
-                        case "day":
-                            this.raids[i].day = value;
-                            break;
-                        case "date":
-                            this.raids[i].date = value;
-                            break;
-                        case "start":
-                            this.raids[i].start = value;
-                            break;
-                        case "end":
-                            this.raids[i].end = value;
-                            break;
-                        case "invite":
-                            this.raids[i].invite = value;
-                            break;
-                        default:
-                            msg.reply(`'${option}' is not a property which can be updated!`);
-                            return;
+                    case "day":
+                        this.raids[i].day = value;
+                        break;
+                    case "date":
+                        this.raids[i].date = value;
+                        break;
+                    case "start":
+                        this.raids[i].start = value;
+                        break;
+                    case "end":
+                        this.raids[i].end = value;
+                        break;
+                    case "invite":
+                        this.raids[i].invite = value;
+                        break;
+                    default:
+                        msg.reply(`'${option}' is not a property which can be updated!`);
+                        return;
                     }
                     this.updatePrintedRaid(this.raids[i]);
                     msg.reply(`Raid ${this.raids[i].name} on ${this.raids[i].date} is updated!`);
@@ -207,9 +207,9 @@ class messageHandler {
 
             if(raidInstance.messageID !== "") {
                 var embed = new Discord.RichEmbed()
-                        .addField(raidInstance.name, raidInstance.generateRaidOutput())
-                        .setColor(raidInstance.embedColor)
-                        .attachFile(raidInstance.img);
+                    .addField(raidInstance.name, raidInstance.generateRaidOutput())
+                    .setColor(raidInstance.embedColor)
+                    .attachFile(raidInstance.img);
                 channel.fetchMessage(raidInstance.messageID)
                     .then(message => message.edit({embed}))
                     .catch(error => console.log(`updatePrintedRaid/fetchMessage: ${error}`));
@@ -257,7 +257,7 @@ class messageHandler {
                 const raidID = parseInt(message[1]);
 
                 const raid = this.raids
-                    .filter(r => r.id === raidID)
+                    .filter(r => r.id === raidID);
                 if(raid.length === 0) {
                     msg.reply("Couldn't find the raid you wanted to get registered to!");
                 } else if(raid[0].registeredPlayer.find(p => p.id === newPlayer.id)) {
@@ -300,7 +300,7 @@ class messageHandler {
             const playerID = msg.author.id;
 
             const raid = this.raids
-                .filter(r => r.id === raidID)
+                .filter(r => r.id === raidID);
             if(raid.length === 0) {
                 msg.reply("Couldn't find the raid you wanted to get deregistered from!");
             } else if(raid[0].registeredPlayer.find(p => p.id === playerID)) {
@@ -440,112 +440,112 @@ class messageHandler {
     }
 
     help(isOffi) {
-        var string = "usage:\n\n"
+        var string = "usage:\n\n";
         string = `${string}help - show this message${
-                N}${
-                N}1. Create your Character: (You have to do this once for every raiding charakter.)${
-                N}   create <name@shard> <class> <roles> <shortName>${
-                N}   e.g.: 'create Paxie@Brutwacht Kleriker Tank,DD,Heal,Support Pax'${
-                N}${
-                N}2. Register your character for incoming raid:${
-                N}   register <raidID> <shortName>${
-                N}   e.g. 'register 1001 Pax'${
-                N}${
-                N}3. Deregister your character for incoming raid:${
-                N}   deregister${
-                N}   e.g. 'deregister 1003'`;
+            N}${
+            N}1. Create your Character: (You have to do this once for every raiding charakter.)${
+            N}   create <name@shard> <class> <roles> <shortName>${
+            N}   e.g.: 'create Paxie@Brutwacht Kleriker Tank,DD,Heal,Support Pax'${
+            N}${
+            N}2. Register your character for incoming raid:${
+            N}   register <raidID> <shortName>${
+            N}   e.g. 'register 1001 Pax'${
+            N}${
+            N}3. Deregister your character for incoming raid:${
+            N}   deregister${
+            N}   e.g. 'deregister 1003'`;
 
         if (isOffi) {
             string = `${string}${
-                    N}${
-                    N}Admin Settings:${
-                    N}${
-                    N}Create a new raid instance:${
-                    N}addRaid <irotp / td> <day> <date>${
-                    N}e.g. 'addRaid td Wednesday 01.01.1970'${
-                    N}${
-                    N}updates an existing raid instance: (one property per command)${
-                    N}updateRaid <raidID> <day / date / start / end / invite> <data>${
-                    N}e.g. 'updateRaid 1000 start 18:00'${
-                    N}${
-                    N}deletes a raid instance:${
-                    N}deleteRaid <raidID>${
-                    N}e.g. 'deleteRaid 1000'${
-                    N}${
-                    N}confirm players for raid:${
-                    N}confirm <raidID> <number of player in registered list> <2nd player> <3rd player> ...${
-                    N}e.g. 'confirm 1000 8 4 12'${
-                    N}${
-                    N}Delete all messages in raid planner channel and print all active raids again:${
-                    N}printRaids${
-                    N}${
-                    N}Deletes all messages in raid planner channel${
-                    N}clearRaidChannel`;
+                N}${
+                N}Admin Settings:${
+                N}${
+                N}Create a new raid instance:${
+                N}addRaid <irotp / td> <day> <date>${
+                N}e.g. 'addRaid td Wednesday 01.01.1970'${
+                N}${
+                N}updates an existing raid instance: (one property per command)${
+                N}updateRaid <raidID> <day / date / start / end / invite> <data>${
+                N}e.g. 'updateRaid 1000 start 18:00'${
+                N}${
+                N}deletes a raid instance:${
+                N}deleteRaid <raidID>${
+                N}e.g. 'deleteRaid 1000'${
+                N}${
+                N}confirm players for raid:${
+                N}confirm <raidID> <number of player in registered list> <2nd player> <3rd player> ...${
+                N}e.g. 'confirm 1000 8 4 12'${
+                N}${
+                N}Delete all messages in raid planner channel and print all active raids again:${
+                N}printRaids${
+                N}${
+                N}Deletes all messages in raid planner channel${
+                N}clearRaidChannel`;
         }
         return string;
     }
 
     memberCommand(msg) {
-         var command = msg.content.split(" ")[0];
+        var command = msg.content.split(" ")[0];
         switch(command) {
-            case "register":
-                this.register(msg);
-                break;
-            case "deregister":
-                this.deregister(msg);
-                break;
-            case "help":
-                msg.reply(this.help(true))
-                    .catch(error => console.log(`help: ${error}`));
-                break;
-            case "create":
-                this.newCharacter(msg);
-                break;
-            default:
-                msg.reply(`unknown command!Use 'help' for info!`)
-                    .catch(error => console.log(`help: ${error}`));
-                break;
+        case "register":
+            this.register(msg);
+            break;
+        case "deregister":
+            this.deregister(msg);
+            break;
+        case "help":
+            msg.reply(this.help(true))
+                .catch(error => console.log(`help: ${error}`));
+            break;
+        case "create":
+            this.newCharacter(msg);
+            break;
+        default:
+            msg.reply("unknown command!Use 'help' for info!")
+                .catch(error => console.log(`help: ${error}`));
+            break;
         }
     }
 
     offiCommand(msg) {
         var command = msg.content.split(" ")[0];
         switch(command) {
-            case "addRaid":
-                this.addRaid(msg);
-                break;
-            case "clearRaidChannel":
-                this.clearChannel();
-                break;
-            case "printRaids":
-                this.printRaids(msg);
-                break;
-            case "register":
-                this.register(msg);
-				break;
-			case "deregister":
-                this.deregister(msg);
-                break;
-            case "help":
-                msg.reply(this.help(true))
-                    .catch(error => console.log(`help: ${error}`));
-                break;
-            case "deleteRaid":
-                this.deleteRaid(msg);
-                break;
-            case "updateRaid":
-                this.updateRaid(msg);
-                break;
-            case "create":
-                this.newCharacter(msg);
-                break;
-            case "confirm":
-                this.confirmRegisteredEventMemberForEvent(msg);
-                break;
-            default:
-                msg.reply(`unknown command!Use 'help' for info!`)
-                    .catch(error => console.log(`help: ${error}`));
-                break;
+        case "addRaid":
+            this.addRaid(msg);
+            break;
+        case "clearRaidChannel":
+            this.clearChannel();
+            break;
+        case "printRaids":
+            this.printRaids(msg);
+            break;
+        case "register":
+            this.register(msg);
+            break;
+        case "deregister":
+            this.deregister(msg);
+            break;
+        case "help":
+            msg.reply(this.help(true))
+                .catch(error => console.log(`help: ${error}`));
+            break;
+        case "deleteRaid":
+            this.deleteRaid(msg);
+            break;
+        case "updateRaid":
+            this.updateRaid(msg);
+            break;
+        case "create":
+            this.newCharacter(msg);
+            break;
+        case "confirm":
+            this.confirmRegi7steredEventMemberForEvent(msg);
+            break;
+        default:
+            msg.reply("unknown command!Use 'help' for info!")
+                .catch(error => console.log(`help: ${error}`));
+            break;
         }
     }
 }

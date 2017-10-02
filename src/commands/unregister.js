@@ -1,7 +1,7 @@
 exports.run = (bot, msg) => {
-    msg.reply("Couldn't unregister from raid");
+    msg.reply('Couldn\'t unregister from raid');
 };
-  
+
 exports.conf = {
     enabled: true,
     guildOnly: false,
@@ -10,7 +10,7 @@ exports.conf = {
 };
 
 exports.help = {
-    name: "unregister",
-    description: "Unregister from raid. What did you expect?",
-    usage: "unregister <raidID>"
+    name: 'unregister',
+    description: 'Unregister from raid. What did you expect?',
+    usage: 'unregister <raidID>'
 };
