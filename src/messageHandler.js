@@ -291,7 +291,7 @@ class messageHandler {
     deregister(msg) {
         try {
             const message = msg.content.split(" ");
-            if(message.length != 3) {
+            if(message.length != 2) {
                 msg.reply("Invalid number of Arguments! Please verify your input!");
                 return;
             }
@@ -495,14 +495,14 @@ class messageHandler {
                 this.deregister(msg);
                 break;
             case "help":
-                msg.reply(this.help(true))
+                msg.reply(this.help(false))
                     .catch(error => console.log(`help: ${error}`));
                 break;
             case "create":
                 this.newCharacter(msg);
                 break;
             default:
-                msg.reply(`unknown command!Use 'help' for info!`)
+                msg.reply(`unknown command! Use 'help' for info!`)
                     .catch(error => console.log(`help: ${error}`));
                 break;
         }
