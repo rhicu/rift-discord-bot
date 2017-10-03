@@ -420,6 +420,7 @@ class messageHandler {
             let playerNumbersToConfirm = message;
             playerNumbersToConfirm.splice(0, 2);
             let numberOfSuccessfulConfirmations = 0;
+            let playerToDeregister = [];
 
             if(!raid) {
                 msg.reply("Couldn't find raid! Please check your input!");
@@ -428,11 +429,15 @@ class messageHandler {
                     const index = parseInt(number) - 1;
                     if(index < raid.registeredPlayer.length) {
                         const player = raid.registeredPlayer[index];
-                        raid.registeredPlayer.splice(index, 1);
                         raid.confirmedPlayer.push(player);
+                        playerToDeregister.push(player);
                         numberOfSuccessfulConfirmations++;
                         this.databaseConfirm(raidID, player);
                     }
+                });
+                playerToDeregister.forEach(player => {
+                    const index = raid.registeredPlayer.findIndex(p => {p === player});
+                    raid.registeredPlayer.splice(index, 1);
                 });
                 this.updatePrintedRaid(raid);
                 msg.reply(`Confirmed ${numberOfSuccessfulConfirmations} player(s) for raid '${raid.name}' with ID '${raid.id}'`);
