@@ -10,6 +10,7 @@ let messageHandler;
 
 bot.on('ready', () => {
     console.log(`Logged in as ${bot.user.tag}!`);
+    messageHandler = new messagehandler(bot);
 });
 
 bot.on('message', msg => {
@@ -33,6 +34,3 @@ bot.on('message', msg => {
 });
 
 bot.login(`${privateConfig.token}`)
-    .then(() => {
-        messageHandler = new messagehandler(bot);
-    });
