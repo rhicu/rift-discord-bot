@@ -296,7 +296,7 @@ class messageHandler {
                 return;
             }
 
-            const raidID = message[1];
+            const raidID = parseInt(message[1]);
             const playerID = msg.author.id;
 
             const raid = this.raids
