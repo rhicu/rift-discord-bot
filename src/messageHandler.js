@@ -1,7 +1,6 @@
 "use strict";
 
 const Discord = require("discord.js");
-const db = require("sqlite");
 const config = require("./config.json");
 const raid = require("./raid");
 const player = require("./player");
@@ -11,16 +10,16 @@ const N = "\n";
 const communicationPrefix = config.communicationPrefix;
 
 class messageHandler {
-    constructor(bot) {
+    constructor(bot, db) {
         this.raids = [];
         this.bot = bot;
+        this.db = db;
         (async() => {
             try {
-                await db.open(`${config.dbPath}riftDiscordBot.sqlite`);
-                const rowsOfRaids = await db.all(`SELECT * FROM raids`)
+                const rowsOfRaids = await this.db.all(`SELECT * FROM raids`)
                     .catch((error) => {
                         console.log(error);
-                        db.run("CREATE TABLE IF NOT EXISTS raids (raidID Integer, name TEXT, type TEXT, day TEXT, date TEXT)");
+                        this.db.run("CREATE TABLE IF NOT EXISTS raids (raidID Integer, name TEXT, type TEXT, day TEXT, date TEXT)");
                     });
                 if (rowsOfRaids && rowsOfRaids.length !== 0) {
                     for (const raidInstance of rowsOfRaids) {
@@ -30,11 +29,11 @@ class messageHandler {
                         newRaid.day = raidInstance.day;
                         this.raids.push(newRaid);
 
-                        //add all registered players from db to runtime objects
-                        const rowsOfRegisteredPlayer = await db.all(`Select * FROM registered WHERE raidID = ${raidInstance.raidID}`)
+                        //add all registered players from this.db to runtime objects
+                        const rowsOfRegisteredPlayer = await this.db.all(`Select * FROM registered WHERE raidID = ${raidInstance.raidID}`)
                             .catch((error) => {
                                 console.log(error);
-                                db.run("CREATE TABLE IF NOT EXISTS registered (raidID INTEGER, userID TEXT, shortName TEXT)");
+                                this.db.run("CREATE TABLE IF NOT EXISTS registered (raidID INTEGER, userID TEXT, shortName TEXT)");
                             });
                         if(rowsOfRegisteredPlayer && rowsOfRegisteredPlayer.length !== 0) {
                             for (const player of rowsOfRegisteredPlayer) {
@@ -43,11 +42,11 @@ class messageHandler {
                             }
                         }
 
-                        //add all confirmed players form db to runtime objects
-                        const rowsOfConfirmedPlayer = await db.all(`Select * FROM confirmed WHERE raidID = ${raidInstance.raidID}`)
+                        //add all confirmed players form this.db to runtime objects
+                        const rowsOfConfirmedPlayer = await this.db.all(`Select * FROM confirmed WHERE raidID = ${raidInstance.raidID}`)
                             .catch((error) => {
                                 console.log(error);
-                                db.run("CREATE TABLE IF NOT EXISTS confirmed (raidID INTEGER, userID TEXT, shortName TEXT)");
+                                this.db.run("CREATE TABLE IF NOT EXISTS confirmed (raidID INTEGER, userID TEXT, shortName TEXT)");
                             });
                         if(rowsOfConfirmedPlayer && rowsOfConfirmedPlayer.length !== 0) {
                             for (const player of rowsOfConfirmedPlayer) {
@@ -58,14 +57,14 @@ class messageHandler {
                     }
                 }
                 this.actualRaidID = 1000;
-                await db.get(`SELECT * FROM data WHERE name = "actualRaidID"`)
+                await this.db.get(`SELECT * FROM data WHERE name = "actualRaidID"`)
                     .then((row) => {
                         this.actualRaidID = row.intValue;
                     })
                     .catch((error) => {
                         console.log(error);
-                        db.run("CREATE TABLE IF NOT EXISTS data (name TEXT, intValue INTEGER, stringValue TEXT)").then(() => {
-                            db.run("INSERT INTO data (name, intValue, stringValue) VALUES (?, ?, ?)", ["actualRaidID", 1000, ""]);
+                        this.db.run("CREATE TABLE IF NOT EXISTS data (name TEXT, intValue INTEGER, stringValue TEXT)").then(() => {
+                            this.db.run("INSERT INTO data (name, intValue, stringValue) VALUES (?, ?, ?)", ["actualRaidID", 1000, ""]);
                         });
                     });
                 this.printRaids();
@@ -104,14 +103,14 @@ class messageHandler {
                 this.raids.push(newRaid);
                 this.actualRaidID++;
                 (async() => {
-                    await db.run("INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)", [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date])
+                    await this.db.run("INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)", [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date])
                         .catch((error) => {
                             console.log(error);
-                            db.run("CREATE TABLE IF NOT EXISTS raids (raidID INTEGER, name TEXT, type TEXT, day TEXT, date TEXT)").then(() => {
-                                db.run("INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)", [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date]);
+                            this.db.run("CREATE TABLE IF NOT EXISTS raids (raidID INTEGER, name TEXT, type TEXT, day TEXT, date TEXT)").then(() => {
+                                this.db.run("INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)", [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date]);
                             });
                         });
-                    await db.run(`UPDATE data SET intValue = ${this.actualRaidID} WHERE name = "actualRaidID"`)
+                    await this.db.run(`UPDATE data SET intValue = ${this.actualRaidID} WHERE name = "actualRaidID"`)
                 })();
                 msg.reply(`raid "${newRaid.name}" added`);
                 this.printRaids();
@@ -147,9 +146,9 @@ class messageHandler {
                         .catch(error => console.log(`deleteRaid: ${error}`));
                 }
                 this.raids.splice(index, 1);
-                db.run(`DELETE FROM raids WHERE raidID = ${raid.id}`);
-                db.run(`DELETE FROM registered WHERE raidID = ${raid.id}`);
-                db.run(`DELETE FROM confirmed WHERE raidID = ${raid.id}`);
+                this.db.run(`DELETE FROM raids WHERE raidID = ${raid.id}`);
+                this.db.run(`DELETE FROM registered WHERE raidID = ${raid.id}`);
+                this.db.run(`DELETE FROM confirmed WHERE raidID = ${raid.id}`);
                 msg.reply(`You successfully deleted raid ${raid.name} on ${raid.day}!`);
             }
         } catch(error) {
@@ -225,7 +224,7 @@ class messageHandler {
     }
 
     createPlayerFromDatabase(playerID, shortName) {
-        return db.all(`SELECT * FROM characters WHERE userID = "${playerID}"`)
+        return this.db.all(`SELECT * FROM characters WHERE userID = "${playerID}"`)
             .then(rows => {
                 if (!rows) {
                     return null;
@@ -268,16 +267,16 @@ class messageHandler {
                 } else if(raid[0].confirmedPlayer.find(p => p.id === newPlayer.id)) {
                     msg.reply("You are already confirmed for this raid!");
                 } else {
-                    db.get(`Select * FROM registered WHERE raidID = ${raid[0].id} AND userID = "${newPlayer.id}"`)
+                    this.db.get(`Select * FROM registered WHERE raidID = ${raid[0].id} AND userID = "${newPlayer.id}"`)
                         .then(row => {
                             if(!row) {
-                                db.run("INSERT INTO registered (raidID, userID, shortName) VALUES (?, ?, ?)", [raid[0].id, newPlayer.id, newPlayer.shortName]);
+                                this.db.run("INSERT INTO registered (raidID, userID, shortName) VALUES (?, ?, ?)", [raid[0].id, newPlayer.id, newPlayer.shortName]);
                             }
                         })
                         .catch((error) => {
                             console.log(error);
-                            db.run("CREATE TABLE IF NOT EXISTS registered (raidID INTEGER, userID TEXT, shortName TEXT)").then(() => {
-                                db.run("INSERT INTO registered (raidID, userID, shortName) VALUES (?, ?, ?)", [raid[0].id, newPlayer.id, newPlayer.shortName]);
+                            this.db.run("CREATE TABLE IF NOT EXISTS registered (raidID INTEGER, userID TEXT, shortName TEXT)").then(() => {
+                                this.db.run("INSERT INTO registered (raidID, userID, shortName) VALUES (?, ?, ?)", [raid[0].id, newPlayer.id, newPlayer.shortName]);
                             });
                         });
                     raid[0].registeredPlayer.push(newPlayer);
@@ -307,7 +306,7 @@ class messageHandler {
             if(raid.length === 0) {
                 msg.reply("Couldn't find the raid you wanted to get deregistered from!");
             } else if(raid[0].registeredPlayer.find(p => p.id === playerID)) {
-                db.run(`DELETE FROM registered WHERE raidID = "${raid[0].id}" AND userID = "${playerID}"`);
+                this.db.run(`DELETE FROM registered WHERE raidID = "${raid[0].id}" AND userID = "${playerID}"`);
                 const index = raid[0].registeredPlayer.findIndex(p => p.id === playerID);
                 raid[0].registeredPlayer.splice(index, 1);
                 this.updatePrintedRaid(raid[0]);
@@ -365,18 +364,18 @@ class messageHandler {
         }
 
         try {
-            db.get(`SELECT * FROM characters WHERE name = "${message[1]}"`).then(row => {
+            this.db.get(`SELECT * FROM characters WHERE name = "${message[1]}"`).then(row => {
                 if (!row) {
-                    db.run("INSERT INTO characters (name, userID, riftClass, roles, shortName) VALUES (?, ?, ?, ?, ?)", [message[1], msg.author.id, message [2], message[3], message[4]])
+                    this.db.run("INSERT INTO characters (name, userID, riftClass, roles, shortName) VALUES (?, ?, ?, ?, ?)", [message[1], msg.author.id, message [2], message[3], message[4]])
                         .then(() => msg.reply("Character created"));
                 } else {
-                    db.run(`UPDATE characters SET riftClass = "${message[2]}", roles = "${message[3]}", shortName = "${message[4]}" WHERE name = "${message[1]}"`)
+                    this.db.run(`UPDATE characters SET riftClass = "${message[2]}", roles = "${message[3]}", shortName = "${message[4]}" WHERE name = "${message[1]}"`)
                         .then(() => msg.reply("Character updated"));
                 }
             }).catch(error => {
-                console.log(`newCharacter/ get player from db: ${error}`);
-                db.run("CREATE TABLE IF NOT EXISTS characters (name TEXT, userID TEXT, riftClass TEXT, roles TEXT, shortName TEXT)").then(() => {
-                    db.run("INSERT INTO characters (name, userID, riftClass, roles, shortName) VALUES (?, ?, ?, ?, ?)", [message[1], msg.author.id, message [2], message[3], message[4]])
+                console.log(`newCharacter/ get player from this.db: ${error}`);
+                this.db.run("CREATE TABLE IF NOT EXISTS characters (name TEXT, userID TEXT, riftClass TEXT, roles TEXT, shortName TEXT)").then(() => {
+                    this.db.run("INSERT INTO characters (name, userID, riftClass, roles, shortName) VALUES (?, ?, ?, ?, ?)", [message[1], msg.author.id, message [2], message[3], message[4]])
                         .then(() => msg.reply("Character created"));
                 });
             });
@@ -389,21 +388,21 @@ class messageHandler {
 
     databaseConfirm(raidID, player) {
         this.databaseDeregister(raidID, player);
-        db.run("INSERT INTO confirmed (raidID, userID, shortName) VALUES (?, ?, ?)", [raidID, player.id, player.shortName])
+        this.db.run("INSERT INTO confirmed (raidID, userID, shortName) VALUES (?, ?, ?)", [raidID, player.id, player.shortName])
             .catch(error => {
                 console.log(`databaseConfirm: ${error}`);
-                db.run("CREATE TABLE IF NOT EXISTS confirmed (raidID INTEGER, userID TEXT, shortName TEXT)")
+                this.db.run("CREATE TABLE IF NOT EXISTS confirmed (raidID INTEGER, userID TEXT, shortName TEXT)")
                     .then(() => {
-                        db.run("INSERT INTO confirmed (raidID, userID, shortName) VALUES (?, ?, ?)", [raidID, player.id, player.shortName]);
+                        this.db.run("INSERT INTO confirmed (raidID, userID, shortName) VALUES (?, ?, ?)", [raidID, player.id, player.shortName]);
                     });
             });
     }
 
     databaseDeregister(raidID, player) {
-        db.run(`DELETE FROM registered WHERE raidID = ${raidID} AND userID = "${player.id}"`)
+        this.db.run(`DELETE FROM registered WHERE raidID = ${raidID} AND userID = "${player.id}"`)
             .catch(error => {
                 console.log(`databaseDeregister: ${error}`);
-                db.run("CREATE TABLE IF NOT EXISTS registered (raidID INTEGER, userID TEXT, shortName TEXT)");
+                this.db.run("CREATE TABLE IF NOT EXISTS registered (raidID INTEGER, userID TEXT, shortName TEXT)");
             });
     }
 

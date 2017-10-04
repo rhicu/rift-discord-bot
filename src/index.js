@@ -10,7 +10,7 @@ let messageHandler;
 
 bot.on('ready', () => {
     console.log(`Logged in as ${bot.user.tag}!`);
-    messageHandler = new messagehandler(bot);
+    messageHandler = new messagehandler(bot, db);
 });
 
 bot.on('message', msg => {
@@ -33,4 +33,9 @@ bot.on('message', msg => {
     if(!msg.content.startsWith(prefix) || msg.author.bot) return;
 });
 
-bot.login(`${privateConfig.token}`)
+db.open(`${config.dbPath}riftDiscordBot.sqlite`)
+    .then(() => {
+        bot.login(`${privateConfig.token}`)
+    }).catch((error) => {
+        console.log(`open database: ${error}`)
+    })
