@@ -18,6 +18,7 @@ class raid {
                 this.config = config.raids.td;
                 return;
         }
+
         this.type = type;
         this.day = "";
         this.date = "";
@@ -32,6 +33,7 @@ class raid {
         this.confirmedPlayer = [];
         this.messageID = "";
         this.id = 0;
+        this.raidlead = "any offi";
     }
 
     isValid() {
@@ -41,6 +43,7 @@ class raid {
     generateRaidOutput() {
         const plannedRaids = `${this.name} - ${this.day}, ${this.date}${
                             N}AnmeldeID: ${this.id}${N}${
+                            N}Raidlead: ${this.raidlead}${N}${
                             N}Raidinvite: ${this.invite}${
                             N}Raidstart: ${this.start} - Raidende : ${this.end}${
                             N}${

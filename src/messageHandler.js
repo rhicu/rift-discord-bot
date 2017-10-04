@@ -185,6 +185,9 @@ class messageHandler {
                         case "invite":
                             this.raids[i].invite = value;
                             break;
+                        case "raidlead":
+                            this.raids[i].raidlead = value;
+                            break;
                         default:
                             msg.reply(`'${option}' is not a property which can be updated!`);
                             return;
@@ -291,12 +294,12 @@ class messageHandler {
     deregister(msg) {
         try {
             const message = msg.content.split(" ");
-            if(message.length != 3) {
+            if(message.length != 2) {
                 msg.reply("Invalid number of Arguments! Please verify your input!");
                 return;
             }
 
-            const raidID = message[1];
+            const raidID = parseInt(message[1]);
             const playerID = msg.author.id;
 
             const raid = this.raids
@@ -417,6 +420,7 @@ class messageHandler {
             let playerNumbersToConfirm = message;
             playerNumbersToConfirm.splice(0, 2);
             let numberOfSuccessfulConfirmations = 0;
+            let playerToDeregister = [];
 
             if(!raid) {
                 msg.reply("Couldn't find raid! Please check your input!");
@@ -425,11 +429,15 @@ class messageHandler {
                     const index = parseInt(number) - 1;
                     if(index < raid.registeredPlayer.length) {
                         const player = raid.registeredPlayer[index];
-                        raid.registeredPlayer.splice(index, 1);
                         raid.confirmedPlayer.push(player);
+                        playerToDeregister.push(player);
                         numberOfSuccessfulConfirmations++;
                         this.databaseConfirm(raidID, player);
                     }
+                });
+                playerToDeregister.forEach(player => {
+                    const index = raid.registeredPlayer.findIndex(p => {p === player});
+                    raid.registeredPlayer.splice(index, 1);
                 });
                 this.updatePrintedRaid(raid);
                 msg.reply(`Confirmed ${numberOfSuccessfulConfirmations} player(s) for raid '${raid.name}' with ID '${raid.id}'`);
@@ -452,7 +460,7 @@ class messageHandler {
                 N}   e.g. 'register 1001 Pax'${
                 N}${
                 N}3. Deregister your character for incoming raid:${
-                N}   deregister${
+                N}   deregister <raidID>${
                 N}   e.g. 'deregister 1003'`;
 
         if (isOffi) {
@@ -465,7 +473,7 @@ class messageHandler {
                     N}e.g. 'addRaid td Wednesday 01.01.1970'${
                     N}${
                     N}updates an existing raid instance: (one property per command)${
-                    N}updateRaid <raidID> <day / date / start / end / invite> <data>${
+                    N}updateRaid <raidID> <day / date / start / end / invite / raidlead> <data>${
                     N}e.g. 'updateRaid 1000 start 18:00'${
                     N}${
                     N}deletes a raid instance:${
@@ -485,6 +493,24 @@ class messageHandler {
         return string;
     }
 
+    hilfe(isOffi) {
+        var string = "Benutzung:\n\n"
+        string = `${string}hilfe - zeigt Dir diese Hilfe an${
+                N}${
+                N}1. Erstelle deinen Charakter (Dies musst du nur EINMAL machen.)${
+                N}   create <Name@Server> <Klasse> <Rollen> <Dein Kürzel>${
+                N}   z.B.: 'create Paxie@Brutwacht Kleriker Tank,DD,Heal,Support Pax'${
+                N}${
+                N}2. Melde Dich für kommende Raids an:${
+                N}   register <raidID> <DeinKürzel>${
+                N}   z.B. 'register 1001 Pax'${
+                N}${
+                N}3. Abmelden von einem Raid:${
+                N}   deregister <raidID>${
+                N}   z.B.: 'deregister 1003'`;
+        return string;
+    }
+
     memberCommand(msg) {
          var command = msg.content.split(" ")[0];
         switch(command) {
@@ -495,14 +521,19 @@ class messageHandler {
                 this.deregister(msg);
                 break;
             case "help":
-                msg.reply(this.help(true))
+                msg.reply(this.help(false))
                     .catch(error => console.log(`help: ${error}`));
+                break;
+            case "hilfe":
+                msg.reply(this.hilfe(false))
+                    .catch(error => console.log(`hilfe: ${error}`));
                 break;
             case "create":
                 this.newCharacter(msg);
                 break;
             default:
-                msg.reply(`unknown command!Use 'help' for info!`)
+                msg.reply(`Unknown command! / Unbekannter Befehl${
+                        N}Use 'help' for info! / Nutze 'hilfe' für Informationen`)
                     .catch(error => console.log(`help: ${error}`));
                 break;
         }
@@ -530,6 +561,10 @@ class messageHandler {
                 msg.reply(this.help(true))
                     .catch(error => console.log(`help: ${error}`));
                 break;
+            case "hilfe":
+                msg.reply(this.hilfe(true))
+                    .catch(error => console.log(`hilfe: ${error}`));
+                break;
             case "deleteRaid":
                 this.deleteRaid(msg);
                 break;
@@ -543,7 +578,8 @@ class messageHandler {
                 this.confirmRegisteredEventMemberForEvent(msg);
                 break;
             default:
-                msg.reply(`unknown command!Use 'help' for info!`)
+                msg.reply(`Unknown command! / Unbekannter Befehl${
+                        N}Use 'help' for info! / Nutze 'hilfe' für Informationen`)
                     .catch(error => console.log(`help: ${error}`));
                 break;
         }
