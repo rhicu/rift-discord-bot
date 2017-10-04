@@ -2,7 +2,7 @@
 
 const Discord = require("discord.js");
 const config = require("./config.json");
-const raid = require("./raid");
+const raid = require("./raid/raid");
 const player = require("./player");
 const util = require("./util");
 const N = "\n";

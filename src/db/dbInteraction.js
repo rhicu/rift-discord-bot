@@ -1,7 +1,6 @@
 "use strict";
  
 const player = require("./player");
-const db = require("sqlite");
 
 function createPlayerFormDataBase(string) {
     const message = string.split(" ");
