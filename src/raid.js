@@ -14,6 +14,9 @@ class raid {
             case "td":
                 this.config = config.raids.td;
                 break;
+            case "bos":
+                this.config = config.raids.bos;
+                break;
             default:
                 this.config = config.raids.td;
                 return;

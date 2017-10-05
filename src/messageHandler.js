@@ -91,6 +91,9 @@ class messageHandler {
                 case "td":
                     type = "td";
                     break;
+                case "bos":
+                    type = "bos";
+                    break;
                 default:
                     msg.reply("unknown raid, use 'irotp' or 'td'");
                     return;
