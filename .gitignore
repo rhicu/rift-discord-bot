@@ -42,5 +42,6 @@ Thumbs.db
 privateConfig.json
 config.json
 node_modules/
+coverage/
 package.json
 package-lock.json
