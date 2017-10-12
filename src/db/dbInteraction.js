@@ -1,28 +1,29 @@
-"use strict";
- 
-const player = require("./player");
+/** */
+class Database {
 
-function createPlayerFormDataBase(string) {
-    const message = string.split(" ");
-    (async() => {
-        try {
-            await db.open(`${config.dbPath}riftCharacter.sqlite`);
-            await db.get(`SELECT * FROM characters WHERE userID ="${msg.author.id}"`).then(row => {
-                    if (!row) {
-                        return msg.reply("(1) No characters created yet! Please use 'create <name+shard> <class> <roles>' first!");
-                    } else {
-                        const newPlayer = new player(row.id , row.name, row.riftClass, row.roles);
-                    }
-                }).catch(() => {
-                    console.error;
-                    msg.reply("(2) No characters created yet! Please use 'create <name+shard> <class> <roles>' first!");
-                });
-            await db.close();
-            return new player(id , ingameName, riftClass, roles);
-        } catch(error) {
-            console.log(`newCharacter: ${error}`);
-            msg.reply("Unable to handle database");
-            return;
-        };
-    })();
+    /** */
+    constructor() {}
+
+    /**
+     * 
+     * @param {sqlite} db
+     * @param {String} id
+     * @param {String} shortName
+     * 
+     * @return {Object}
+     */
+    static getPlayerFormDataBase(db, id, shortName) {
+        return db.get(`SELECT * FROM characters WHERE userID ="${id}" AND shortName = "${shortName}"`).then((row) => {
+            if (!row) {
+                return null
+            } else {
+                return row
+            }
+        }).catch(() => {
+            console.error
+            return null
+        })
+    }
 }
+
+module.exports = Database

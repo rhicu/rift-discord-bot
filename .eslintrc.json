@@ -1,0 +1,50 @@
+{
+    "env": {
+        "es6": true,
+        "node": true
+    },
+
+    "extends": "google",
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 8,
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+         }
+    },
+
+    "rules": {
+        "semi": ["error", "never"],
+        "semi-style": ["error", "last"],
+        "max-len": ["error", 220],
+        "eol-last": "error",
+        "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1 }],
+        "no-console": 0,
+        "no-undef": 2,
+        "no-debugger": 2,
+        "camelcase": 2,
+        "linebreak-style": 0,
+        "func-call-spacing": 0,
+        "keyword-spacing": 0,
+        "curly": 0,
+        "padded-blocks": "off",
+        "comma-dangle": ["error", "never"],
+        "indent": ["error", 4, { "SwitchCase": 1 }]
+    },
+
+    "globals": {
+      "describe": true,
+      "beforeEach": true,
+      "beforeAll": true,
+      "test": true,
+      "expect": true,
+      "document": true,
+      "window": true,
+      "jest": true,
+      "Event": true,
+      "Promise": true,
+      "require": true,
+      "Map": true,
+      "history": true
+    }
+}

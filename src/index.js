@@ -1,41 +1,48 @@
-const Discord = require("discord.js");
-const config = require("./config.json");
-const privateConfig = require("./privateConfig.json");
-const messagehandler = require("./messageHandler");
-const db = require("sqlite");
+const Discord = require('discord.js')
+const config = require('./config.json')
+const privateConfig = require('./privateConfig.json')
+const Messagehandler = require('./messageHandler')
+const db = require('sqlite')
+const newDB = require('sqlite')
 
-const bot = new Discord.Client();
-const prefix = config.prefix;
-let messageHandler;
+const bot = new Discord.Client()
+const prefix = config.prefix
+let messageHandler
 
 bot.on('ready', () => {
-    console.log(`Logged in as ${bot.user.tag}!`);
-    messageHandler = new messagehandler(bot, db);
-});
+    console.log(`Logged in as ${bot.user.tag}!`)
+    messageHandler = new Messagehandler(bot, db, newDB)
+})
 
-bot.on('message', msg => {
-    if(msg.content.startsWith(config.communicationPrefix)) return;
+bot.on('message', (msg) => {
+    if(msg.content.startsWith(config.communicationPrefix)) return
 
     if(msg.channel.type === 'dm' && !msg.author.bot) {
-        guildMember = bot.guilds.find("id", config.serverID).member(msg.author);
+        const guildMember = bot.guilds.find('id', config.serverID).member(msg.author)
         if (guildMember) {
             if(guildMember.roles.has(config.roles.offi)) {
-                messageHandler.offiCommand(msg);
+                messageHandler.offiCommand(msg)
             // quickfix for guest users
-            //} else if(guildMember.roles.has(config.roles.member)) {
-            //    messageHandler.memberCommand(msg);
+            // } else if(guildMember.roles.has(config.roles.member)) {
+            //     messageHandler.memberCommand(msg)
             } else {
-                messageHandler.memberCommand(msg);
+                messageHandler.memberCommand(msg)
             }
         }
     }
 
-    if(!msg.content.startsWith(prefix) || msg.author.bot) return;
-});
+    if(!msg.content.startsWith(prefix) || msg.author.bot) return
+})
 
 db.open(`${config.dbPath}riftDiscordBot.sqlite`)
     .then(() => {
-        bot.login(`${privateConfig.token}`)
+        newDB.open(`${config.dbPath}newDatabase.sqlite`)
+            .then(() => {
+                bot.login(`${privateConfig.token}`)
+            }).catch((error) => {
+                console.log(`open new database: ${error}`)
+            })
     }).catch((error) => {
         console.log(`open database: ${error}`)
     })
+
