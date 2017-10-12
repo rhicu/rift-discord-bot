@@ -1,4 +1,4 @@
-const Raid = require('../../src/raid/raid')
+const Raid = require('../../src/raid/raidNew')
 const RaidFactory = require('../../src/raid/raidFactory')
 
 const factory = new RaidFactory()
