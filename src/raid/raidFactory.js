@@ -9,14 +9,13 @@ class RaidFactory {
 
     /**
      * 
-     * @param {string} input
-     * @param {String} raidLead
+     * @param {String} input
+     * @param {String} raidLeadName
      * 
      * @return {Raid}
      */
-    newRaid(input, raidLead) {
+    newRaid(args, raidLeadName) {
         try {
-            const args = input.split(' ')
             const type = this._getType(args[0])
             if(!type)
                 return null
@@ -33,9 +32,9 @@ class RaidFactory {
             if(!end)
                 return null
 
-            return new Raid(type, date, start, end, raidLead)
+            return new Raid(type, date, start, end, raidLeadName)
         } catch(error) {
-            console.log(`newRaid: ${error}`)
+            console.log(`newRaid: ${error.stack}`)
             return null
         }
     }
@@ -80,7 +79,7 @@ class RaidFactory {
      * @param {String} timeString 
      */
     _verifyTime(timeString) {
-
+        return timeString
     }
 }
 

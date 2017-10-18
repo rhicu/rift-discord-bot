@@ -1,7 +1,6 @@
 const util = require('../util')
-// const Player = require('../player')
-// const enums = require('../enums')
-// const config = require('../config.json')
+const Discord = require('discord.js')
+const config = require('../config.json')
 const N = '\n'
 
 /** */
@@ -13,16 +12,16 @@ class Raid {
      * @param {Date} date
      * @param {String} start
      * @param {String} end
-     * @param {String} raidLead
+     * @param {String} raidLeadName
      */
-    constructor(type, date, start, end, raidLead) {
+    constructor(type, date, start, end, raidLeadName) {
 
         this.type = type
         this.date = date.toDateString()
         this.start = start
         this.end = end
         this.invite = this._calculateInviteTime(start)
-        this.raidLead = raidLead
+        this.raidLead = raidLeadName
         this.id = 0
         this.prio = date.getTime()
         this.messageID = ''
@@ -31,42 +30,48 @@ class Raid {
     }
 
     /**
-     * 
-     * @return {Number}
-     */
-    get id() {
-        return this.id
-    }
-
-    /**
-     * 
-     * @param {Number} raidID
-     */
-    set id(raidID) {
-        this.id = raidID
-    }
-
-    /**
      * @return {String}
      */
     generateRaidOutput() {
-        const plannedRaids = `${this.name} - ${this.day}, ${this.date}${
+        return `${config.raids[this.type].name} - ${this.date}${
             N}AnmeldeID: ${this.id}${N}${
-            N}Raidlead: ${this.raidlead}${N}${
+            N}Raidlead: ${this.raidLead}${N}${
             N}Raidinvite: ${this.invite}${
             N}Raidstart: ${this.start} - Raidende : ${this.end}${
             N}${
-            N}Vorraussetzung:${
-            N}${util.multiLineStringFromArray(this.config.requirements)}${
-            N}Insgesamt verfügbare Plätze: ${this.config.numberPlayer}${
-            N}${
-            N}Benötigt: ${this.config.numberTank}x Tank, ${this.config.numberHeal}x Heal, ${this.config.numberSupport}x Supp, ${this.config.numberDD}x DD${
-            N}${
-            N}Angemeldet:${
-            N}${util.numberedMultiLineStringFromArray(this.registeredPlayer)}${
-            N}Bestätigt:${
-            N}${util.numberedMultiLineStringFromArray(this.confirmedPlayer)}`
-        return plannedRaids
+            N}Insgesamt verfügbare Plätze: ${config.raids[this.type].numberPlayer}${
+            N}Benötigt: ${config.raids[this.type].numberTank}x Tank, ${config.raids[this.type].numberHeal}x Heal, ${config.raids[this.type].numberSupport}x Supp, ${config.raids[this.type].numberDD}x DD`
+    }
+
+    generateEmbed() {
+        try {
+            let embed = new Discord.RichEmbed()
+                .attachFile(config.raids[this.type].imgPath)
+                .setTitle(config.raids[this.type].name)
+                .addField('Daten:', this.generateRaidOutput())
+                .addField('Vorraussetzungen:', this._checkForEmptyStrings(util.multiLineStringFromArray(config.raids[this.type].requirements)))
+                .addField('Angemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.registeredPlayer)))
+                .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.confirmedPlayer)))            
+                .setFooter('Registrierung via RiftDiscordBot')
+                .setColor(config.raids[this.type].embedColor)
+            return embed
+        } catch(error) {
+            console.log(`generateEmbed: ${error.stack}`)
+        }
+    }
+
+    /**
+     * 
+     * @param {String} input
+     * 
+     * @return {String}
+     */
+    _checkForEmptyStrings(input) {
+        if(input === '') {
+            return 'keine Einträge'
+        } else {
+            return input
+        }
     }
 
     /**

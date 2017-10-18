@@ -665,6 +665,9 @@ class MessageHandler {
             case 'confirm':
                 this.confirmRegisteredEventMemberForEvent(msg)
                 break
+            case 'newAddRaid':
+                this.newAddRaid(msg)
+                break
             default:
                 msg.reply(`Unknown command! / Unbekannter Befehl${
                     N}Use 'help' for info! / Nutze 'hilfe' für Informationen`)
@@ -679,28 +682,27 @@ class MessageHandler {
      */
     newAddRaid(msg) {
         const message = msg.content.split(' ')
-        if(message.length != 4) {
+        if(message.length != 5) {
             msg.reply('Invalid number of Arguments! Please verify your input!')
             return
         }
         try {
-            const newRaid = this.raidFactory.newRaid(message.splice(1))
+            message.splice(0, 1)
+            const newRaid = this.raidFactory.newRaid(message, 'icke')
 
-            if(newRaid.isValid()) {
+            if(newRaid) {
                 util.pushRaidToArraySortedByDate(this.raids, newRaid)
                 this.actualRaidID++;
-                (async () => {
-                    await this.db.run('INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)', [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date])
-                        .catch((error) => {
-                            console.log(error)
-                            this.db.run('CREATE TABLE IF NOT EXISTS raids (raidID INTEGER, name TEXT, type TEXT, day TEXT, date TEXT)').then(() => {
-                                this.db.run('INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)', [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date])
-                            })
+                this.db.run('INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)', [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date])
+                    .catch((error) => {
+                        console.log(`newAddRaid/db: ${error.stack}`)
+                        this.db.run('CREATE TABLE IF NOT EXISTS raids (raidID INTEGER, name TEXT, type TEXT, day TEXT, date TEXT)').then(() => {
+                            this.db.run('INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)', [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date])
                         })
-                    await this.db.run(`UPDATE data SET intValue = ${this.actualRaidID} WHERE name = "actualRaidID"`)
-                })()
+                    })
+                this.db.run(`UPDATE data SET intValue = ${this.actualRaidID} WHERE name = "actualRaidID"`)
                 msg.reply(`raid "${newRaid.name}" added`)
-                this.printRaids()
+                this.newPrintRaids()
             } else {
                 msg.reply(`Couldn't create raid because of missing data. Please try again!`)
             }
@@ -745,6 +747,27 @@ class MessageHandler {
         } catch(error) {
             console.log(`deleteRaid: ${error}`)
             msg.reply(`something bad happened :(`)
+        }
+    }
+
+    /**
+     * 
+     */
+    newPrintRaids() {
+        try {
+            const channel = this.bot.guilds.find('id', config.serverID).channels.find('id', config.raidPlannerChannelID)
+            this.clearChannel();
+
+            this.raids.forEach((raid) => {
+                let embed = raid.generateEmbed()
+                channel.send({embed})
+                    .then((message) => {
+                        raid.messageID = message.id
+                    })
+                    .catch((error) => console.log(`printRaids/sending message: ${error}`))
+            })
+        } catch(error) {
+            console.log(`newPrintRaids: ${error.stack}`)
         }
     }
 
