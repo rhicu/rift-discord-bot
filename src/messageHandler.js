@@ -682,7 +682,7 @@ class MessageHandler {
      */
     newAddRaid(msg) {
         const message = msg.content.split(' ')
-        if(message.length != 5) {
+        if(!(message.length === 3 || message.length === 5)) {
             msg.reply('Invalid number of Arguments! Please verify your input!')
             return
         }
@@ -693,14 +693,14 @@ class MessageHandler {
             if(newRaid) {
                 util.pushRaidToArraySortedByDate(this.raids, newRaid)
                 this.actualRaidID++;
-                this.db.run('INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)', [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date])
+                this.newDB.run('INSERT INTO raids (raidID, type, day, date) VALUES (?, ?, ?, ?)', [newRaid.id, newRaid.type, newRaid.day, newRaid.date])
                     .catch((error) => {
                         console.log(`newAddRaid/db: ${error.stack}`)
-                        this.db.run('CREATE TABLE IF NOT EXISTS raids (raidID INTEGER, name TEXT, type TEXT, day TEXT, date TEXT)').then(() => {
-                            this.db.run('INSERT INTO raids (raidID, name, type, day, date) VALUES (?, ?, ?, ?, ?)', [newRaid.id, newRaid.name, newRaid.type, newRaid.day, newRaid.date])
+                        this.newDB.run('CREATE TABLE IF NOT EXISTS raids (raidID INTEGER, type TEXT, day TEXT, date TEXT)').then(() => {
+                            this.newDB.run('INSERT INTO raids (raidID, type, day, date) VALUES (?, ?, ?, ?)', [newRaid.id, newRaid.type, newRaid.day, newRaid.date])
                         })
                     })
-                this.db.run(`UPDATE data SET intValue = ${this.actualRaidID} WHERE name = "actualRaidID"`)
+                this.newDB.run(`UPDATE data SET intValue = ${this.actualRaidID} WHERE name = "actualRaidID"`)
                 msg.reply(`raid "${newRaid.name}" added`)
                 this.newPrintRaids()
             } else {
@@ -739,9 +739,9 @@ class MessageHandler {
                         .catch((error) => console.log(`deleteRaid: ${error}`))
                 }
                 this.raids.splice(index, 1)
-                this.db.run(`DELETE FROM raids WHERE raidID = ${raid.id}`)
-                this.db.run(`DELETE FROM registered WHERE raidID = ${raid.id}`)
-                this.db.run(`DELETE FROM confirmed WHERE raidID = ${raid.id}`)
+                this.newDB.run(`DELETE FROM raids WHERE raidID = ${raid.id}`)
+                this.newDB.run(`DELETE FROM registered WHERE raidID = ${raid.id}`)
+                this.newDB.run(`DELETE FROM confirmed WHERE raidID = ${raid.id}`)
                 msg.reply(`You successfully deleted raid ${raid.name} on ${raid.day}!`)
             }
         } catch(error) {

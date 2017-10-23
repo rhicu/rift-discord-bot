@@ -37,8 +37,8 @@ describe('testing _getType()', () => {
         expect(factory._getType('td')).toBe('td')
     })
 
-    test('should return "td" with correct input ("Tatarische Tiefen")', () => {
-        expect(factory._getType('Tatarische Tiefen')).toBe('td')
+    test('should return "td" with correct input ("Tartarische Tiefen")', () => {
+        expect(factory._getType('Tartarische Tiefen')).toBe('td')
     })
 })
 
@@ -49,10 +49,14 @@ describe('testing newRaid()', () => {
     })
 
     test('should return a new irotp Raid object with correct input', () => {
-        expect(factory.newRaid('irotp')).toEqual(new Raid('irotp'))
+        const date = new Date('2017-10-23')
+        const args = ['irotp', '23.10.2017']
+        expect(factory.newRaid(args, 'icke')).toEqual(new Raid('irotp', date, '19:00', '21:30', 'icke'))
     })
 
     test('should return a new td Raid object with correct input', () => {
-        expect(factory.newRaid('td')).toEqual(new Raid('td'))
+        const date = new Date('2017-10-23')
+        const args = ['td', '23.10.2017', '22:00', '23:00']
+        expect(factory.newRaid(args, 'du')).toEqual(new Raid('td', date, '22:00', '23:00', 'du'))
     })
 })

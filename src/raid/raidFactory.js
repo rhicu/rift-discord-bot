@@ -1,6 +1,9 @@
 const config = require('../config.json')
 const Raid = require('./raidNew')
 
+const defaultStartingTime = '19:00'
+const defaultEndingTime = '21:30'
+
 /** */
 class RaidFactory {
 
@@ -9,13 +12,16 @@ class RaidFactory {
 
     /**
      * 
-     * @param {String} input
+     * @param {String[]} args
      * @param {String} raidLeadName
      * 
      * @return {Raid}
      */
     newRaid(args, raidLeadName) {
         try {
+            if(args.length < 2)
+                return null
+            
             const type = this._getType(args[0])
             if(!type)
                 return null
@@ -24,13 +30,24 @@ class RaidFactory {
             if(date === 'Invalid Date')
                 return null
 
-            const start = this._verifyTime(args[2])
-            if(!start)
-                return null
+            let start, end
+            if(args.length < 4) {
+                start = this._verifyTime(defaultStartingTime)
+                if(!start)
+                    return null
 
-            const end = this._verifyTime(args[3])
-            if(!end)
-                return null
+                end = this._verifyTime(defaultEndingTime)
+                if(!end)
+                    return null
+            } else {
+                start = this._verifyTime(args[2])
+                if(!start)
+                    return null
+
+                end = this._verifyTime(args[3])
+                if(!end)
+                    return null
+            }
 
             return new Raid(type, date, start, end, raidLeadName)
         } catch(error) {
