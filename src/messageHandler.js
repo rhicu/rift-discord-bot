@@ -9,15 +9,15 @@ const N = '\n'
 // const communicationPrefix = config.communicationPrefix
 
 /**
- * 
+ *
  */
 class MessageHandler {
 
     /**
-     * 
-     * @param {Client} bot 
+     *
+     * @param {Client} bot
      * @param {sqlite} db
-     * @param {sqlite} newDB 
+     * @param {sqlite} newDB
      */
     constructor(bot, db, newDB) {
         this.raids = []
@@ -86,8 +86,8 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Message} msg 
+     *
+     * @param {Message} msg
      */
     addRaid(msg) {
         const message = msg.content.split(' ')
@@ -137,8 +137,8 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Message} msg 
+     *
+     * @param {Message} msg
      */
     deleteRaid(msg) {
         try {
@@ -175,8 +175,8 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Message} msg 
+     *
+     * @param {Message} msg
      */
     updateRaid(msg) {
         try {
@@ -225,9 +225,9 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Raid} raidInstance 
-     * 
+     *
+     * @param {Raid} raidInstance
+     *
      * @return {Boolean}
      */
     updatePrintedRaid(raidInstance) {
@@ -251,10 +251,10 @@ class MessageHandler {
     }
 
     /**
-     * 
+     *
      * @param {String} playerID
-     * @param {String} shortName 
-     * 
+     * @param {String} shortName
+     *
      * @return {Player}
      * @return {null}
      */
@@ -277,8 +277,8 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Message} msg 
+     *
+     * @param {Message} msg
      */
     register(msg) {
         (async () => {
@@ -330,8 +330,8 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Message} msg 
+     *
+     * @param {Message} msg
      */
     deregister(msg) {
         try {
@@ -364,7 +364,7 @@ class MessageHandler {
     }
 
     /**
-     * 
+     *
      */
     clearChannel() {
         try {
@@ -379,7 +379,7 @@ class MessageHandler {
     }
 
     /**
-     * 
+     *
      */
     printRaids() {
         try {
@@ -406,8 +406,8 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Message} msg 
+     *
+     * @param {Message} msg
      */
     newCharacter(msg) {
         const message = msg.content.split(' ')
@@ -440,9 +440,9 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {String} raidID 
-     * @param {Player} player 
+     *
+     * @param {String} raidID
+     * @param {Player} player
      */
     databaseConfirm(raidID, player) {
         this.databaseDeregister(raidID, player)
@@ -457,9 +457,9 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {String} raidID 
-     * @param {Player} player 
+     *
+     * @param {String} raidID
+     * @param {Player} player
      */
     databaseDeregister(raidID, player) {
         this.db.run(`DELETE FROM registered WHERE raidID = ${raidID} AND userID = "${player.id}"`)
@@ -470,8 +470,8 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Message} msg 
+     *
+     * @param {Message} msg
      */
     confirmRegisteredEventMemberForEvent(msg) {
         try {
@@ -516,9 +516,9 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Boolean} isOffi 
-     * 
+     *
+     * @param {Boolean} isOffi
+     *
      * @return {String}
      */
     help(isOffi) {
@@ -568,9 +568,9 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Boolean} isOffi 
-     * 
+     *
+     * @param {Boolean} isOffi
+     *
      * @return {String}
      */
     hilfe(isOffi) {
@@ -592,8 +592,8 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Message} msg 
+     *
+     * @param {Message} msg
      */
     memberCommand(msg) {
         let command = msg.content.split(' ')[0]
@@ -624,8 +624,8 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Message} msg 
+     *
+     * @param {Message} msg
      */
     offiCommand(msg) {
         let command = msg.content.split(' ')[0]
@@ -677,8 +677,8 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Message} msg 
+     *
+     * @param {Message} msg
      */
     newAddRaid(msg) {
         const message = msg.content.split(' ')
@@ -692,7 +692,7 @@ class MessageHandler {
 
             if(newRaid) {
                 util.pushRaidToArraySortedByDate(this.raids, newRaid)
-                this.actualRaidID++;
+                this.actualRaidID++
                 this.newDB.run('INSERT INTO raids (raidID, type, day, date) VALUES (?, ?, ?, ?)', [newRaid.id, newRaid.type, newRaid.day, newRaid.date])
                     .catch((error) => {
                         console.log(`newAddRaid/db: ${error.stack}`)
@@ -713,8 +713,8 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Message} msg 
+     *
+     * @param {Message} msg
      */
     newDeleteRaid(msg) {
         try {
@@ -751,12 +751,12 @@ class MessageHandler {
     }
 
     /**
-     * 
+     *
      */
     newPrintRaids() {
         try {
             const channel = this.bot.guilds.find('id', config.serverID).channels.find('id', config.raidPlannerChannelID)
-            this.clearChannel();
+            this.clearChannel()
 
             this.raids.forEach((raid) => {
                 let embed = raid.generateEmbed()
@@ -772,8 +772,8 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Message} msg 
+     *
+     * @param {Message} msg
      */
     newUpdateRaid(msg) {
         try {
@@ -822,9 +822,9 @@ class MessageHandler {
     }
 
     /**
-     * 
-     * @param {Raid} raidInstance 
-     * 
+     *
+     * @param {Raid} raidInstance
+     *
      * @return {Boolean}
      */
     newUpdatePrintedRaid(raidInstance) {
@@ -845,6 +845,83 @@ class MessageHandler {
             console.log(`updatePrintedRaid: ${error}`)
             return true
         }
+    }
+
+    /**
+     *
+     * @param {String} channel
+     * @param {Number} raidID
+     */
+    updateSingleRaidOutput(channel, raidID) {
+        // get raid
+        this.getRaidInformationFromDatabase()
+            .then((informationen) => {
+                if (!informationen)
+                    return
+                else {
+                    const newRaid = this.raidFactory.newRaid(informationen)
+                    const embed = newRaid.generateEmbed()
+                    channel.fetchMessage(newRaid.messageID)
+                        .then((message) => message.edit({embed}))
+                        .catch((error) => console.log(`updatePrintedRaid/fetchMessage: ${error}`))
+                }
+            })
+    }
+
+    /**
+     *
+     * @param {String} channel
+     */
+    updateAllRaidsOutput(channel) {
+        // get all raidIDs
+        this.getRaidIDsFromDatabase()
+        // update every raid
+            .then((raidIDArray) => {
+                raidIDArray.forEach((raidID) => {
+                    this.updateSingleRaidOutput(channel, raidID)
+                })
+            })
+    }
+
+    /**
+     *
+     * @param {String} channel
+     *
+     * @return {TextChannel}
+     */
+    getChannel(channel) {
+        return this.bot.guilds.find('id', config.serverID).channels.find('id', channel)
+    }
+
+    /**
+     * @return {Number[]}
+     */
+    getRaidIDsFromDatabase() {
+        return this.newDB.get('SELECT raidID FROM raids').then((rows) => {
+            /** @type {Number[]} */
+            let raidIDArray = []
+            rows.forEach((row) => {
+                raidIDArray.push(row.raidID)
+            })
+            return raidIDArray
+        })
+    }
+
+    /**
+     *
+     * @param {Number} raidID
+     *
+     * @return {String[]}
+     */
+    getRaidInformationFromDatabase(raidID) {
+        return this.newDB.get(`SELECT * FROM raids WHERE raidID = "${raidID}"`)
+            .then((row) => {
+                if(row) {
+                    return [row.raidID, row.messageID, row.type, row.date, row.start, row.end, row.raidLeadName]
+                } else {
+                    return null
+                }
+            })
     }
 }
 

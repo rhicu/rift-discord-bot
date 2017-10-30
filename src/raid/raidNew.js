@@ -7,7 +7,7 @@ const N = '\n'
 class Raid {
 
     /**
-     * 
+     *
      * @param {String} type
      * @param {Date} date
      * @param {String} start
@@ -43,6 +43,9 @@ class Raid {
             N}Benötigt: ${config.raids[this.type].numberTank}x Tank, ${config.raids[this.type].numberHeal}x Heal, ${config.raids[this.type].numberSupport}x Supp, ${config.raids[this.type].numberDD}x DD`
     }
 
+    /**
+     * @return {RichEmbed}
+     */
     generateEmbed() {
         try {
             let embed = new Discord.RichEmbed()
@@ -51,7 +54,7 @@ class Raid {
                 .addField('Daten:', this.generateRaidOutput())
                 .addField('Vorraussetzungen:', this._checkForEmptyStrings(util.multiLineStringFromArray(config.raids[this.type].requirements)))
                 .addField('Angemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.registeredPlayer)))
-                .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.confirmedPlayer)))            
+                .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.confirmedPlayer)))
                 .setFooter('Registrierung via RiftDiscordBot')
                 .setColor(config.raids[this.type].embedColor)
             return embed
@@ -61,9 +64,9 @@ class Raid {
     }
 
     /**
-     * 
+     *
      * @param {String} input
-     * 
+     *
      * @return {String}
      */
     _checkForEmptyStrings(input) {
@@ -75,10 +78,10 @@ class Raid {
     }
 
     /**
-     * 
+     *
      * @param {String} start
-     * 
-     * @return {String} 
+     *
+     * @return {String}
      */
     _calculateInviteTime(start) {
         const timeArray = start.split(':')

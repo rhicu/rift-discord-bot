@@ -11,17 +11,17 @@ class RaidFactory {
     constructor() {}
 
     /**
-     * 
+     *
      * @param {String[]} args
      * @param {String} raidLeadName
-     * 
+     *
      * @return {Raid}
      */
     newRaid(args, raidLeadName) {
         try {
             if(args.length < 2)
                 return null
-            
+
             const type = this._getType(args[0])
             if(!type)
                 return null
@@ -30,7 +30,8 @@ class RaidFactory {
             if(date === 'Invalid Date')
                 return null
 
-            let start, end
+            let start
+            let end
             if(args.length < 4) {
                 start = this._verifyTime(defaultStartingTime)
                 if(!start)
@@ -57,9 +58,9 @@ class RaidFactory {
     }
 
     /**
-     * 
-     * @param {string} input 
-     * 
+     *
+     * @param {string} input
+     *
      * @return {String}
      * @return {null}
      */
@@ -81,9 +82,9 @@ class RaidFactory {
     }
 
     /**
-     * 
-     * @param {String} dateString 
-     * 
+     *
+     * @param {String} dateString
+     *
      * @return {Date}
      */
     _generateDate(dateString) {
@@ -92,8 +93,10 @@ class RaidFactory {
     }
 
     /**
-     * 
-     * @param {String} timeString 
+     *
+     * @param {String} timeString
+     *
+     * @return {String}
      */
     _verifyTime(timeString) {
         return timeString

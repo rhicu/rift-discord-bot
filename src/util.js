@@ -5,9 +5,9 @@ class util {
     constructor() {}
 
     /**
-     * 
-     * @param {Array} array 
-     * 
+     *
+     * @param {Array} array
+     *
      * @return {String}
      */
     static multiLineStringFromArray(array) {
@@ -19,10 +19,10 @@ class util {
     }
 
     /**
-     * 
+     *
      * @param {Array} array
-     * 
-     * @return {String} 
+     *
+     * @return {String}
      */
     static numberedMultiLineStringFromArray(array) {
         let string = ''
@@ -33,29 +33,29 @@ class util {
     }
 
     /**
-     * 
+     *
      * @param {String} string
-     * 
-     * @return {String} 
+     *
+     * @return {String}
      */
     static getDay(string) {
         return string
     }
 
     /**
-     * 
+     *
      * @param {String} string
-     * 
-     * @return {String} 
+     *
+     * @return {String}
      */
     static getDate(string) {
         return string
     }
 
     /**
-     * 
-     * @param {String} dateString 
-     * 
+     *
+     * @param {String} dateString
+     *
      * @return {Number} - Time in Milliseconds since 01/01/1970
      */
     static getTimeInMilliseconds(dateString) {
@@ -73,9 +73,9 @@ class util {
     }
 
     /**
-     * 
-     * @param {Raid[]} raidArray 
-     * @param {Raid} raidObject 
+     *
+     * @param {Raid[]} raidArray
+     * @param {Raid} raidObject
      */
     static pushRaidToArraySortedByDate(raidArray, raidObject) {
         let i = 0
