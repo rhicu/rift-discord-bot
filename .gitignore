@@ -46,3 +46,4 @@ coverage/
 database/
 package.json
 package-lock.json
+save.json
