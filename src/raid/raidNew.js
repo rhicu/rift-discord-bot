@@ -1,5 +1,5 @@
 const util = require('../util')
-const Discord = require('discord.js')
+const RichEmbed = require('discord.js').RichEmbed
 const config = require('../config.json')
 const N = '\n'
 
@@ -8,21 +8,22 @@ class Raid {
 
     /**
      *
+     * @param {Number} id
      * @param {String} type
      * @param {Date} date
      * @param {String} start
      * @param {String} end
      * @param {String} raidLeadName
      */
-    constructor(type, date, start, end, raidLeadName) {
+    constructor(id, type, date, start, end, raidLeadName) {
 
+        this.id = 0
         this.type = type
         this.date = date.toDateString()
         this.start = start
         this.end = end
         this.invite = this._calculateInviteTime(start)
         this.raidLead = raidLeadName
-        this.id = 0
         this.prio = date.getTime()
         this.messageID = ''
         this.registeredPlayer = []
@@ -48,7 +49,7 @@ class Raid {
      */
     generateEmbed() {
         try {
-            let embed = new Discord.RichEmbed()
+            let embed = new RichEmbed()
                 .attachFile(config.raids[this.type].imgPath)
                 .setTitle(config.raids[this.type].name)
                 .addField('Daten:', this.generateRaidOutput())
