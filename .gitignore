@@ -43,5 +43,7 @@ privateConfig.json
 config.json
 node_modules/
 coverage/
+database/
 package.json
 package-lock.json
+save.json

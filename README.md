@@ -21,19 +21,33 @@ save, exit and you are done.
 Repeat for a file named "config.json":
 ```json
 {
-    "prefix": ">",
-    "communicationPrefix": "#",
-    "serverID": "325779168405094410",
+    "prefix": "",
+    "communicationPrefix": "",
+    "serverID": "",
     "roles": {
-        "offi": "335116773181489152",
-        "member": "335123824859152385"
+        "offi": "",
+        "member": ""
     },
-    "raidPlannerChannelID": "336073501540876288",
+    "raidPlannerChannelID": "",
     "raids": {
+        "bos": {
+            "name": "Stahlbastion",
+            "alias": ["bastion of steel", "stahlbastion"],
+            "shortName": "bos",
+            "imgPath": "/home/usr/git/RiftDiscordBot/img/bos.jpg",
+            "requirements": ["800k dps an der Puppe", "2,4k Hit"],
+            "numberPlayer": 10,
+            "numberTank": 2,
+            "numberHeal": 2,
+            "numberSupport": 1,
+            "numberDD": 5,
+            "embedColor": "0x0000FF"
+        },
         "irotp": {
             "name": "Aufstieg des Phönix",
+            "alias": ["phönix", "aufstieg des phönix", "adp"],
             "shortName": "irotp",
-            "imgPath": "D:\\Git\\RiftDiscordBot\\img\\rotp.jpg",
+            "imgPath": "/home/usr/git/RiftDiscordBot/img/rotp.jpg",
             "requirements": ["500k dps an der Puppe", "2,2k Hit"],
             "numberPlayer": 10,
             "numberTank": 2,
@@ -44,8 +58,9 @@ Repeat for a file named "config.json":
         },
         "td": {
             "name": "Tartarische Tiefen",
+            "alias": ["tartarische tiefen"],
             "shortName": "td",
-            "imgPath": "D:\\Git\\RiftDiscordBot\\img\\td.jpg",
+            "imgPath": "/home/usr/git/RiftDiscordBot/img/td.jpg",
             "requirements": ["500k dps an der Puppe", "2,2k Hit"],
             "numberPlayer": 10,
             "numberTank": 2,
@@ -54,7 +69,8 @@ Repeat for a file named "config.json":
             "numberDD": 5,
             "embedColor": "0xFF0000"
         }
-    }
+    },
+    "dbPath": "/home/usr/git/RiftDiscordBot/database"
 }
 ```
 
