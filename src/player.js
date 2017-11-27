@@ -1,17 +1,15 @@
-// const enums = require('./enums')
-
 /**
  * 
  */
 class Player {
 
     /**
-     * 
-     * @param {String} id 
-     * @param {String} ingameName 
-     * @param {String} riftClass 
-     * @param {String} roles 
-     * @param {String} shortName 
+     *
+     * @param {String} id
+     * @param {String} ingameName
+     * @param {String} riftClass
+     * @param {String} roles
+     * @param {String} shortName
      */
     constructor(id, ingameName, riftClass, roles, shortName) {
         this.id = id
