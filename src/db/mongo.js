@@ -92,6 +92,20 @@ class MongoDatabase {
                 console.log(error)
             })
     }
+
+    /**
+     * @return {Number}
+     */
+    static getNextRaidID() {
+        // look for raidID and save it again incremented by 1
+        return MongoClient.connect(url)
+            .then((db) => {
+                db.collection('data').findOne({name: 'data'})
+                db.close()
+            }).catch((error) => {
+                console.log(error)
+            })
+    }
 }
 
 module.exports = MongoDatabase

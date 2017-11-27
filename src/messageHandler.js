@@ -875,7 +875,7 @@ class MessageHandler {
     updateAllRaidsOutput(channel) {
         // get all raidIDs
         this.getRaidIDsFromDatabase()
-        // update every raid
+            // update every raid
             .then((raidIDArray) => {
                 raidIDArray.forEach((raidID) => {
                     this.updateSingleRaidOutput(channel, raidID)

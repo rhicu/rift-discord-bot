@@ -13,11 +13,12 @@ class RaidFactory {
     /**
      *
      * @param {String[]} args
+     * @param {Number} id
      * @param {String} raidLeadName
      *
      * @return {Raid}
      */
-    newRaid(args, raidLeadName) {
+    newRaid(args, id, raidLeadName) {
         try {
             if(args.length < 2)
                 return null
@@ -50,7 +51,7 @@ class RaidFactory {
                     return null
             }
 
-            return new Raid(type, date, start, end, raidLeadName)
+            return new Raid(id, type, date, start, end, raidLeadName)
         } catch(error) {
             console.log(`newRaid: ${error.stack}`)
             return null
