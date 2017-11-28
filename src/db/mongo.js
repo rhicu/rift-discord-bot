@@ -94,16 +94,83 @@ class MongoDatabase {
     }
 
     /**
+     *
+     * @param {Number} raidID
+     */
+    static updateRaidID(raidID) {
+        MongoClient.connect(url)
+            .then((db) => {
+                db.collection('data').updateOne({name: 'raidID'}, {value: `${raidID}`})
+                    .catch((error) => {
+                        console.log(error)
+                    })
+            }).catch((error) => {
+                console.log(error)
+            })
+    }
+
+    /**
      * @return {Number}
      */
-    static getNextRaidID() {
+    static getRaidID() {
         // look for raidID and save it again incremented by 1
         return MongoClient.connect(url)
             .then((db) => {
-                db.collection('data').findOne({name: 'data'})
-                db.close()
+                return db.collection('data').findOne({name: 'raidID'})
+                    .then((result) => {
+                        db.close()
+                        return result.value
+                    })
             }).catch((error) => {
                 console.log(error)
+            })
+    }
+
+    /**
+     * @return {Number}
+     */
+    static async getNextRaidID() {
+        let nextRaidID = await this.getRaidID()
+        this.updateRaidID(nextRaidID+1)
+        return nextRaidID
+    }
+
+    /**
+     * @return {Number[]}
+     */
+    static getRaidIDs() {
+        return MongoClient.connect(url)
+            .then((db) => {
+                return db.collection('raids').find({}).toArray()
+                    .map((raid) => {
+                        return raid.id
+                    }).then((result) => {
+                        db.close()
+                        return result
+                    }).catch((error) => {
+                        console.log(error)
+                    })
+            }).catch((error) => {
+                console.log(error)
+            })
+    }
+
+    /**
+     *
+     * @param {Number} raidID
+     *
+     * @return {Raid}
+     */
+    static getRaid(raidID) {
+        return MongoClient.connect(url)
+            .then((db) => {
+                return db.collection('raids').findOne({id: `${raidID}`})
+                    .then((result) => {
+                        db.close()
+                        return result
+                    }).catch((error) => {
+                        console.log(error)
+                    })
             })
     }
 }

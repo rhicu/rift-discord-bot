@@ -17,7 +17,7 @@ class Raid {
      */
     constructor(id, type, date, start, end, raidLeadName) {
 
-        this.id = 0
+        this.id = id
         this.type = type
         this.date = date.toDateString()
         this.start = start

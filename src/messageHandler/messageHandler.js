@@ -98,10 +98,10 @@ class MessageHandler {
         let command = msg.content.split(' ')[0]
         switch(command) {
             case 'register':
-                actions.register(msg)
+                this.commands.register(msg)
                 break
             case 'deregister':
-                actions.deregister(msg)
+                this.commands.deregister(msg)
                 break
             case 'help':
                 msg.reply(this.help(false))
@@ -112,7 +112,7 @@ class MessageHandler {
                     .catch((error) => console.log(`hilfe: ${error}`))
                 break
             case 'create':
-                actions.newCharacter(msg)
+                this.commands.newCharacter(msg)
                 break
             default:
                 msg.reply(`Unknown command! / Unbekannter Befehl${
@@ -130,19 +130,19 @@ class MessageHandler {
         let command = msg.content.split(' ')[0]
         switch(command) {
             case 'addRaid':
-                actions.addRaid(msg)
+                this.commands.addRaid(msg)
                 break
             case 'clearRaidChannel':
-                actions.clearChannel()
+                this.commands.clearChannel()
                 break
             case 'printRaids':
-                actions.printRaids(msg)
+                this.commands.printRaids(msg)
                 break
             case 'register':
-                actions.register(msg)
+                this.commands.register(msg)
                 break
             case 'deregister':
-                actions.deregister(msg)
+                this.commands.deregister(msg)
                 break
             case 'help':
                 msg.reply(this.help(true))
@@ -153,16 +153,16 @@ class MessageHandler {
                     .catch((error) => console.log(`hilfe: ${error}`))
                 break
             case 'deleteRaid':
-                actions.deleteRaid(msg)
+                this.commands.deleteRaid(msg)
                 break
             case 'updateRaid':
-                actions.updateRaid(msg)
+                this.commands.updateRaid(msg)
                 break
             case 'create':
-                actions.newCharacter(msg)
+                this.commands.newCharacter(msg)
                 break
             case 'confirm':
-                actions.confirmRegisteredEventMemberForEvent(msg)
+                this.commands.confirmRegisteredEventMemberForEvent(msg)
                 break
             default:
                 msg.reply(`Unknown command! / Unbekannter Befehl${
