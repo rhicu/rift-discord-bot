@@ -9,49 +9,6 @@ class MongoDatabase {
 
     /**
      *
-     * @param {Plyer} newPlayer
-     *
-     * @return {Boolean}
-     */
-    static addPlayer(newPlayer) {
-        return MongoClient.connect(url)
-            .then((db) => {
-                return db.collection('character').insertOne(newPlayer)
-                    .then((res) => {
-                        db.close()
-                        return true
-                    }).catch((error) => {
-                        console.log(error)
-                    })
-            }).catch((error) => {
-                console.log(error)
-            })
-    }
-
-    /**
-     *
-     * @param {String} playerID
-     * @param {String} name
-     *
-     * @return {Player}
-     */
-    static getPlayer(playerID, name) {
-        return MongoClient.connect(url)
-            .then((db) => {
-                return db.collection('character').findOne({id: `${playerID}`, shortName: `${name}`})
-                    .then((result) => {
-                        db.close()
-                        return result
-                    }).catch((error) => {
-                        console.log(error)
-                    })
-            }).catch((error) => {
-                console.log(error)
-            })
-    }
-
-    /**
-     *
      * @param {Raid} newRaid
      *
      * @return {Boolean}
@@ -97,7 +54,7 @@ class MongoDatabase {
      *
      * @param {Number} raidID
      */
-    static updateRaidID(raidID) {
+    _updateNextRaidID(raidID) {
         MongoClient.connect(url)
             .then((db) => {
                 db.collection('data').updateOne({name: 'raidID'}, {value: `${raidID}`})
@@ -112,7 +69,7 @@ class MongoDatabase {
     /**
      * @return {Number}
      */
-    static getRaidID() {
+    _getRaidID() {
         // look for raidID and save it again incremented by 1
         return MongoClient.connect(url)
             .then((db) => {
@@ -130,8 +87,8 @@ class MongoDatabase {
      * @return {Number}
      */
     static async getNextRaidID() {
-        let nextRaidID = await this.getRaidID()
-        this.updateRaidID(nextRaidID+1)
+        let nextRaidID = await this._getRaidID()
+        this._updateNextRaidID(nextRaidID+1)
         return nextRaidID
     }
 
@@ -171,6 +128,22 @@ class MongoDatabase {
                     }).catch((error) => {
                         console.log(error)
                     })
+            })
+    }
+
+    /**
+     *
+     * @param {Raid} raid
+     */
+    static updateRaid(raid) {
+        MongoClient.connect(url)
+            .then((db) => {
+                db.collection('raids').updateOne({id: `${raid.id}`}, raid)
+                    .catch((error) => {
+                        console.log(error)
+                    })
+            }).catch((error) => {
+                console.log(error)
             })
     }
 }

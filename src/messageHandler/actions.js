@@ -59,10 +59,10 @@ class Actions {
     /**
      *
      */
-    newPrintRaids() {
+    static printRaids() {
         try {
-            const channel = this.bot.guilds.find('id', config.serverID).channels.find('id', config.raidPlannerChannelID)
-            this.clearChannel()
+            const channel = this._getChannel()
+            this._clearChannel()
 
             this.raids.forEach((raid) => {
                 let embed = raid.generateEmbed()
@@ -81,7 +81,7 @@ class Actions {
      *
      * @param {Message} msg
      */
-    newUpdateRaid(msg) {
+    static updateRaid(msg) {
         try {
             if(msg.content.split(' ').length !== 4) {
                 msg.reply('Invalid number of arguments!')
@@ -115,8 +115,9 @@ class Actions {
                             msg.reply(`'${option}' is not a property which can be updated!`)
                             return
                     }
-                    this.updatePrintedRaid(this.raids[i])
-                    msg.reply(`Raid ${this.raids[i].name} on ${this.raids[i].date} is updated!`)
+                    db.updateRaid(this.raids[i])
+                    this._updateSingleRaidOutput(this.raids[i].id)
+                    msg.reply(`Raid ${this.raids[i].name} on ${this.raids[i].date} has been updated!`)
                     return
                 }
             }
@@ -131,7 +132,7 @@ class Actions {
      *
      * @param {Number} raidID
      */
-    updateSingleRaidOutput(raidID) {
+    _updateSingleRaidOutput(raidID) {
         // get raid
         db.getRaid()
             .then((raid) => {
@@ -139,7 +140,7 @@ class Actions {
                     return
                 else {
                     const embed = raid.generateEmbed()
-                    this.getChannel().fetchMessage(raid.messageID)
+                    this._getChannel().fetchMessage(raid.messageID)
                         .then((message) => message.edit({embed}))
                         .catch((error) => console.log(`updatePrintedRaid/fetchMessage: ${error}`))
                 }
@@ -147,13 +148,13 @@ class Actions {
     }
 
     /** */
-    updateAllRaidsOutput() {
+    _updateAllRaidsOutput() {
         // get all raidIDs
         db.getRaidIDs()
             // update every raid
             .then((raidIDArray) => {
                 raidIDArray.forEach((raidID) => {
-                    this.updateSingleRaidOutput(raidID)
+                    this._updateSingleRaidOutput(raidID)
                 })
             })
     }
@@ -161,8 +162,21 @@ class Actions {
     /**
      * @return {TextChannel}
      */
-    getChannel() {
+    _getChannel() {
         return this.bot.guilds.find('id', config.serverID).channels.find('id', config.raidPlannerChannelID)
+    }
+
+    /** */
+    _clearChannel() {
+        try {
+            const channel = this._getChannel()
+            channel.fetchMessages()
+                .then((messages) => {
+                    messages.deleteAll()
+                })
+        } catch(error) {
+            console.log(`clearChannel: ${error}`)
+        }
     }
 }
 
