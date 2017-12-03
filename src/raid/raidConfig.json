@@ -1,0 +1,45 @@
+{
+    "defaultStartingTime": "19:00",
+    "defaultEndingTime": "21:30",
+    "raids": {
+        "bos": {
+            "name": "Stahlbastion",
+            "alias": ["bastion of steel", "stahlbastion"],
+            "shortName": "bos",
+            "imgPath": "D:\\Git\\RiftDiscordBot\\img\\bos.jpg",
+            "requirements": ["800k dps an der Puppe", "2,4k Hit"],
+            "numberPlayer": 10,
+            "numberTank": 2,
+            "numberHeal": 2,
+            "numberSupport": 1,
+            "numberDD": 5,
+            "embedColor": "0x0000FF"
+        },
+        "irotp": {
+            "name": "Aufstieg des Phönix",
+            "alias": ["phönix", "aufstieg des phönix", "adp"],
+            "shortName": "irotp",
+            "imgPath": "D:\\Git\\RiftDiscordBot\\img\\rotp.jpg",
+            "requirements": ["500k dps an der Puppe", "2,2k Hit"],
+            "numberPlayer": 10,
+            "numberTank": 2,
+            "numberHeal": 2,
+            "numberSupport": 1,
+            "numberDD": 5,
+            "embedColor": "0x00FF00"
+        },
+        "td": {
+            "name": "Tartarische Tiefen",
+            "alias": ["tartarische tiefen"],
+            "shortName": "td",
+            "imgPath": "D:\\Git\\RiftDiscordBot\\img\\td.jpg",
+            "requirements": ["500k dps an der Puppe", "2,2k Hit"],
+            "numberPlayer": 10,
+            "numberTank": 2,
+            "numberHeal": 2,
+            "numberSupport": 1,
+            "numberDD": 5,
+            "embedColor": "0xFF0000"
+        }
+    }
+}

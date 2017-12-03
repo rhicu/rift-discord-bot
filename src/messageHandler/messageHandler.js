@@ -9,9 +9,7 @@ class MessageHandler {
      * @param {Client} bot
      */
     constructor(bot) {
-        this.raids = []
-        this.bot = bot
-        this.commands = new Actions(this.bot, this.raids)
+        this.commands = new Actions(this.bot)
     }
 
     /**

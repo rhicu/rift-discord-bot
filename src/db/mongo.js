@@ -113,6 +113,40 @@ class MongoDatabase {
     }
 
     /**
+     * @return {Raid[]}
+     */
+    static getAllRaids() {
+        return MongoClient.connect(url)
+            .then((db) => {
+                return db.collection('raids').find({}).toArray()
+                    .then((result) => {
+                        db.close()
+                        return result
+                    }).catch((error) => {
+                        console.log(error)
+                    })
+            }).catch((error) => {
+                console.log(error)
+            })
+    }
+
+    /**
+     * 
+     * @param {Raid} raid 
+     */
+    static addRaid(raid) {
+        MongoClient.connect(url)
+            .then((db) => {
+                db.collection('raids').insertOne(raid)
+                    .catch((error) => {
+                        console.log(error)
+                    })
+            }).catch((error) => {
+                console.log(error)
+            })
+    }
+
+    /**
      *
      * @param {Number} raidID
      *
@@ -144,6 +178,58 @@ class MongoDatabase {
                     })
             }).catch((error) => {
                 console.log(error)
+            })
+    }
+
+    /**
+     * 
+     * @param {Number} raidID 
+     */
+    static deleteRaid(raidID) {
+        MongoClient.connect(url)
+            .then((db) => {
+                db.collection('raids').deleteOne({id: `${raidID}`})
+                    .catch((error) => {
+                        console.log(error)
+                    })
+            }).catch((error) => {
+                console.log(error)
+            })
+    }
+
+    /**
+     *
+     * @param {Player} player
+     */
+    static createPlayer(player) {
+        MongoClient.connect(url)
+            .then((db) => {
+                db.collection('player').insertOne(player)
+                    .catch((error) => {
+                        console.log(error)
+                    })
+            }).catch((error) => {
+                console.log(error)
+            })
+    }
+
+    /**
+     *
+     * @param {String} playerID
+     * @param {String} shortName
+     *
+     * @return {Player}
+     */
+    static getPlayer(playerID, shortName) {
+        return MongoClient.connect(url)
+            .then((db) => {
+                return db.collection('player').findOne({id: `${playerID}`, shortName: `${shortName}`})
+                    .then((result) => {
+                        db.close()
+                        return result
+                    }).catch((error) => {
+                        console.log(error)
+                    })
             })
     }
 }

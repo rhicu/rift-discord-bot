@@ -1,8 +1,5 @@
-const config = require('../config.json')
+const config = require('./raidConfig')
 const Raid = require('./raidNew')
-
-const defaultStartingTime = '19:00'
-const defaultEndingTime = '21:30'
 
 /** */
 class RaidFactory {
@@ -18,7 +15,7 @@ class RaidFactory {
      *
      * @return {Raid}
      */
-    newRaid(args, id, raidLeadName) {
+    static newRaid(args, id, raidLeadName) {
         try {
             if(args.length < 2)
                 return null
@@ -34,11 +31,11 @@ class RaidFactory {
             let start
             let end
             if(args.length < 4) {
-                start = this._verifyTime(defaultStartingTime)
+                start = this._verifyTime(config.defaultStartingTime)
                 if(!start)
                     return null
 
-                end = this._verifyTime(defaultEndingTime)
+                end = this._verifyTime(config.defaultEndingTime)
                 if(!end)
                     return null
             } else {

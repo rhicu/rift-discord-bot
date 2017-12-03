@@ -1,9 +1,6 @@
 const Discord = require('discord.js')
 const config = require('./config.json')
-const privateConfig = require('./privateConfig.json')
-const Messagehandler = require('./messageHandler')
-const db = require('sqlite')
-const newDB = require('sqlite')
+const Messagehandler = require('./messageHandler/messageHandler')
 
 const bot = new Discord.Client()
 const prefix = config.prefix
@@ -11,7 +8,7 @@ let messageHandler
 
 bot.on('ready', () => {
     console.log(`Logged in as ${bot.user.tag}!`)
-    messageHandler = new Messagehandler(bot, db, newDB)
+    messageHandler = new Messagehandler(bot)
 })
 
 bot.on('message', (msg) => {
@@ -34,15 +31,4 @@ bot.on('message', (msg) => {
     if(!msg.content.startsWith(prefix) || msg.author.bot) return
 })
 
-db.open(`${config.dbPath}riftDiscordBot.sqlite`)
-    .then(() => {
-        newDB.open(`${config.dbPath}newDatabase.sqlite`)
-            .then(() => {
-                bot.login(`${privateConfig.token}`)
-            }).catch((error) => {
-                console.log(`open new database: ${error}`)
-            })
-    }).catch((error) => {
-        console.log(`open database: ${error}`)
-    })
-
+bot.login(`${config.token}`)
