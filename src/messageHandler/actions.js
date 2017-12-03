@@ -1,7 +1,7 @@
 const Player = require('../player')
 const util = require('../util')
 const config = require('../config.json')
-const raidFactory = require('../raid/raidFactory')
+const RaidFactory = require('../raid/raidFactory')
 const db = require('../db/mongo')
 
 /** */
@@ -44,7 +44,7 @@ class Actions {
                 .then(() => {
                     // create raid
                     message.splice(0, 1)
-                    const newRaid = raidFactory.newRaid(message, nextRaidID, 'any offi')
+                    const newRaid = RaidFactory.newRaid(message, nextRaidID, 'any offi')
 
                     if(newRaid) {
                         // add raid to array and save it in database

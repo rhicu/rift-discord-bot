@@ -1,5 +1,5 @@
 const config = require('./raidConfig')
-const Raid = require('./raidNew')
+const Raid = require('./raid')
 
 /** */
 class RaidFactory {
@@ -20,30 +20,30 @@ class RaidFactory {
             if(args.length < 2)
                 return null
 
-            const type = this._getType(args[0])
+            const type = RaidFactory._getType(args[0])
             if(!type)
                 return null
 
-            const date = this._generateDate(args[1])
+            const date = RaidFactory._generateDate(args[1])
             if(date === 'Invalid Date')
                 return null
 
             let start
             let end
             if(args.length < 4) {
-                start = this._verifyTime(config.defaultStartingTime)
+                start = RaidFactory._verifyTime(config.defaultStartingTime)
                 if(!start)
                     return null
 
-                end = this._verifyTime(config.defaultEndingTime)
+                end = RaidFactory._verifyTime(config.defaultEndingTime)
                 if(!end)
                     return null
             } else {
-                start = this._verifyTime(args[2])
+                start = RaidFactory._verifyTime(args[2])
                 if(!start)
                     return null
 
-                end = this._verifyTime(args[3])
+                end = RaidFactory._verifyTime(args[3])
                 if(!end)
                     return null
             }
@@ -62,7 +62,7 @@ class RaidFactory {
      * @return {String}
      * @return {null}
      */
-    _getType(input) {
+    static _getType(input) {
         input = input.toLowerCase()
         let possibleRaids = config.raids
         for(let raid in possibleRaids) {
@@ -85,7 +85,7 @@ class RaidFactory {
      *
      * @return {Date}
      */
-    _generateDate(dateString) {
+    static _generateDate(dateString) {
         const dateArray = dateString.split('.')
         return new Date(`${dateArray[2]}-${dateArray[1]}-${dateArray[0]}`)
     }
@@ -96,7 +96,7 @@ class RaidFactory {
      *
      * @return {String}
      */
-    _verifyTime(timeString) {
+    static _verifyTime(timeString) {
         return timeString
     }
 }
