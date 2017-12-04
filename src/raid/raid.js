@@ -14,8 +14,9 @@ class Raid {
      * @param {String} start
      * @param {String} end
      * @param {String} raidLeadName
+     * @param {String} messageID
      */
-    constructor(id, type, date, start, end, raidLeadName) {
+    constructor(id, type, date, start, end, raidLeadName, messageID) {
 
         this.id = id
         this.type = type
@@ -25,7 +26,7 @@ class Raid {
         this.invite = this._calculateInviteTime(start)
         this.raidLead = raidLeadName
         this.prio = date.getTime()
-        this.messageID = ''
+        this.messageID = messageID
         this.registeredPlayer = []
         this.confirmedPlayer = []
     }

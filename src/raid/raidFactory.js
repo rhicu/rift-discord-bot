@@ -48,7 +48,7 @@ class RaidFactory {
                     return null
             }
 
-            return new Raid(id, type, date, start, end, raidLeadName)
+            return new Raid(id, type, date, start, end, raidLeadName, '')
         } catch(error) {
             console.log(`newRaid: ${error.stack}`)
             return null

@@ -16,9 +16,11 @@ class Actions {
         this.bot = bot
         db.getAllRaids()
             .then((raidArrayFromDatabase) => {
-                raidArrayFromDatabase.forEach((raid) => {
-                    util.pushRaidToArraySortedByDate(this.raids, raid)
-                })
+                if(raidArrayFromDatabase) {
+                    raidArrayFromDatabase.forEach((raid) => {
+                        util.pushRaidToArraySortedByDate(this.raids, raid)
+                    })
+                }
             }).then(() => {
                 this.printRaids()
             })
@@ -40,8 +42,8 @@ class Actions {
 
         try {
             // change raid id for next creation persistently
-            const nextRaidID = db.getNextRaidID()
-                .then(() => {
+            db.getNextRaidID()
+                .then((nextRaidID) => {
                     // create raid
                     message.splice(0, 1)
                     const newRaid = RaidFactory.newRaid(message, nextRaidID, 'any offi')
@@ -53,7 +55,7 @@ class Actions {
 
                         // display new raid
                         this.printRaids()
-                        msg.reply(`New "${newRaid.name}" raid created`)
+                        msg.reply(`New "${newRaid.type}" raid created at "${newRaid.date}"`)
                     } else {
                         msg.reply('Couldn\'t create raid because of missing data. Please check ur input!')
                     }
@@ -171,7 +173,7 @@ class Actions {
                 db.deleteRaid(raid.id)
                 // this.db.run(`DELETE FROM registered WHERE raidID = ${raid.id}`)
                 // this.db.run(`DELETE FROM confirmed WHERE raidID = ${raid.id}`)
-                msg.reply(`You successfully deleted raid ${raid.name} on ${raid.date}!`)
+                msg.reply(`You successfully deleted raid ${raid.type} at ${raid.date}!`)
             }
         } catch(error) {
             console.log(`deleteRaid: ${error}`)
@@ -187,13 +189,14 @@ class Actions {
         // get raid
         db.getRaid(raidID)
             .then((raid) => {
-                if (!raid)
+                if (!raid) {
+                    console.log('_updateSingleRaidOutput: no raid found')
                     return
-                else {
+                } else {
                     const embed = raid.generateEmbed()
                     this._getChannel().fetchMessage(raid.messageID)
                         .then((message) => message.edit({embed}))
-                        .catch((error) => console.log(`updatePrintedRaid/fetchMessage: ${error}`))
+                        .catch((error) => console.log(`updatePrintedRaid/fetchMessage: ${error.stack}`))
                 }
             })
     }
@@ -246,12 +249,13 @@ class Actions {
         try {
             let newPlayer = new Player(msg.author.id, message[1], message[2], message[3], message[4])
             if(newPlayer) {
-                db.createPlayer()
+                db.addPlayer(newPlayer)
+                msg.reply('New character created')
             } else {
                 msg.reply('Couldn\'t create character')
             }
         } catch(error) {
-            console.log(`newCharacter: ${error}`)
+            console.log(`newCharacter: ${error.stack}`)
             msg.reply('Something bad happened :(')
         }
     }
@@ -295,7 +299,7 @@ class Actions {
                 msg.reply(`You are now registered for raid "${raidInArray[0].name}" at "${raidInArray[0].date}"! Please be there in time!`)
             }
         } catch(error) {
-            console.log(`register: ${error}`)
+            console.log(`register: ${error.stack}`)
             msg.reply('something bad happened :(')
         }
     }
