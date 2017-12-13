@@ -57,6 +57,21 @@ class RaidFactory {
 
     /**
      *
+     * @param {Object} dataBaseObject
+     *
+     * @return {Raid}
+     */
+    static recreateRaidFromDatabase(dataBaseObject) {
+        if(dataBaseObject) {
+            let date = new Date(dataBaseObject.date)
+            return new Raid(dataBaseObject.id, dataBaseObject.type, date, dataBaseObject.start, dataBaseObject.end, dataBaseObject.raidLead, dataBaseObject.messageID)
+        } else {
+            return null
+        }
+    }
+
+    /**
+     *
      * @param {string} input
      *
      * @return {String}

@@ -1,6 +1,5 @@
 const MongoClient = require('mongodb').MongoClient
 const Raid = require('../raid/raid')
-const Player = require('../player')
 const url = require('../config').mongoPath
 
 /** */
@@ -11,11 +10,11 @@ class MongoDatabase {
 
     /**
      *
-     * @param {Raid} newCharacter
+     * @param {Player} newCharacter
      *
      * @return {Boolean}
      */
-    static addPlayer(newCharacter) {
+    static savePlayerInDatabase(newCharacter) {
         return MongoClient.connect(url)
             .then((db) => {
                 return db.collection('character').insertOne(newCharacter)
@@ -24,6 +23,7 @@ class MongoDatabase {
                         return true
                     }).catch((error) => {
                         console.log(error)
+                        return false
                     })
             }).catch((error) => {
                 console.log(error)
@@ -33,24 +33,20 @@ class MongoDatabase {
     /**
      *
      * @param {String} playerID
-     * @param {String} name
+     * @param {String} shortName
      *
      * @return {Raid}
      */
-    static getPlayer(playerID, name) {
+    static getGameCharacterFromDatabase(playerID, shortName) {
         return MongoClient.connect(url)
             .then((db) => {
-                return db.collection('character').findOne({id: `${playerID}`, shortName: `${name}`})
+                return db.collection('character').findOne({id: `${playerID}`, shortName: `${shortName}`})
                     .then((result) => {
                         db.close()
-                        if(result) {
-                            let newPlayer = new Player(result.id, result.ingameName, result.riftClass, result.roles, result. shortName)
-                            return newPlayer
-                        } else {
-                            return null
-                        }
+                        return result
                     }).catch((error) => {
                         console.log(error)
+                        return null
                     })
             }).catch((error) => {
                 console.log(error)

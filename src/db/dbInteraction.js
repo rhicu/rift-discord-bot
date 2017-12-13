@@ -1,3 +1,7 @@
+const Mongo = require('./mongo')
+const Player = require('../player')
+const RaidFactory = require('../raid/raidFactory')
+
 /** */
 class Database {
 
@@ -5,24 +9,32 @@ class Database {
     constructor() {}
 
     /**
-     * 
-     * @param {sqlite} db
-     * @param {String} id
-     * @param {String} shortName
-     * 
-     * @return {Object}
+     *
+     * @param {Player} newCharacter
+     *
+     * @return {Boolean}
      */
-    static getPlayerFormDataBase(db, id, shortName) {
-        return db.get(`SELECT * FROM characters WHERE userID ="${id}" AND shortName = "${shortName}"`).then((row) => {
-            if (!row) {
-                return null
-            } else {
-                return row
-            }
-        }).catch(() => {
-            console.error
-            return null
-        })
+    static addPlayer(newCharacter) {
+        return Mongo.savePlayerInDatabase(newCharacter)
+    }
+
+    /**
+     *
+     * @param {String} playerID
+     * @param {String} shortName
+     *
+     * @return {Player}
+     */
+    static getPlayer(playerID, shortName) {
+        return Mongo.getGameCharacterFromDatabase(playerID, shortName)
+            .then((result) => {
+                if(result) {
+                    let newPlayer = new Player(result.id, result.ingameName, result.riftClass, result.roles, result. shortName)
+                    return newPlayer
+                } else {
+                    return null
+                }
+            })
     }
 }
 
