@@ -46,3 +46,4 @@ database/
 package.json
 package-lock.json
 save.json
+privateConfig.json

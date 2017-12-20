@@ -5,7 +5,8 @@ After it open a terminal, navigate to the bot folder and use the command "npm in
 Now you have to install the following packages:
 
 * discord.js - "npm install --save discord.js"
-* mongodb - "npm install --save mongodb"
+* sequalize - "npm install --save sequalize"
+* mysql2 - "npm install --save mysql2"
 
 Finally you have to create a new file in the "src"-folder named "config.json".
 Open the file and write:
@@ -21,7 +22,11 @@ Open the file and write:
         "offi": "",
         "member": ""
     },
-    "mongoPath": "mongodb://localhost:27017/db"
+    "mysql": {
+        "name": "",
+        "username": "",
+        "password": ""
+    }
 }
 
 ```
