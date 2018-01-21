@@ -1,34 +1,29 @@
 /**
- * 
+ *
  */
 class Player {
 
-    /** */
-    static newPlayer() {}
-
     /**
      *
-     * @param {Array} databaseArray
-     *
-     * @return {Array}
+     * @param {String} id
+     * @param {String} ingameName
+     * @param {String} riftClass
+     * @param {JSON} roles
+     * @param {String} shortName
      */
-    static generatePlayerArrayFromDatabaseObjectArray(databaseArray) {
-        let playerArray = []
-        databaseArray.forEach((databasePlayerObject) => {
-            let player = Player.toString(databasePlayerObject)
-            playerArray.push(player)
-        })
-        return playerArray
+    constructor(id, ingameName, riftClass, roles, shortName) {
+        this.id = id
+        this.ingameName = ingameName
+        this.riftClass = riftClass
+        this.roles = roles
+        this.shortName = shortName
     }
 
     /**
-     *
-     * @param {Object} playerObject
-     *
      * @return {String}
      */
-    static toString(playerObject) {
-        return `${playerObject.ingameName} - ${playerObject.roles} (${playerObject.riftClass})`
+    toString() {
+        return `${this.ingameName} - ${this.roles} (${this.riftClass})`
     }
 }
 
