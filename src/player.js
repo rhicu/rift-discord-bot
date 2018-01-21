@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 class Player {
 
@@ -8,7 +8,7 @@ class Player {
      * @param {String} id
      * @param {String} ingameName
      * @param {String} riftClass
-     * @param {String} roles
+     * @param {JSON} roles
      * @param {String} shortName
      */
     constructor(id, ingameName, riftClass, roles, shortName) {
