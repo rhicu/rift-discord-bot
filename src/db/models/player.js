@@ -2,25 +2,25 @@ module.exports = (sequelize, DataTypes) => {
     return sequelize.define('player', {
         discordID: {
             type: DataTypes.STRING,
+            allowNull: false,
             validate: {
-                notNull: true,
                 notEmpty: true
             }
         },
         ingameName: {
             type: DataTypes.STRING,
-            primaryKey: true,
+            unique: true,
+            allowNull: false,
             validate: {
                 isLowercase: true,
-                notNull: true,
                 notEmpty: true
             }
         },
         riftClass: {
             type: DataTypes.STRING,
+            allowNull: false,
             validate: {
                 isLowercase: true,
-                notNull: true,
                 notEmpty: true
             }
         },
@@ -36,9 +36,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         shortName: {
             type: DataTypes.STRING,
+            allowNull: false,
             validate: {
                 isLowercase: true,
-                notNull: true,
                 notEmpty: true
             }
         }

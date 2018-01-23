@@ -2,45 +2,45 @@ module.exports = (sequelize, DataTypes) => {
     return sequelize.define('raid', {
         type: {
             type: DataTypes.STRING,
+            allowNull: false,
             validate: {
                 isLowercase: true,
-                notNull: true,
                 notEmpty: true
             }
         },
         start: {
             type: DataTypes.DATE,
+            allowNull: false,
             validate: {
-                notNull: true,
                 notEmpty: true
             }
         },
         end: {
             type: DataTypes.DATE,
+            allowNull: false,
             validate: {
-                notNull: true,
                 notEmpty: true
             }
         },
         raidLead: {
             type: DataTypes.STRING,
+            allowNull: false,
             validate: {
                 isLowercase: true,
-                notNull: true,
                 notEmpty: true
             }
         },
         messageID: {
             type: DataTypes.STRING,
+            allowNull: false,
             validate: {
-                notNull: true,
                 notEmpty: true
             }
         },
         member: {
             type: DataTypes.JSON,
+            allowNull: false,
             validate: {
-                notNull: true,
                 notEmpty: true,
                 isInitialized(value) {
                     if(!value.registered || !value.confirmed || !value.deregistered) {
@@ -51,15 +51,15 @@ module.exports = (sequelize, DataTypes) => {
         },
         recurring: {
             type: DataTypes.BOOLEAN,
+            allowNull: false,
             validate: {
-                notNull: true,
                 notEmpty: true
             }
         },
         mainRaid: {
             type: DataTypes.BOOLEAN,
+            allowNull: false,
             validate: {
-                notNull: true,
                 notEmpty: true
             }
         }
