@@ -1,4 +1,3 @@
-const Mongo = require('./mongo')
 const Player = require('../player')
 const RaidFactory = require('../raid/raidFactory')
 

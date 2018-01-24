@@ -82,6 +82,27 @@ class util {
         for (; i < raidArray.length && raidArray[i].prio <= raidObject.prio; i++);
         raidArray.splice(i, 0, raidObject)
     }
+
+    /**
+     * Makes the input to lower case, deletes multiple spaces
+     * and makes sure that there are no spaces after a comma
+     * @param {String} input
+     * @return {String}
+     */
+    static beautifyUserInput(input) {
+        return input
+            // delete multiple spaces
+            .split(' ')
+            .filter((element) => {
+                return (element !== '')
+            })
+            // delete spaces after appearence of a comma
+            .join(' ')
+            .split(', ')
+            .join(',')
+            // make string lower case to better work with user inputs
+            .toLowerCase()
+    }
 }
 
 module.exports = util
