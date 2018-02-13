@@ -44,16 +44,28 @@ module.exports = (sequelize, DataTypes) => {
                 notEmpty: true,
                 isInitialized(value) {
                     if(!value.registered || !value.confirmed || !value.deregistered) {
-                        throw new Error('List of Members has not been initialized!')
+                        throw new Error('List of members has not been initialized!')
                     }
                 }
             }
         },
         recurring: {
-            type: DataTypes.BOOLEAN,
+            type: DataTypes.JSON,
             allowNull: false,
             validate: {
                 notEmpty: true
+            }
+        },
+        recurringMember: {
+            type: DataTypes.JSON,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+                isInitialized(value) {
+                    if(!value.player) {
+                        throw new Error('List of recurring members has not been initialized!')
+                    }
+                }
             }
         },
         mainRaid: {
@@ -62,6 +74,9 @@ module.exports = (sequelize, DataTypes) => {
             validate: {
                 notEmpty: true
             }
+        },
+        display: {
+            type: DataTypes.BOOLEAN
         }
     })
 }

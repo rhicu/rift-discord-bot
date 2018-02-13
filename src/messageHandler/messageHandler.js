@@ -1,15 +1,144 @@
-const Actions = require('./actions')
+const RaidFactory = require('../raid/raidFactory')
+const PlayerFactory = require('../user/playerFactory')
+const Database = require('../db/dbInteraction')
+
 const N = '\n'
 
 /** */
 class MessageHandler {
 
+    /** */
+    static init() {
+        Database.init()
+    }
+
     /**
-     *
-     * @param {Client} bot
+     * Makes the input to lower case, deletes multiple spaces
+     * and makes sure that there are no spaces after a comma
+     * @param {String} input
+     * @return {String}
      */
-    constructor(bot) {
-        this.commands = new Actions(bot)
+    static _beautifyUserInput(input) {
+        return input
+            // delete multiple spaces
+            .split(' ')
+            .filter((element) => {
+                return (element !== '')
+            }).join(' ')
+            // delete spaces after appearence of a comma
+            .split(', ')
+            .join(',')
+            // make string lower case to better work with user inputs
+            .toLowerCase()
+    }
+
+    /**
+     * @param {Message} message
+     */
+    static createOrUpdatePlayer(message) {
+        try {
+            const userInput = MessageHandler._beautifyUserInput(message.content)
+
+            // create Raid object
+            const newRaid = RaidFactory.createRaidFromUserInput(userInput, message.author.id)
+
+            // check if input was valid
+            if(!newRaid) {
+                message.reply('Couldn\'t create new character! Please check your input and try again!')
+                return
+            }
+
+            // check if character already exists and was created by this user
+            Database.isEntitledToUpdatePlayer(newRaid)
+                .then((result) => {
+                    if(result === false) {
+                        message.reply('You are not allowed to update this character!')
+                    } else {
+                        // check if character already exists
+                        Database.addOrUpdatePlayer(newRaid)
+                            .then((result) => {
+                                if(result === true) {
+                                    message.reply(`New charackter ${newRaid.ingameName} successfully created!`)
+                                } else {
+                                    message.reply(`Charackter ${newRaid.ingameName} successfully updated!`)
+                                }
+                            }).catch((error) => {
+                                message.reply(error.message)
+                            })
+                    }
+                }).catch((error) => {
+                    message.reply(error.message)
+                })
+        } catch(error) {
+            message.reply(error.message)
+        }
+    }
+
+    /**
+     * @param {Message} message 
+     */
+    static deletePlayer(message) {
+        const userInput = MessageHandler._beautifyUserInput(message.content)
+        const splittedUserInput = userInput.split(' ').splice(1)
+
+        if(splittedUserInput.length < 1) {
+            message.reply('Too few arguments! Check input and try again!')
+            return
+        }
+
+        const discordID = message.author.id
+        const shortName = splittedUserInput[0]
+
+        try {
+            Database.deletePlayer(shortName, discordID)
+                .then((result) => {
+                    if(result) {
+                        message.reply(`${shortName} has been deleted successfully!`)
+                    } else {
+                        message.reply(`${shortName} could\'t be deleted! Is it really your character?`)
+                    }
+                })
+        } catch(error) {
+            message.reply(error.message)
+        }
+    }
+
+    /**
+     * @param {Message} message
+     */
+    static addRaid(message) {
+        const userInput = MessageHandler._beautifyUserInput(message.content)
+
+        // create Player object
+        const newPlayer = PlayerFactory.createPlayerFromUserInput(userInput, message.author.id)
+
+        // check if input was valid
+        if(!newPlayer) {
+            message.reply('Couldn\'t create new character! Please check your input and try again!')
+            return
+        }
+
+        // check if character already exists and was created by this user
+        Database.isEntitledToUpdatePlayer(newPlayer)
+            .then((result) => {
+                if(result === false) {
+                    message.reply('You are not allowed to update this character!')
+                } else {
+                    // check if character already exists
+                    Database.addOrUpdatePlayer(newPlayer)
+                        .then((result) => {
+                            if(result === true) {
+                                message.reply(`New charackter ${newPlayer.ingameName} successfully created!`)
+                            } else {
+                                message.reply(`Charackter ${newPlayer.ingameName} successfully updated!`)
+                            }
+                        }).catch((error) => {
+                            message.reply(error.message)
+                        })
+                }
+            }).catch((error) => {
+                message.reply(error.message)
+            })
     }
 
     /**
@@ -18,7 +147,7 @@ class MessageHandler {
      *
      * @return {String}
      */
-    help(isOffi) {
+    static help(isOffi) {
         let string = 'usage:\n\n'
         string = `${string}help - show this message${
             N}${
@@ -70,7 +199,7 @@ class MessageHandler {
      *
      * @return {String}
      */
-    hilfe(isOffi) {
+    static hilfe(isOffi) {
         let string = 'Benutzung:\n\n'
         string = `${string}hilfe - zeigt Dir diese Hilfe an${
             N}${
@@ -92,25 +221,28 @@ class MessageHandler {
      *
      * @param {Message} msg
      */
-    memberCommand(msg) {
-        let command = msg.content.split(' ')[0]
+    static memberCommand(msg) {
+        let command = msg.content.split(' ')[0].toLowerCase()
         switch(command) {
             case 'register':
-                this.commands.register(msg)
+                MessageHandler.register(msg)
                 break
             case 'deregister':
-                this.commands.deregister(msg)
+                MessageHandler.deregister(msg)
                 break
             case 'help':
-                msg.reply(this.help(false))
+                msg.reply(MessageHandler.help(false))
                     .catch((error) => console.log(`help: ${error}`))
                 break
             case 'hilfe':
-                msg.reply(this.hilfe(false))
+                msg.reply(MessageHandler.hilfe(false))
                     .catch((error) => console.log(`hilfe: ${error}`))
                 break
             case 'create':
-                this.commands.newCharacter(msg)
+                MessageHandler.createOrUpdatePlayer(msg)
+                break
+            case 'delete':
+                MessageHandler.deletePlayer(msg)
                 break
             default:
                 msg.reply(`Unknown command! / Unbekannter Befehl${
@@ -124,43 +256,46 @@ class MessageHandler {
      *
      * @param {Message} msg
      */
-    offiCommand(msg) {
-        let command = msg.content.split(' ')[0]
+    static offiCommand(msg) {
+        let command = msg.content.split(' ')[0].toLowerCase()
         switch(command) {
-            case 'addRaid':
-                this.commands.addRaid(msg)
+            case 'addraid':
+                MessageHandler.addRaid(msg)
                 break
-            case 'clearRaidChannel':
-                this.commands.clearChannel()
+            case 'clearraidchannel':
+                MessageHandler.clearChannel()
                 break
-            case 'printRaids':
-                this.commands.printRaids(msg)
+            case 'printraids':
+                MessageHandler.printRaids(msg)
                 break
             case 'register':
-                this.commands.register(msg)
+                MessageHandler.register(msg)
                 break
             case 'deregister':
-                this.commands.deregister(msg)
+                MessageHandler.deregister(msg)
                 break
             case 'help':
-                msg.reply(this.help(true))
+                msg.reply(MessageHandler.help(true))
                     .catch((error) => console.log(`help: ${error}`))
                 break
             case 'hilfe':
-                msg.reply(this.hilfe(true))
+                msg.reply(MessageHandler.hilfe(true))
                     .catch((error) => console.log(`hilfe: ${error}`))
                 break
-            case 'deleteRaid':
-                this.commands.deleteRaid(msg)
+            case 'deleteraid':
+                MessageHandler.deleteRaid(msg)
                 break
-            case 'updateRaid':
-                this.commands.updateRaid(msg)
+            case 'updateraid':
+                MessageHandler.updateRaid(msg)
                 break
             case 'create':
-                this.commands.newCharacter(msg)
+                MessageHandler.createOrUpdatePlayer(msg)
                 break
             case 'confirm':
-                this.commands.confirmRegisteredEventMemberForEvent(msg)
+                MessageHandler.confirmRegisteredEventMemberForEvent(msg)
+                break
+            case 'delete':
+                MessageHandler.deletePlayer(msg)
                 break
             default:
                 msg.reply(`Unknown command! / Unbekannter Befehl${
@@ -169,7 +304,6 @@ class MessageHandler {
                 break
         }
     }
-
 }
 
 module.exports = MessageHandler

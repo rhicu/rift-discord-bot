@@ -5,14 +5,14 @@ class Player {
 
     /**
      *
-     * @param {String} id
+     * @param {String} discordID
      * @param {String} ingameName
      * @param {String} riftClass
      * @param {JSON} roles
      * @param {String} shortName
      */
-    constructor(id, ingameName, riftClass, roles, shortName) {
-        this.id = id
+    constructor(discordID, ingameName, riftClass, roles, shortName) {
+        this.discordID = discordID
         this.ingameName = ingameName
         this.riftClass = riftClass
         this.roles = roles
@@ -20,6 +20,7 @@ class Player {
     }
 
     /**
+     *
      * @return {String}
      */
     toString() {

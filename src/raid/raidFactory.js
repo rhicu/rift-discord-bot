@@ -4,54 +4,39 @@ const Raid = require('./raid')
 /** */
 class RaidFactory {
 
-    /** */
-    constructor() {}
-
     /**
-     *
-     * @param {String[]} args
-     * @param {Number} id
-     * @param {String} raidLeadName
-     *
+     * @param {String} input
      * @return {Raid}
      */
-    static newRaid(args, id, raidLeadName) {
+    static createRaidFromUserInput(input) {
         try {
-            if(args.length < 2)
+            const splittedInput = input.split(' ').splice(1)
+            if(splittedInput.length < 2) {
                 return null
+            }
 
-            const type = RaidFactory._getType(args[0])
-            if(!type)
-                return null
-
-            const date = RaidFactory._generateDate(args[1])
-            if(date === 'Invalid Date')
-                return null
+            const type = RaidFactory._getType(splittedInput[0])
+            const raidLeadShortName = null
+            const recurring = false
+            const mainRaid = false
 
             let start
             let end
-            if(args.length < 4) {
-                start = RaidFactory._verifyTime(config.defaultStartingTime)
-                if(!start)
-                    return null
-
-                end = RaidFactory._verifyTime(config.defaultEndingTime)
-                if(!end)
-                    return null
-            } else {
-                start = RaidFactory._verifyTime(args[2])
-                if(!start)
-                    return null
-
-                end = RaidFactory._verifyTime(args[3])
-                if(!end)
-                    return null
+            switch(splittedInput.length) {
+                case 2:
+                    start = RaidFactory._verifyTime(config.defaultStartingTime)
+                    end = RaidFactory._verifyTime(config.defaultEndingTime)
+                    break
+                case 4:
+                    start = RaidFactory._verifyTime(splittedInput[1])
+                    end = RaidFactory._verifyTime(splittedInput[2])
+                    break
+                default:
+                    throw new Error('You have to declare either start and end time or none of them!')
             }
-
-            return new Raid(id, type, date, start, end, raidLeadName, '')
+            return new Raid(type, date, start, end, raidLeadName, '')
         } catch(error) {
-            console.log(`newRaid: ${error.stack}`)
-            return null
+            throw error
         }
     }
 

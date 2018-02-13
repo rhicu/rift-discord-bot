@@ -1,4 +1,4 @@
-const util = require('../util')
+const util = require('../util/util')
 const RichEmbed = require('discord.js').RichEmbed
 const config = require('./raidConfig')
 const N = '\n'
@@ -7,36 +7,47 @@ const N = '\n'
 class Raid {
 
     /**
-     *
-     * @param {Number} id
      * @param {String} type
-     * @param {Date} date
      * @param {String} start
      * @param {String} end
      * @param {String} raidLeadName
      * @param {String} messageID
+     * @param {Object} member
+     * @param {Object} recurring
+     * @param {Object} recurringMember
+     * @param {Boolean} mainRaid
+     * @param {Boolean} display
+     * @param {Number} planerID
      */
-    constructor(id, type, date, start, end, raidLeadName, messageID) {
-
-        this.id = id
+    constructor(type, start, end, raidLeadName, messageID, member, recurring, recurringMember, mainRaid, display, planerID) {
         this.type = type
-        this.date = date.toDateString()
         this.start = start
         this.end = end
-        this.invite = this._calculateInviteTime(start)
         this.raidLead = raidLeadName
-        this.prio = date.getTime()
         this.messageID = messageID
-        this.registeredPlayer = []
-        this.confirmedPlayer = []
+        this.member = member
+        this.recurring = recurring
+        this.recurringMember = recurringMember
+        this.mainRaid = mainRaid
+        this.display = display
+
+        this.planerID = planerID
+        this.invite = this._calculateInviteTime(start)
+    }
+
+    /**
+     * @return {Number}
+     */
+    getPrio() {
+        return this.start.toDateString().getTime()
     }
 
     /**
      * @return {String}
      */
-    generateRaidOutput() {
-        return `${config.raids[this.type].name} - ${this.date}${
-            N}AnmeldeID: ${this.id}${N}${
+    _generateRaidOutput() {
+        return `${config.raids[this.type].name} - ${this.start.toDateString()}${
+            N}AnmeldeID: ${this.planerID}${N}${
             N}Raidlead: ${this.raidLead}${N}${
             N}Raidinvite: ${this.invite}${
             N}Raidstart: ${this.start} - Raidende : ${this.end}${
@@ -53,7 +64,7 @@ class Raid {
             let embed = new RichEmbed()
                 .attachFile(config.raids[this.type].imgPath)
                 .setTitle(config.raids[this.type].name)
-                .addField('Daten:', this.generateRaidOutput())
+                .addField('Daten:', this._generateRaidOutput())
                 .addField('Vorraussetzungen:', this._checkForEmptyStrings(util.multiLineStringFromArray(config.raids[this.type].requirements)))
                 .addField('Angemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.registeredPlayer)))
                 .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.confirmedPlayer)))

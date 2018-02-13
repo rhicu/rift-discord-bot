@@ -1,4 +1,4 @@
-const config = require('./config')
+const config = require('../config.json')
 const Sequelize = require('sequelize')
 const db = new Sequelize(config.mysql.name, config.mysql.username, config.mysql.password, {
     host: config.mysql.host,
@@ -16,55 +16,81 @@ const Player = db.import('./models/player')
 /** */
 class Database {
 
+    /** */
+    static init() {
+        Raid.sync({force: true})
+        Player.sync({force: true})
+    }
     /**
-     *
      * @param {Object} raidObject
-     *
      * @return {Promise}
      */
-    static addNewRaid(raidObject) {
-        return Raid.sync().then(() => {
-            return Raid.create(raidObject)
-        })
+    static addOrUpdateRaid(raidObject) {
+        return Raid.upsert(raidObject)
     }
 
     /**
-     *
      * @param {String} raidID
-     *
      * @return {Promise}
      */
     static getRaidByID(raidID) {
-        return Raid.sync().then(() => {
-            return Raid.findById(raidID).then((result) => {
-                return result.dataValues
-            })
-        })
+        return Raid.findById(raidID)
     }
 
     /**
-     *
      * @param {Object} playerObject
-     *
      * @return {Promise}
      */
-    static addNewPlayer(playerObject) {
-        return Player.sync().then(() => {
-            return Player.create(playerObject)
-        })
+    static addRaid(playerObject) {
+        return Player.upsert(playerObject)
     }
 
     /**
-     *
      * @param {String} playerID 
-     *
      * @return {Promise}
      */
     static getPlayerByID(playerID) {
-        return Player.sync().then(() => {
-            return Player.findById(playerID).then((result) => {
-                return result.dataValues
-            })
+        return Player.findById(playerID)
+    }
+
+    /**
+     * @param {String} shortName
+     * @param {String} discordID
+     * @return {Promise}
+     */
+    static getPlayerByShortNameAndDiscordID(shortName, discordID) {
+        return Player.findOne({
+            where: {
+                shortName: shortName,
+                discordID: discordID
+            }
+        })
+    }
+
+    /**
+     * @param {String} ingameName
+     * @return {Promise}
+     */
+    static getPlayerByIngameName(ingameName) {
+        return Player.findOne({
+            where: {
+                ingameName: ingameName
+            }
+        })
+    }
+
+    /**
+     *
+     * @param {String} shortName
+     * @param {String} discordID
+     * @return {Promise}
+     */
+    static deletePlayer(shortName, discordID) {
+        return Player.destroy({
+            where: {
+                shortName: shortName,
+                discordID: discordID
+            }
         })
     }
 }
