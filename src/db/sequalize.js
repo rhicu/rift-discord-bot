@@ -46,7 +46,7 @@ class Database {
     }
 
     /**
-     * @param {String} playerID 
+     * @param {String} playerID
      * @return {Promise}
      */
     static getPlayerByID(playerID) {

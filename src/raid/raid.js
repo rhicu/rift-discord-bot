@@ -17,9 +17,8 @@ class Raid {
      * @param {Object} recurringMember
      * @param {Boolean} mainRaid
      * @param {Boolean} display
-     * @param {Number} planerID
      */
-    constructor(type, start, end, raidLeadName, messageID, member, recurring, recurringMember, mainRaid, display, planerID) {
+    constructor(type, start, end, raidLeadName, messageID, member, recurring, recurringMember, mainRaid, display) {
         this.type = type
         this.start = start
         this.end = end
@@ -31,7 +30,6 @@ class Raid {
         this.mainRaid = mainRaid
         this.display = display
 
-        this.planerID = planerID
         this.invite = this._calculateInviteTime(start)
     }
 

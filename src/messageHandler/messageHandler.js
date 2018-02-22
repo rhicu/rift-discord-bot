@@ -75,7 +75,7 @@ class MessageHandler {
     }
 
     /**
-     * @param {Message} message 
+     * @param {Message} message
      */
     static deletePlayer(message) {
         const userInput = MessageHandler._beautifyUserInput(message.content)
@@ -108,37 +108,7 @@ class MessageHandler {
      */
     static addRaid(message) {
         const userInput = MessageHandler._beautifyUserInput(message.content)
-
-        // create Player object
-        const newPlayer = PlayerFactory.createPlayerFromUserInput(userInput, message.author.id)
-
-        // check if input was valid
-        if(!newPlayer) {
-            message.reply('Couldn\'t create new character! Please check your input and try again!')
-            return
-        }
-
-        // check if character already exists and was created by this user
-        Database.isEntitledToUpdatePlayer(newPlayer)
-            .then((result) => {
-                if(result === false) {
-                    message.reply('You are not allowed to update this character!')
-                } else {
-                    // check if character already exists
-                    Database.addOrUpdatePlayer(newPlayer)
-                        .then((result) => {
-                            if(result === true) {
-                                message.reply(`New charackter ${newPlayer.ingameName} successfully created!`)
-                            } else {
-                                message.reply(`Charackter ${newPlayer.ingameName} successfully updated!`)
-                            }
-                        }).catch((error) => {
-                            message.reply(error.message)
-                        })
-                }
-            }).catch((error) => {
-                message.reply(error.message)
-            })
+        
     }
 
     /**

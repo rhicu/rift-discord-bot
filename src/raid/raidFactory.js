@@ -15,10 +15,20 @@ class RaidFactory {
                 return null
             }
 
-            const type = RaidFactory._getType(splittedInput[0])
-            const raidLeadShortName = null
+            const messageID = ''
             const recurring = false
+            const recurringMember = {
+                player: {}
+            }
             const mainRaid = false
+            const display = true
+            const member = {
+                registered: {},
+                confirmed: {},
+                deregistered: {}
+            }
+
+            const type = RaidFactory._getType(splittedInput[0])
 
             let start
             let end
@@ -34,16 +44,17 @@ class RaidFactory {
                 default:
                     throw new Error('You have to declare either start and end time or none of them!')
             }
-            return new Raid(type, date, start, end, raidLeadName, '')
+
+            const raidLeadName = RaidFactory._getRaidLeadName(splittedInput[3])
+
+            return new Raid(type, start, end, raidLeadName, messageID, member, recurring, recurringMember, mainRaid, display)
         } catch(error) {
             throw error
         }
     }
 
     /**
-     *
      * @param {Object} dataBaseObject
-     *
      * @return {Raid}
      */
     static recreateRaidFromDatabaseObject(dataBaseObject) {
@@ -56,9 +67,7 @@ class RaidFactory {
     }
 
     /**
-     *
      * @param {string} input
-     *
      * @return {String}
      * @return {null}
      */
@@ -80,9 +89,7 @@ class RaidFactory {
     }
 
     /**
-     *
      * @param {String} dateString
-     *
      * @return {Date}
      */
     static _generateDate(dateString) {
@@ -91,13 +98,19 @@ class RaidFactory {
     }
 
     /**
-     *
      * @param {String} timeString
-     *
      * @return {String}
      */
     static _verifyTime(timeString) {
         return timeString
+    }
+
+    /**
+     * @param {String} shortName
+     * @return {String}
+     */
+    static _getRaidLeadName(shortName) {
+        return ''
     }
 }
 
