@@ -1,78 +1,91 @@
-const util = require('../utils/util')
-const config = require('../config.json')
+const util = require('../util/util')
+const RichEmbed = require('discord.js').RichEmbed
+const config = require('./raidConfig')
 const N = '\n'
 
-/**
- * 
- */
+/** */
 class Raid {
 
     /**
-     * 
-     * @param {string} type 
-     * @param {string} day 
-     * @param {string} date 
-     * @param {string} invite 
-     * @param {string} start 
-     * @param {string} end 
+     * @param {String} type
+     * @param {String} start
+     * @param {String} end
+     * @param {String} raidLeadName
+     * @param {String} messageID
+     * @param {Object} member
+     * @param {Object} recurring
+     * @param {Object} recurringMember
+     * @param {Boolean} isMainRaid
+     * @param {Boolean} shouldBeDisplay
      */
-    constructor(type, day, date, invite = '18:45', start = '19:00', end = '21:30') {
-
-        switch(type) {
-            case 'irotp':
-                this.config = config.raids.irotp
-                break
-            case 'td':
-                this.config = config.raids.td
-                break
-            default:
-                this.config = config.raids.td
-                return
-        }
-
+    constructor(type, start, end, raidLeadName, messageID, member, recurring, recurringMember, isMainRaid, shouldBeDisplay) {
         this.type = type
-        this.day = day
-        this.date = date
-        this.invite = invite
         this.start = start
         this.end = end
-        this.img = this.config.imgPath
-        this.name = this.config.name
-        this.shortName = this.config.shortName
-        this.embedColor = this.config.embedColor
-        this.registeredPlayer = []
-        this.confirmedPlayer = []
-        this.messageID = ''
-        this.id = 0
+        this.raidLead = raidLeadName
+        this.messageID = messageID
+        this.member = member
+        this.recurring = recurring
+        this.recurringMember = recurringMember
+        this.isMainRaid = isMainRaid
+        this.shouldBeDisplay = shouldBeDisplay
+
+        this.invite = this._calculateInviteTime(start)
     }
 
     /**
-     * @return {string}
+     * @return {Number}
      */
-    isValid() {
-        return (this.day !== '' && this.date !== '' && this.invite !== '' && this.start !== '' && this.end !== '')
+    priority() {
+        return this.start.toDateString().getTime()
     }
 
     /**
-     * @return {string} 
+     * @return {String}
      */
-    generateRaidOutput() {
-        const plannedRaids = `${this.name} - ${this.day}, ${this.date}${
-            N}AnmeldeID: ${this.id}${N}${
+    _generateRaidOutput() {
+        return `${config.raids[this.type].name} - ${this.start.toDateString()}${
+            N}AnmeldeID: ${this.planerID}${N}${
+            N}Raidlead: ${this.raidLead}${N}${
             N}Raidinvite: ${this.invite}${
             N}Raidstart: ${this.start} - Raidende : ${this.end}${
             N}${
-            N}Vorraussetzung:${
-            N}${util.multiLineStringFromArray(this.config.requirements)}${
-            N}Insgesamt verfügbare Plätze: ${this.config.numberPlayer}${
-            N}${
-            N}Benötigt: ${this.config.numberTank}x Tank, ${this.config.numberHeal}x Heal, ${this.config.numberSupport}x Supp, ${this.config.numberDD}x DD${
-            N}${
-            N}Angemeldet:${
-            N}${util.numberedMultiLineStringFromArray(this.registeredPlayer)}${
-            N}Bestätigt:${
-            N}${util.numberedMultiLineStringFromArray(this.confirmedPlayer)}`
-        return plannedRaids
+            N}Insgesamt verfügbare Plätze: ${config.raids[this.type].numberPlayer}${
+            N}Benötigt: ${config.raids[this.type].numberTank}x Tank, ${config.raids[this.type].numberHeal}x Heal, ${config.raids[this.type].numberSupport}x Supp, ${config.raids[this.type].numberDD}x DD`
+    }
+
+    /**
+     * @return {RichEmbed}
+     */
+    generateEmbed() {
+        try {
+            let embed = new RichEmbed()
+                .attachFile(config.raids[this.type].imgPath)
+                .setTitle(config.raids[this.type].name)
+                .addField('Daten:', this._generateRaidOutput())
+                .addField('Vorraussetzungen:', this._checkForEmptyStrings(util.multiLineStringFromArray(config.raids[this.type].requirements)))
+                .addField('Angemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.registeredPlayer)))
+                .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.confirmedPlayer)))
+                .setFooter('Registrierung via RiftDiscordBot')
+                .setColor(config.raids[this.type].embedColor)
+            return embed
+        } catch(error) {
+            console.log(`generateEmbed: ${error.stack}`)
+        }
+    }
+
+    /**
+     *
+     * @param {String} input
+     *
+     * @return {String}
+     */
+    _checkForEmptyStrings(input) {
+        if(input === '') {
+            return '...'
+        } else {
+            return input
+        }
     }
 }
 

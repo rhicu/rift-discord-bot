@@ -6,7 +6,7 @@ exports.days = {
     FRIDAY: 4,
     SATURDAY: 5,
     SUNDAY: 6
-};
+}
 
 exports.riftClasses = {
     UNKNOWN: 0,
@@ -15,7 +15,7 @@ exports.riftClasses = {
     CLERIC: 3,
     ROGUE: 4,
     PRIMALIST: 5
-};
+}
 
 exports.roles = {
     UNKNOWN: 0,
@@ -23,4 +23,4 @@ exports.roles = {
     HEAL: 2,
     SUPPORT: 3,
     DD: 4
-};
+}

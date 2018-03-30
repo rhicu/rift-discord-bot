@@ -1,7 +1,9 @@
-class raidHandler {
+/** */
+class RaidHandler {
+
+    /** */
     constructor() {}
 
-    
 }
 
-module.exports = raidHandler;
+module.exports = RaidHandler

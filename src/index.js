@@ -1,15 +1,7 @@
 const Discord = require('discord.js')
 const config = require('./config.json')
 const privateConfig = require('./privateConfig.json')
-const RaidHandler = require('./raidHandler/raidHandler')
-const Database = require('./db/database')
 const fs = require('fs')
-const db = require('sqlite')
-
-db.open(`${config.dbPath}riftDiscordBot.sqlite`)
-    .catch((error) => {
-        console.log(`opening database: ${error}`)
-    })
 
 const bot = new Discord.Client()
 require('./utils/eventLoader')(bot)
@@ -36,8 +28,13 @@ fs.readdir(config.commandsFolderPath, (error, files) => {
 })
 
 bot.elevation = (msg) => {
-    /* This function should resolve to an ELEVATION level which
-        is then sent to the command handler for verification*/
+
+    if(msg.author.bot) return
+
+    /**
+     * This function should resolve to an ELEVATION level which
+     * is then sent to the command handler for verification
+     */
     const guildMember = bot.guilds.find('id', config.serverID).member(msg.author)
     let permlvl = 0
     if (guildMember.roles.has(config.roles.member)) permlvl = 1
@@ -48,8 +45,3 @@ bot.elevation = (msg) => {
 }
 
 bot.login(`${privateConfig.token}`)
-    .then(() => {
-        const channel = bot.guilds.find('id', config.serverID).channels.find('id', config.raidPlannerChannelID)
-        bot.db = new Database()
-        bot.raidManager = new RaidHandler(channel)
-    })
