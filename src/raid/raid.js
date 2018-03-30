@@ -36,7 +36,7 @@ class Raid {
     /**
      * @return {Number}
      */
-    getPrio() {
+    priority() {
         return this.start.toDateString().getTime()
     }
 
@@ -86,34 +86,6 @@ class Raid {
         } else {
             return input
         }
-    }
-
-    /**
-     *
-     * @param {String} start
-     *
-     * @return {String}
-     */
-    _calculateInviteTime(start) {
-        const timeArray = start.split(':')
-        let hour = parseInt(timeArray[0])
-        let minutes = parseInt(timeArray[1])
-
-        if(minutes < 15) {
-            let overflow = 15 - minutes
-            minutes = 60 - overflow
-            hour--
-            if(hour === -1)
-                hour = 23
-        } else
-            minutes = minutes -15
-
-        if(hour < 10 && hour >= 0)
-            hour = `0${hour}`
-        if(minutes < 10 && minutes >= 0)
-            minutes = `0${minutes}`
-
-        return `${hour}:${minutes}`
     }
 }
 

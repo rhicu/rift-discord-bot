@@ -110,7 +110,7 @@ class RaidFactory {
      * @return {String}
      */
     static _getRaidLeadName(shortName) {
-        return ''
+        return shortName
     }
 }
 
