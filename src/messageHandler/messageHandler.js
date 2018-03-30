@@ -13,26 +13,6 @@ class MessageHandler {
     }
 
     /**
-     * Makes the input to lower case, deletes multiple spaces
-     * and makes sure that there are no spaces after a comma
-     * @param {String} input
-     * @return {String}
-     */
-    static _beautifyUserInput(input) {
-        return input
-            // delete multiple spaces
-            .split(' ')
-            .filter((element) => {
-                return (element !== '')
-            }).join(' ')
-            // delete spaces after appearence of a comma
-            .split(', ')
-            .join(',')
-            // make string lower case to better work with user inputs
-            .toLowerCase()
-    }
-
-    /**
      * @param {Message} message
      */
     static createOrUpdatePlayer(message) {
