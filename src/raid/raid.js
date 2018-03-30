@@ -15,10 +15,10 @@ class Raid {
      * @param {Object} member
      * @param {Object} recurring
      * @param {Object} recurringMember
-     * @param {Boolean} mainRaid
-     * @param {Boolean} display
+     * @param {Boolean} isMainRaid
+     * @param {Boolean} shouldBeDisplay
      */
-    constructor(type, start, end, raidLeadName, messageID, member, recurring, recurringMember, mainRaid, display) {
+    constructor(type, start, end, raidLeadName, messageID, member, recurring, recurringMember, isMainRaid, shouldBeDisplay) {
         this.type = type
         this.start = start
         this.end = end
@@ -27,8 +27,8 @@ class Raid {
         this.member = member
         this.recurring = recurring
         this.recurringMember = recurringMember
-        this.mainRaid = mainRaid
-        this.display = display
+        this.isMainRaid = isMainRaid
+        this.shouldBeDisplay = shouldBeDisplay
 
         this.invite = this._calculateInviteTime(start)
     }
@@ -82,7 +82,7 @@ class Raid {
      */
     _checkForEmptyStrings(input) {
         if(input === '') {
-            return 'keine Einträge'
+            return '...'
         } else {
             return input
         }

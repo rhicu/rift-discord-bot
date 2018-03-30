@@ -1,43 +1,27 @@
 const RaidFactory = require('../raid/raidFactory')
-const PlayerFactory = require('../user/playerFactory')
+// const PlayerFactory = require('../user/playerFactory')
 const Database = require('../db/dbInteraction')
+const Util = require('../util/util')
 
 const N = '\n'
 
 /** */
 class MessageHandler {
 
-    /** */
+    /**
+     * @public
+     */
     static init() {
         Database.init()
     }
 
     /**
-     * Makes the input to lower case, deletes multiple spaces
-     * and makes sure that there are no spaces after a comma
-     * @param {String} input
-     * @return {String}
-     */
-    static _beautifyUserInput(input) {
-        return input
-            // delete multiple spaces
-            .split(' ')
-            .filter((element) => {
-                return (element !== '')
-            }).join(' ')
-            // delete spaces after appearence of a comma
-            .split(', ')
-            .join(',')
-            // make string lower case to better work with user inputs
-            .toLowerCase()
-    }
-
-    /**
+     * @public
      * @param {Message} message
      */
     static createOrUpdatePlayer(message) {
         try {
-            const userInput = MessageHandler._beautifyUserInput(message.content)
+            const userInput = Util._beautifyUserInput(message.content)
 
             // create Raid object
             const newRaid = RaidFactory.createRaidFromUserInput(userInput, message.author.id)
@@ -75,10 +59,11 @@ class MessageHandler {
     }
 
     /**
+     * @public
      * @param {Message} message
      */
     static deletePlayer(message) {
-        const userInput = MessageHandler._beautifyUserInput(message.content)
+        const userInput = Util._beautifyUserInput(message.content)
         const splittedUserInput = userInput.split(' ').splice(1)
 
         if(splittedUserInput.length < 1) {
@@ -104,17 +89,16 @@ class MessageHandler {
     }
 
     /**
+     * @public
      * @param {Message} message
      */
     static addRaid(message) {
-        const userInput = MessageHandler._beautifyUserInput(message.content)
-        
+        // const userInput = Util._beautifyUserInput(message.content)
     }
 
     /**
-     *
+     * @public
      * @param {Boolean} isOffi
-     *
      * @return {String}
      */
     static help(isOffi) {
@@ -164,9 +148,8 @@ class MessageHandler {
     }
 
     /**
-     *
+     * @public
      * @param {Boolean} isOffi
-     *
      * @return {String}
      */
     static hilfe(isOffi) {
@@ -188,7 +171,7 @@ class MessageHandler {
     }
 
     /**
-     *
+     * @public
      * @param {Message} msg
      */
     static memberCommand(msg) {
@@ -223,7 +206,7 @@ class MessageHandler {
     }
 
     /**
-     *
+     * @public
      * @param {Message} msg
      */
     static offiCommand(msg) {

@@ -1,5 +1,3 @@
-import { throws } from 'assert';
-
 const PlayerConfig = require('./playerConfig')
 const Player = require('./player')
 

@@ -14,7 +14,7 @@ const Raid = db.import('./models/raid')
 const Player = db.import('./models/player')
 
 /** */
-class Database {
+class SequelizeInteractions {
 
     /** */
     static init() {
@@ -95,4 +95,4 @@ class Database {
     }
 }
 
-module.exports = Database
+module.exports = SequelizeInteractions
