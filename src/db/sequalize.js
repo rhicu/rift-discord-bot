@@ -38,10 +38,21 @@ class SequelizeInteractions {
     }
 
     /**
+     * @return {Raid[]}
+     */
+    static getRaidsToPrint() {
+        return Raid.findAll({
+            where: {
+                display: true
+            }
+        })
+    }
+
+    /**
      * @param {Object} playerObject
      * @return {Promise}
      */
-    static addRaid(playerObject) {
+    static addOrUpdatePlayer(playerObject) {
         return Player.upsert(playerObject)
     }
 

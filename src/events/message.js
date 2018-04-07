@@ -1,4 +1,4 @@
-// const config = require('../config.json')
+const util = require('../util/util')
 
 /**
  * @param {Message} msg
@@ -9,11 +9,12 @@ module.exports = (msg) => {
     if(msg.channel.type !== 'dm') return
     // if (!msg.content.startsWith(config.prefix)) return
 
-    let client = msg.client
+    const client = msg.client
+    const input = util.beautifyUserInput(msg.content)
 
-    let command = msg.content.split(' ')[0]
-    let args = msg.content.split(' ').slice(1)
-    let permissionLevel = client.elevation(msg)
+    const command = input.split(' ')[0]
+    const args = input.split(' ').slice(1)
+    const permissionLevel = client.elevation(msg)
 
     let cmd
     if (client.commands.has(command)) {

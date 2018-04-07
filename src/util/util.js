@@ -1,5 +1,5 @@
 /** */
-class util {
+class Util {
 
     /**
      * @return {String}
@@ -72,4 +72,4 @@ class util {
     }
 }
 
-module.exports = util
+module.exports = Util

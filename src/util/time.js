@@ -67,6 +67,26 @@ class Time {
             throw error
         }
     }
+
+    /**
+     * @param {String} timeString
+     * @return {String}
+     */
+    static _verifyTime(timeString) {
+        return timeString
+    }
+
+    /**
+     * @param {String} dateString
+     * @return {Date}
+     */
+    static _generateDate(dateString) {
+        const dateArray = dateString.split('.')
+        if(dateArray.length !== 3) {
+            return null
+        }
+        return new Date(`${dateArray[2]}-${dateArray[1]}-${dateArray[0]}`)
+    }
 }
 
 module.exports = Time

@@ -1,6 +1,7 @@
 const db = require('./sequalize')
 const RaidFactory = require('../raid/raidFactory')
 const PlayerFactory = require('../user/playerFactory')
+const util = require('../util/util')
 
 /** */
 class Database {
@@ -54,7 +55,7 @@ class Database {
     static getPlayerByID(playerID) {
         return db.getPlayerByID(playerID)
             .then((result) => {
-                if(!result && !result.dataValues) {
+                if(!result || !result.dataValues) {
                     return null
                 } else {
                     const newPlayer = PlayerFactory.createPlayerFromDatabaseObject(result)
@@ -76,7 +77,7 @@ class Database {
     static getPlayerByShortNameAndDiscordID(shortName, discordID) {
         return db.getPlayerByShortNameAndDiscordID(shortName, discordID)
             .then((result) => {
-                if(!result && !result.dataValues) {
+                if(!result || !result.dataValues) {
                     return null
                 } else {
                     const newPlayer = PlayerFactory.createPlayerFromDatabaseObject(result)
@@ -110,8 +111,8 @@ class Database {
      * @param {Raid} raidObject
      * @return {Promise<Boolean>}
      */
-    static addRaid(raidObject) {
-        return db.addRaid(raidObject)
+    static addOrUpdateRaid(raidObject) {
+        return db.addOrUpdateRaid(raidObject)
             .catch((error) => {
                 throw error
             })
@@ -123,6 +124,24 @@ class Database {
      */
     static getRaidByID(raidID) {
 
+    }
+
+    /**
+     * @return {Raid[]}
+     */
+    static getRaidsToPrint() {
+        return db.getRaidsToPrint()
+            .then((result) => {
+                const raidArray = []
+                result.forEach((raidObject) => {
+                    const raid = RaidFactory.recreateRaidFromDatabaseObject(raidObject)
+                    if(!raid) {
+                        throw new Error('Couldn\'t get raids to print!')
+                    }
+                    util.pushRaidToArraySortedByDate(raidArray, raid)
+                })
+                return raidArray
+            })
     }
 }
 

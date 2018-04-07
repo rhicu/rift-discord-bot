@@ -1,7 +1,8 @@
 const Discord = require('discord.js')
-const config = require('./config.json')
-const privateConfig = require('./privateConfig.json')
 const fs = require('fs')
+const config = require('./config.json')
+const Database = require('./db/dbInteraction')
+Database.init()
 
 const bot = new Discord.Client()
 require('./utils/eventLoader')(bot)
@@ -10,6 +11,7 @@ bot.on('ready', () => {
     console.log(`Logged in as ${bot.user.tag}!`)
 })
 
+bot.database = Database
 bot.commands = new Discord.Collection()
 bot.aliases = new Discord.Collection()
 fs.readdir('./commands/', (error, files) => {
@@ -43,4 +45,4 @@ bot.elevation = (msg) => {
     return permlvl
 }
 
-bot.login(`${privateConfig.token}`)
+bot.login(`${config.token}`)

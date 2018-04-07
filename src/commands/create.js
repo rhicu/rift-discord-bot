@@ -1,41 +1,52 @@
-exports.run = (bot, msg) => {
+const PlayerFactory = require('../user/playerFactory')
+
+exports.run = (bot, msg, args) => {
     try {
-        const args = msg.content.toLowerCase().split(' ').splice(1);
-        if(args.length !== 4) {
-            msg.reply('Couldn\'t create character! Invalid number of Arguments!');
-            return;
+        // create Player object
+        const newPlayer = PlayerFactory.createPlayerFromUserInput(args)
+
+        // check if input was valid
+        if(!newPlayer) {
+            msg.reply('Something went wrong! Please check your input and try again!')
+            return
         }
 
-        const id = msg.author.id;
-        const name = args[0].split('@')[0];
-        const shard = args[0].split('@')[1];
-        const riftClass = args[1];
-        const roles = args[2];
-        const shortName = args[3];
-
-        const status = bot.db.createCharacter(id, name, shard, riftClass, roles, shortName);
-
-        if(status === 'NEW') {
-            msg.reply(`Created new character ${args[0]}`);
-        } else if(status === 'UPDATE') {
-            msg.reply(`Updated ${args[0]}`);
-        } else {
-            msg.reply(`couldn't create ${args[0]}. Don't know why! :(`);
-        }
+        // check if character already exists and was created by this user
+        bot.database.isEntitledToUpdatePlayer(newPlayer)
+            .then((result) => {
+                if(result === false) {
+                    msg.reply('You are not allowed to update this character!')
+                } else {
+                    // check if character already exists
+                    bot.database.addOrUpdatePlayer(newPlayer)
+                        .then((result) => {
+                            if(result === true) {
+                                msg.reply(`New charackter ${newPlayer.ingameName} successfully created!`)
+                            } else {
+                                msg.reply(`Charackter ${newPlayer.ingameName} successfully updated!`)
+                            }
+                        }).catch((error) => {
+                            msg.reply(error.message)
+                        })
+                }
+            }).catch((error) => {
+                msg.reply(error.message)
+            })
     } catch(error) {
-        console.log(`create: ${error}`);
+        msg.reply(error.message)
+        console.log(`create: ${error}`)
     }
-};
+}
 
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: [],
-    permLevel: 2
-};
+    aliases: ['createPlayer', 'addPlayer'],
+    permLevel: 1
+}
 
 exports.help = {
     name: 'create',
     description: 'Creates a Character.',
     usage: 'create <Name> <Class> <Roles> <ShortName>'
-};
+}

@@ -1,17 +1,17 @@
 const config = require('./raidConfig')
 const Raid = require('./raid')
+const Time = require('../util/time')
 
 /** */
 class RaidFactory {
 
     /**
-     * @param {String} input
+     * @param {String} splittedInput
      * @return {Raid}
      */
-    static createRaidFromUserInput(input) {
+    static createRaidFromUserInput(splittedInput) {
         try {
-            const splittedInput = input.split(' ').splice(1)
-            if(splittedInput.length < 2) {
+            if(splittedInput.length < 3) {
                 return null
             }
 
@@ -29,23 +29,31 @@ class RaidFactory {
             }
 
             const type = RaidFactory._getType(splittedInput[0])
+            const date = Time._generateDate(splittedInput[1])
+            if(!type || !date) {
+                return null
+            }
+
 
             let start
             let end
             switch(splittedInput.length) {
-                case 2:
-                    start = RaidFactory._verifyTime(config.defaultStartingTime)
-                    end = RaidFactory._verifyTime(config.defaultEndingTime)
+                case 3:
+                    start = Time._verifyTime(config.defaultStartingTime)
+                    end = Time._verifyTime(config.defaultEndingTime)
                     break
-                case 4:
-                    start = RaidFactory._verifyTime(splittedInput[1])
-                    end = RaidFactory._verifyTime(splittedInput[2])
+                case 5:
+                    start = Time._verifyTime(splittedInput[2])
+                    end = Time._verifyTime(splittedInput[3])
                     break
                 default:
                     throw new Error('You have to declare either start and end time or none of them!')
             }
+            if(!start || !end) {
+                return null
+            }
 
-            const raidLeadName = RaidFactory._getRaidLeadName(splittedInput[3])
+            const raidLeadName = RaidFactory._getRaidLeadName(splittedInput[4])
 
             return new Raid(type, start, end, raidLeadName, messageID, member, recurring, recurringMember, mainRaid, display)
         } catch(error) {
@@ -86,23 +94,6 @@ class RaidFactory {
             }
         }
         return null
-    }
-
-    /**
-     * @param {String} dateString
-     * @return {Date}
-     */
-    static _generateDate(dateString) {
-        const dateArray = dateString.split('.')
-        return new Date(`${dateArray[2]}-${dateArray[1]}-${dateArray[0]}`)
-    }
-
-    /**
-     * @param {String} timeString
-     * @return {String}
-     */
-    static _verifyTime(timeString) {
-        return timeString
     }
 
     /**
