@@ -16,9 +16,9 @@ class Raid {
      * @param {Object} recurring
      * @param {Object} recurringMember
      * @param {Boolean} isMainRaid
-     * @param {Boolean} shouldBeDisplay
+     * @param {Boolean} shouldBeDisplayed
      */
-    constructor(type, start, end, raidLeadName, messageID, member, recurring, recurringMember, isMainRaid, shouldBeDisplay) {
+    constructor(type, start, end, raidLeadName, messageID, member, recurring, recurringMember, isMainRaid, shouldBeDisplayed) {
         this.type = type
         this.start = start
         this.end = end
@@ -28,7 +28,7 @@ class Raid {
         this.recurring = recurring
         this.recurringMember = recurringMember
         this.isMainRaid = isMainRaid
-        this.shouldBeDisplay = shouldBeDisplay
+        this.shouldBeDisplayed = shouldBeDisplayed
 
         this.invite = this._calculateInviteTime(start)
     }

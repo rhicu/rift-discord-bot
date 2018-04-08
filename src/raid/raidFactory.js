@@ -68,7 +68,19 @@ class RaidFactory {
     static recreateRaidFromDatabaseObject(dataBaseObject) {
         if(dataBaseObject) {
             let date = new Date(dataBaseObject.date)
-            return new Raid(dataBaseObject.id, dataBaseObject.type, date, dataBaseObject.start, dataBaseObject.end, dataBaseObject.raidLead, dataBaseObject.messageID)
+            const newRaid = new Raid(
+                dataBaseObject.id,
+                dataBaseObject.type,
+                date, dataBaseObject.start,
+                dataBaseObject.end,
+                dataBaseObject.raidLead,
+                dataBaseObject.messageID
+            )
+            if(!newRaid) {
+                return null
+            } else {
+                return newRaid
+            }
         } else {
             return null
         }
