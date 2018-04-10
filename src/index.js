@@ -5,7 +5,7 @@ const Database = require('./db/dbInteraction')
 Database.init()
 
 const bot = new Discord.Client()
-require('./utils/eventLoader')(bot)
+require('./util/eventLoader')(bot)
 
 bot.on('ready', () => {
     console.log(`Logged in as ${bot.user.tag}!`)
@@ -14,15 +14,15 @@ bot.on('ready', () => {
 bot.database = Database
 bot.commands = new Discord.Collection()
 bot.aliases = new Discord.Collection()
-fs.readdir('./commands/', (error, files) => {
+fs.readdir('/home/rhicu/git/RiftDiscordBot/src/commands', (error, files) => {
     if (error) console.error(error)
     console.log(`${files.length} commands loaded.`)
     files.forEach((f) => {
         let props = require(`./commands/${f}`)
         console.log(`Loading Command: ${props.help.name} OK!`)
-        bot.commands.set(props.help.name, props)
+        bot.commands.set(props.help.name.toLowerCase(), props)
         props.conf.aliases.forEach((alias) => {
-            bot.aliases.set(alias, props.help.name)
+            bot.aliases.set(alias.toLowerCase(), props.help.name.toLowerCase())
         })
     })
 })

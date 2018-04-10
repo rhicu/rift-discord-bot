@@ -1,5 +1,6 @@
 exports.run = (bot, msg, args) => {
-    bot.raidManager.clearChannel();
+    msg.reply('Couldn\'t clear channel')
+    // bot.raidManager.clearChannel();
 };
 
 exports.conf = {

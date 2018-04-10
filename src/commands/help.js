@@ -10,7 +10,7 @@ exports.run = (bot, msg, args) => {
         let command = args[0]
         if (bot.commands.has(command)) {
             command = bot.commands.get(command)
-            msg.channel.send(`= ${command.help.name} = \n${command.help.description}\nusage::${command.help.usage}`, {code: 'asciidoc'})
+            msg.channel.send(`= ${command.help.name} = \n${command.help.description}\nusage :: ${command.help.usage}`, {code: 'asciidoc'})
         }
     }
 }
