@@ -2,7 +2,7 @@
 class Time {
 
     /**
-     * @param {String} time
+     * @param {Date} time
      * @param {String | Number} minutes
      * @return {String}
      */
@@ -12,34 +12,12 @@ class Time {
                 minutes = parseInt(minutes)
             }
 
-            const timeArray = time.split(':')
-            if(timeArray.length !== 2) {
-                throw new Error('Given time input has wrong format or type')
-            }
+            const MS_PER_MINUTE = 60000
+            const currentTimeInMilliseconds = time.valueOf()
 
-            let hour = parseInt(timeArray[0])
-            let minutes = parseInt(timeArray[1])
+            const newTimeInMilliseconds = currentTimeInMilliseconds - (MS_PER_MINUTE * minutes)
 
-            if(minutes < 15) {
-                let overflow = 15 - minutes
-                minutes = 60 - overflow
-                hour--
-                if(hour === -1) {
-                    hour = 23
-                }
-            } else {
-                minutes = minutes -15
-            }
-
-            if(hour < 10 && hour >= 0) {
-                hour = `0${hour}`
-            }
-
-            if(minutes < 10 && minutes >= 0) {
-                minutes = `0${minutes}`
-            }
-
-            return `${hour}:${minutes}`
+            return new Date(newTimeInMilliseconds)
         } catch(error) {
             throw error
         }
@@ -69,23 +47,50 @@ class Time {
     }
 
     /**
+     * @private
      * @param {String} timeString
      * @return {String}
      */
     static _verifyTime(timeString) {
-        return timeString
+        const timeArray = timeString.split(':')
+        if(timeArray.length !== 2) {
+            return null
+        }
+        return `${timeArray[0]}:${timeArray[1]}`
     }
 
     /**
+     * @private
      * @param {String} dateString
-     * @return {Date}
+     * @return {String}
      */
-    static _generateDate(dateString) {
+    static _transformDateStringFromGermanToUSStyle(dateString) {
         const dateArray = dateString.split('.')
         if(dateArray.length !== 3) {
             return null
         }
-        return new Date(`${dateArray[2]}-${dateArray[1]}-${dateArray[0]}`)
+        return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}`
+    }
+
+    /**
+     * @public
+     * @param {String} dateString
+     * @param {String} timeString
+     * @return {Date}
+     */
+    static getDateFromGermanDateAndTimeString(dateString, timeString) {
+        if(!dateString || !timeString) {
+            return null
+        }
+
+        const newDateString = Time._transformDateStringFromGermanToUSStyle(dateString)
+        const newTimeString = Time._verifyTime(timeString)
+
+        if(!newDateString || !newTimeString) {
+            return null
+        }
+
+        return new Date(`${newDateString}T${newTimeString}:00`)
     }
 }
 

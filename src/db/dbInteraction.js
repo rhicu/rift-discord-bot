@@ -42,8 +42,6 @@ class Database {
                 } else {
                     return true
                 }
-            }).catch((error) => {
-                throw error
             })
     }
 
@@ -113,17 +111,15 @@ class Database {
      */
     static addOrUpdateRaid(raidObject) {
         return db.addOrUpdateRaid(raidObject)
-            .catch((error) => {
-                throw error
-            })
     }
 
     /**
      *
      * @param {String} raidID
+     * @return {Number}
      */
     static getRaidByID(raidID) {
-
+        return null
     }
 
     /**

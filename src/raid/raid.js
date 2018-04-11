@@ -1,6 +1,7 @@
 const util = require('../util/util')
 const RichEmbed = require('discord.js').RichEmbed
 const config = require('./raidConfig')
+const Time = require('../util/time')
 const N = '\n'
 
 /** */
@@ -8,36 +9,36 @@ class Raid {
 
     /**
      * @param {String} type
-     * @param {String} start
-     * @param {String} end
-     * @param {String} raidLeadName
+     * @param {Date} start
+     * @param {Date} end
+     * @param {String} raidLead
      * @param {String} messageID
      * @param {Object} member
      * @param {Object} recurring
      * @param {Object} recurringMember
      * @param {Boolean} isMainRaid
-     * @param {Boolean} shouldBeDisplay
+     * @param {Boolean} shouldBeDisplayed
      */
-    constructor(type, start, end, raidLeadName, messageID, member, recurring, recurringMember, isMainRaid, shouldBeDisplay) {
+    constructor(type, start, end, raidLead, messageID, member, recurring, recurringMember, isMainRaid, shouldBeDisplayed) {
         this.type = type
         this.start = start
         this.end = end
-        this.raidLead = raidLeadName
+        this.raidLead = raidLead
         this.messageID = messageID
         this.member = member
         this.recurring = recurring
         this.recurringMember = recurringMember
         this.isMainRaid = isMainRaid
-        this.shouldBeDisplay = shouldBeDisplay
+        this.shouldBeDisplayed = shouldBeDisplayed
 
-        this.invite = this._calculateInviteTime(start)
+        this.invite = Time.substractMinutesFromGivenTime(start, 15)
     }
 
     /**
      * @return {Number}
      */
     priority() {
-        return this.start.toDateString().getTime()
+        return this.start.valueOf()
     }
 
     /**
@@ -64,8 +65,8 @@ class Raid {
                 .setTitle(config.raids[this.type].name)
                 .addField('Daten:', this._generateRaidOutput())
                 .addField('Vorraussetzungen:', this._checkForEmptyStrings(util.multiLineStringFromArray(config.raids[this.type].requirements)))
-                .addField('Angemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.registeredPlayer)))
-                .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.confirmedPlayer)))
+                .addField('Angemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.registered)))
+                .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.confirmed)))
                 .setFooter('Registrierung via RiftDiscordBot')
                 .setColor(config.raids[this.type].embedColor)
             return embed

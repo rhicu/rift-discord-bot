@@ -1,15 +1,16 @@
-const raidFactory = require('../raid/raidFactory')
+const RaidFactory = require('../raid/raidFactory')
 const MessageHandler = require('../util/messageHandler')
 
 exports.run = (bot, msg, args) => {
     try {
-        const newRaid = raidFactory.createRaidFromUserInput(args)
+        const newRaid = RaidFactory.createRaidFromUserInput(args)
 
         if(!newRaid) {
             msg.reply('Couldn\'t create raid. Please check input!')
             return
         }
 
+        console.log('------------------------------ wow -----------------------------')
         bot.database.addOrUpdateRaid(newRaid)
             .then((result) => {
                 if(result) {
@@ -36,5 +37,5 @@ exports.conf = {
 exports.help = {
     name: 'addRaid',
     description: 'Just adding a fucking new raid to planner',
-    usage: 'addRaid <td / irotp> <day> <date>'
+    usage: 'addRaid <type> <date> <raidlead> [<starting time> <ending time>]'
 }
