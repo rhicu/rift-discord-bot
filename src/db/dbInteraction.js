@@ -21,6 +21,8 @@ class Database {
             .catch((error) => {
                 if(error.name === 'SequelizeUniqueConstraintError') {
                     throw new Error('This character has already been created by another person!')
+                } else {
+                    throw error
                 }
             })
     }

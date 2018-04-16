@@ -10,7 +10,6 @@ exports.run = (bot, msg, args) => {
             return
         }
 
-        console.log('------------------------------ wow -----------------------------')
         bot.database.addOrUpdateRaid(newRaid)
             .then((result) => {
                 if(result) {

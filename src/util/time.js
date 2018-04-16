@@ -92,6 +92,24 @@ class Time {
 
         return new Date(`${newDateString}T${newTimeString}:00`)
     }
+
+    /**
+     * @public
+     * @param {Date} date
+     * @return {String}
+     */
+    static dateToDateString(date) {
+        return date.toDateString()
+    }
+
+    /**
+     * @public
+     * @param {Date} date
+     * @return {String}
+     */
+    static dateToTimeString(date) {
+        return date.toLocaleTimeString()
+    }
 }
 
 module.exports = Time

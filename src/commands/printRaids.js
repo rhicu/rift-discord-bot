@@ -2,7 +2,7 @@ const MessageHandler = require('../util/messageHandler')
 
 exports.run = (bot, msg) => {
     try {
-        MessageHandler._clearRaidPlanerChannel(bot)
+        MessageHandler.clearRaidPlanerChannel(bot)
             .then(() => {
                 MessageHandler.updatePrintedRaids(bot)
                 msg.reply(`All raids printed again!`)
@@ -16,7 +16,7 @@ exports.conf = {
     enabled: true,
     guildOnly: false,
     aliases: ['print'],
-    permLevel: 2
+    permLevel: 3
 }
 
 exports.help = {

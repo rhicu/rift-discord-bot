@@ -3,7 +3,8 @@ const PlayerFactory = require('../user/playerFactory')
 exports.run = (bot, msg, args) => {
     try {
         // create Player object
-        const newPlayer = PlayerFactory.createPlayerFromUserInput(args)
+        const discordID = msg.author.id
+        const newPlayer = PlayerFactory.createPlayerFromUserInput(args, discordID)
 
         // check if input was valid
         if(!newPlayer) {
@@ -41,12 +42,12 @@ exports.run = (bot, msg, args) => {
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: ['createPlayer', 'addPlayer'],
+    aliases: ['create', 'addPlayer'],
     permLevel: 1
 }
 
 exports.help = {
-    name: 'create',
+    name: 'createPlayer',
     description: 'Creates a Character.',
     usage: 'create <Name> <Class> <Roles> <ShortName>'
 }

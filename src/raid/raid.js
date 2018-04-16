@@ -45,11 +45,12 @@ class Raid {
      * @return {String}
      */
     _generateRaidOutput() {
-        return `${config.raids[this.type].name} - ${this.start.toDateString()}${
+        return `${config.raids[this.type].name} - ${Time.dateToDateString(this.start)}${
             N}AnmeldeID: ${this.planerID}${N}${
             N}Raidlead: ${this.raidLead}${N}${
-            N}Raidinvite: ${this.invite}${
-            N}Raidstart: ${this.start} - Raidende : ${this.end}${
+            N}Raidinvite: ${Time.dateToTimeString(this.invite)}${
+            N}Raidstart: ${Time.dateToTimeString(this.start)}${
+            N}Raidende : ${Time.dateToTimeString(this.end)}${
             N}${
             N}Insgesamt verfügbare Plätze: ${config.raids[this.type].numberPlayer}${
             N}Benötigt: ${config.raids[this.type].numberTank}x Tank, ${config.raids[this.type].numberHeal}x Heal, ${config.raids[this.type].numberSupport}x Supp, ${config.raids[this.type].numberDD}x DD`

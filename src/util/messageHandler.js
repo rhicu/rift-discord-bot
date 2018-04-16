@@ -14,7 +14,6 @@ class MessageHandler {
             // MessageHandler._getPrintedRaids()
         ]).then((results) => {
             const raidArray = results[0]
-            console.log(raidArray.length)
             // const messageArray = results[1]
             // let counter = 0
 
@@ -36,7 +35,7 @@ class MessageHandler {
             //     MessageHandler._printRaid(raidArray[index], bot)
             // }
 
-            MessageHandler._clearRaidPlanerChannel(bot)
+            MessageHandler.clearRaidPlanerChannel(bot)
                 .then(() => {
                     raidArray.forEach((raid) => {
                         MessageHandler._printRaid(bot, raid)
@@ -64,7 +63,7 @@ class MessageHandler {
      * @param {String} channelName
      * @return {Promise}
      */
-    static _clearRaidPlanerChannel(bot) {
+    static clearRaidPlanerChannel(bot) {
         const channel = MessageHandler._getRaidPlannerChannel(bot)
         return channel.fetchMessages()
             .then((messages) => {

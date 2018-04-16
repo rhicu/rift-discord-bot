@@ -26,10 +26,8 @@ class SequelizeInteractions {
      * @return {Promise}
      */
     static addOrUpdateRaid(raidObject) {
-        console.log('raidObject: ' + raidObject)
         return Raid.upsert(raidObject)
             .then((result) => {
-                console.log('result: ' + result)
                 return result
             })
     }
