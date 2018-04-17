@@ -25,9 +25,21 @@ class Raid {
         this.end = end
         this.raidLead = raidLead
         this.messageID = messageID
+
+        // member = {
+        //     registered: [],
+        //     confirmed: [],
+        //     deregistered: []
+        // }
         this.member = member
+
         this.recurring = recurring
+
+        // recurringMember = {
+        //     player: []
+        // }
         this.recurringMember = recurringMember
+
         this.isMainRaid = isMainRaid
         this.shouldBeDisplayed = shouldBeDisplayed
 
@@ -68,6 +80,7 @@ class Raid {
                 .addField('Vorraussetzungen:', this._checkForEmptyStrings(util.multiLineStringFromArray(config.raids[this.type].requirements)))
                 .addField('Angemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.registered)))
                 .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.confirmed)))
+                .addField('Abgemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.deregistered)))
                 .setFooter('Registrierung via RiftDiscordBot')
                 .setColor(config.raids[this.type].embedColor)
             return embed

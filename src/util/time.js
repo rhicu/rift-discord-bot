@@ -109,6 +109,9 @@ class Time {
      */
     static dateToTimeString(date) {
         return date.toLocaleTimeString()
+            .split(':')
+            .slice(0, 2)
+            .join(':')
     }
 }
 

@@ -2,12 +2,13 @@
 class Util {
 
     /**
+     * @param {Array<String>} array
      * @return {String}
      */
-    static multiLineStringFromArray() {
+    static multiLineStringFromArray(array) {
         let string = ''
-        for(let i = 0; i < this.length; i++) {
-            string = `${string}${this[i]}\n`
+        for(let i = 0; i < array.length; i++) {
+            string = `${string}${array[i]}\n`
         }
         return string
     }
