@@ -12,15 +12,10 @@ class PlayerFactory {
      */
     static createPlayerFromUserInput(input, discordID) {
         try {
-            const splittedInput = input.split(' ').splice(1)
-            if(splittedInput.length < 4) {
-                return null
-            }
-
-            const ingameName = PlayerFactory.verifyName(splittedInput[0])
-            const riftClass = PlayerFactory._verifyRiftClass(splittedInput[1])
-            const roles = PlayerFactory._verifyRoles(splittedInput[2])
-            const shortName = splittedInput[3]
+            const ingameName = PlayerFactory.verifyName(input[0])
+            const riftClass = PlayerFactory._verifyRiftClass(input[1])
+            const roles = PlayerFactory._verifyRoles(input[2])
+            const shortName = input[3]
 
             const newPlayer = new Player(discordID, ingameName, riftClass, roles, shortName)
             if(newPlayer) {
@@ -35,17 +30,28 @@ class PlayerFactory {
 
     /**
      *
-     * @param {Object} playerObject
+     * @param {Object} dataBaseObject
      * @return {Player}
      */
-    static createPlayerFromDatabaseObject(playerObject) {
-        const discordID = playerObject.discordID
-        const ingameName = playerObject.ingameName
-        const riftClass = playerObject.riftClass
-        const roles = playerObject.roles
-        const shortName = playerObject.shortName
+    static createPlayerFromDatabaseObject(dataBaseObject) {
+        if(!dataBaseObject) {
+            return null
+        }
 
-        return new Player(discordID, ingameName, riftClass, roles, shortName)
+        const discordID = dataBaseObject.discordID
+        const ingameName = dataBaseObject.ingameName
+        const riftClass = dataBaseObject.riftClass
+        const roles = dataBaseObject.roles
+        const shortName = dataBaseObject.shortName
+
+        const newPlayer = new Player(discordID, ingameName, riftClass, roles, shortName)
+
+        if(!newPlayer) {
+            return null
+        }
+
+        newPlayer.id = dataBaseObject.id
+        return newPlayer
     }
 
     /**

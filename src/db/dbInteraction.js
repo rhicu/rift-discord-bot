@@ -80,7 +80,7 @@ class Database {
                 if(!result || !result.dataValues) {
                     return null
                 } else {
-                    const newPlayer = PlayerFactory.createPlayerFromDatabaseObject(result)
+                    const newPlayer = PlayerFactory.createPlayerFromDatabaseObject(result.dataValues)
                     if(newPlayer) {
                         return newPlayer
                     } else {
@@ -117,11 +117,11 @@ class Database {
 
     /**
      *
-     * @param {String} raidID
+     * @param {Number} raidID
      * @return {Number}
      */
     static getRaidByID(raidID) {
-        return null
+        return db.getRaidByID(raidID)
     }
 
     /**
