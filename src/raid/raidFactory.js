@@ -10,54 +10,56 @@ class RaidFactory {
      * @return {Raid}
      */
     static createRaidFromUserInput(splittedInput) {
-        try {
-            if(splittedInput.length < 3) {
-                return null
-            }
+        if(splittedInput.length < 3) {
+            return null
+        }
 
-            const messageID = ''
-            const recurring = false
-            const recurringMember = {
-                player: {}
-            }
-            const mainRaid = false
-            const display = true
-            const member = {
-                registered: {},
-                confirmed: {},
-                deregistered: {}
-            }
+        const messageID = ''
+        const recurring = false
+        const recurringMember = {
+            player: []
+        }
+        const isMainRaid = false
+        const shouldBeDisplayed = true
+        const member = {
+            registered: [],
+            confirmed: [],
+            deregistered: []
+        }
 
-            const type = RaidFactory._getType(splittedInput[0])
-            const date = Time._generateDate(splittedInput[1])
-            if(!type || !date) {
-                return null
-            }
+        const type = RaidFactory._getType(splittedInput[0])
+        const date = splittedInput[1]
+        if(!type || !date) {
+            return null
+        }
 
 
-            let start
-            let end
-            switch(splittedInput.length) {
-                case 3:
-                    start = Time._verifyTime(config.defaultStartingTime)
-                    end = Time._verifyTime(config.defaultEndingTime)
-                    break
-                case 5:
-                    start = Time._verifyTime(splittedInput[2])
-                    end = Time._verifyTime(splittedInput[3])
-                    break
-                default:
-                    throw new Error('You have to declare either start and end time or none of them!')
-            }
-            if(!start || !end) {
-                return null
-            }
+        let start
+        let end
+        let raidLead
+        switch(splittedInput.length) {
+            case 3:
+                start = Time.getDateFromGermanDateAndTimeString(date, config.defaultStartingTime)
+                end = Time.getDateFromGermanDateAndTimeString(date, config.defaultEndingTime)
+                raidLead = RaidFactory._getRaidLeadName(splittedInput[2])
+                break
+            case 5:
+                start = Time.getDateFromGermanDateAndTimeString(date, splittedInput[2])
+                end = Time.getDateFromGermanDateAndTimeString(date, splittedInput[3])
+                raidLead = RaidFactory._getRaidLeadName(splittedInput[4])
+                break
+            default:
+                throw new Error('You have to declare either start and end time or none of them!')
+        }
+        if(!start || !end) {
+            return null
+        }
 
-            const raidLeadName = RaidFactory._getRaidLeadName(splittedInput[4])
-
-            return new Raid(type, start, end, raidLeadName, messageID, member, recurring, recurringMember, mainRaid, display)
-        } catch(error) {
-            throw error
+        const newRaid = new Raid(type, start, end, raidLead, messageID, member, recurring, recurringMember, isMainRaid, shouldBeDisplayed)
+        if(newRaid) {
+            return newRaid
+        } else {
+            return null
         }
     }
 
@@ -67,20 +69,20 @@ class RaidFactory {
      */
     static recreateRaidFromDatabaseObject(dataBaseObject) {
         if(dataBaseObject) {
-            let date = new Date(dataBaseObject.date)
             const newRaid = new Raid(
-                dataBaseObject.id,
                 dataBaseObject.type,
-                date, dataBaseObject.start,
+                dataBaseObject.start,
                 dataBaseObject.end,
                 dataBaseObject.raidLead,
-                dataBaseObject.messageID
-            )
-            if(!newRaid) {
-                return null
-            } else {
-                return newRaid
-            }
+                dataBaseObject.messageID,
+                dataBaseObject.member,
+                dataBaseObject.recurring,
+                dataBaseObject.recurringMember,
+                dataBaseObject.isMainRaid,
+                dataBaseObject.shouldBeDisplayed)
+
+            newRaid.id = dataBaseObject.id
+            return newRaid
         } else {
             return null
         }
@@ -100,8 +102,9 @@ class RaidFactory {
             } else {
                 let alias = possibleRaids[raid].alias
                 for(let i = 0; i < alias.length; i++) {
-                    if(alias[i] === input)
+                    if(alias[i] === input) {
                         return raid
+                    }
                 }
             }
         }

@@ -32,10 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         messageID: {
             type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: true
-            }
+            allowNull: false
         },
         member: {
             type: DataTypes.JSON,
@@ -68,14 +65,14 @@ module.exports = (sequelize, DataTypes) => {
                 }
             }
         },
-        mainRaid: {
+        isMainRaid: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             validate: {
                 notEmpty: true
             }
         },
-        display: {
+        shouldBeDisplayed: {
             type: DataTypes.BOOLEAN
         }
     })

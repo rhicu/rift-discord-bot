@@ -27,6 +27,9 @@ class SequelizeInteractions {
      */
     static addOrUpdateRaid(raidObject) {
         return Raid.upsert(raidObject)
+            .then((result) => {
+                return result
+            })
     }
 
     /**
@@ -38,12 +41,12 @@ class SequelizeInteractions {
     }
 
     /**
-     * @return {Raid[]}
+     * @return {Promise<Raid[]>}
      */
     static getRaidsToPrint() {
         return Raid.findAll({
             where: {
-                display: true
+                shouldBeDisplayed: true
             }
         })
     }

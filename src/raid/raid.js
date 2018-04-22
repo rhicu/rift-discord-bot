@@ -1,6 +1,7 @@
 const util = require('../util/util')
 const RichEmbed = require('discord.js').RichEmbed
 const config = require('./raidConfig')
+const Time = require('../util/time')
 const N = '\n'
 
 /** */
@@ -8,9 +9,9 @@ class Raid {
 
     /**
      * @param {String} type
-     * @param {String} start
-     * @param {String} end
-     * @param {String} raidLeadName
+     * @param {Date} start
+     * @param {Date} end
+     * @param {String} raidLead
      * @param {String} messageID
      * @param {Object} member
      * @param {Object} recurring
@@ -18,37 +19,50 @@ class Raid {
      * @param {Boolean} isMainRaid
      * @param {Boolean} shouldBeDisplayed
      */
-    constructor(type, start, end, raidLeadName, messageID, member, recurring, recurringMember, isMainRaid, shouldBeDisplayed) {
+    constructor(type, start, end, raidLead, messageID, member, recurring, recurringMember, isMainRaid, shouldBeDisplayed) {
         this.type = type
         this.start = start
         this.end = end
-        this.raidLead = raidLeadName
+        this.raidLead = raidLead
         this.messageID = messageID
+
+        // member = {
+        //     registered: [],
+        //     confirmed: [],
+        //     deregistered: []
+        // }
         this.member = member
+
         this.recurring = recurring
+
+        // recurringMember = {
+        //     player: []
+        // }
         this.recurringMember = recurringMember
+
         this.isMainRaid = isMainRaid
         this.shouldBeDisplayed = shouldBeDisplayed
 
-        this.invite = this._calculateInviteTime(start)
+        this.invite = Time.substractMinutesFromGivenTime(start, 15)
     }
 
     /**
      * @return {Number}
      */
     priority() {
-        return this.start.toDateString().getTime()
+        return this.start.valueOf()
     }
 
     /**
      * @return {String}
      */
     _generateRaidOutput() {
-        return `${config.raids[this.type].name} - ${this.start.toDateString()}${
+        return `${config.raids[this.type].name} - ${Time.dateToDateString(this.start)}${
             N}AnmeldeID: ${this.planerID}${N}${
             N}Raidlead: ${this.raidLead}${N}${
-            N}Raidinvite: ${this.invite}${
-            N}Raidstart: ${this.start} - Raidende : ${this.end}${
+            N}Raidinvite: ${Time.dateToTimeString(this.invite)}${
+            N}Raidstart: ${Time.dateToTimeString(this.start)}${
+            N}Raidende : ${Time.dateToTimeString(this.end)}${
             N}${
             N}Insgesamt verfügbare Plätze: ${config.raids[this.type].numberPlayer}${
             N}Benötigt: ${config.raids[this.type].numberTank}x Tank, ${config.raids[this.type].numberHeal}x Heal, ${config.raids[this.type].numberSupport}x Supp, ${config.raids[this.type].numberDD}x DD`
@@ -64,8 +78,9 @@ class Raid {
                 .setTitle(config.raids[this.type].name)
                 .addField('Daten:', this._generateRaidOutput())
                 .addField('Vorraussetzungen:', this._checkForEmptyStrings(util.multiLineStringFromArray(config.raids[this.type].requirements)))
-                .addField('Angemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.registeredPlayer)))
-                .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.confirmedPlayer)))
+                .addField('Angemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.registered)))
+                .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.confirmed)))
+                .addField('Abgemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.deregistered)))
                 .setFooter('Registrierung via RiftDiscordBot')
                 .setColor(config.raids[this.type].embedColor)
             return embed

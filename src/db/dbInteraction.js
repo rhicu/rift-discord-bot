@@ -21,6 +21,8 @@ class Database {
             .catch((error) => {
                 if(error.name === 'SequelizeUniqueConstraintError') {
                     throw new Error('This character has already been created by another person!')
+                } else {
+                    throw error
                 }
             })
     }
@@ -42,8 +44,6 @@ class Database {
                 } else {
                     return true
                 }
-            }).catch((error) => {
-                throw error
             })
     }
 
@@ -80,7 +80,7 @@ class Database {
                 if(!result || !result.dataValues) {
                     return null
                 } else {
-                    const newPlayer = PlayerFactory.createPlayerFromDatabaseObject(result)
+                    const newPlayer = PlayerFactory.createPlayerFromDatabaseObject(result.dataValues)
                     if(newPlayer) {
                         return newPlayer
                     } else {
@@ -113,17 +113,15 @@ class Database {
      */
     static addOrUpdateRaid(raidObject) {
         return db.addOrUpdateRaid(raidObject)
-            .catch((error) => {
-                throw error
-            })
     }
 
     /**
      *
-     * @param {String} raidID
+     * @param {Number} raidID
+     * @return {Number}
      */
     static getRaidByID(raidID) {
-
+        return db.getRaidByID(raidID)
     }
 
     /**
