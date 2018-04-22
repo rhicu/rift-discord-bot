@@ -94,7 +94,6 @@ class SequelizeInteractions {
     }
 
     /**
-     *
      * @param {String} shortName
      * @param {String} discordID
      * @return {Promise}
@@ -104,6 +103,18 @@ class SequelizeInteractions {
             where: {
                 shortName: shortName,
                 discordID: discordID
+            }
+        })
+    }
+
+    /**
+     * @param {Number} raidID
+     * @return {Promise}
+     */
+    static deleteRaid(raidID) {
+        return Raid.destroy({
+            where: {
+                id: raidID
             }
         })
     }

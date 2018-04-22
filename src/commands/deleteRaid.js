@@ -1,5 +1,19 @@
-exports.run = (bot, msg) => {
-    msg.reply('Couldn\'t delete raid')
+exports.run = (bot, msg, args) => {
+    if(args.length !== 1) {
+        msg.reply('Exactly 1 argument expected. Please check input and try again!')
+        return
+    }
+
+    const raidID = parseInt(args[0])
+    bot.database.deleteRaid(raidID)
+        .then((result) => {
+            if(result) {
+                bot.database.updatePrintedRaids()
+                msg.reply('Successfully deleted raid!')
+            } else {
+                msg.reply(`Could not delete raid with id ${raidID}. Please check input and try again!`)
+            }
+        })
 }
 
 exports.conf = {

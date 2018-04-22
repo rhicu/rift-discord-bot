@@ -25,7 +25,7 @@ exports.run = (bot, msg, args) => {
         }
     }).then((result) => {
         MessageHandler.updatePrintedRaids(bot)
-        msg.reply(`You are now registered for raid ${raid.id} with ${player.name}`)
+        msg.reply(`You are now registered for raid ${raid._id} with ${player.name}`)
     }).catch((error) => {
         msg.reply(error.message)
     })

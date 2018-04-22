@@ -81,7 +81,7 @@ class RaidFactory {
                 dataBaseObject.isMainRaid,
                 dataBaseObject.shouldBeDisplayed)
 
-            newRaid.id = dataBaseObject.id
+            newRaid.id = dataBaseObject._id
             return newRaid
         } else {
             return null

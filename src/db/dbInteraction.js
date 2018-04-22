@@ -12,7 +12,6 @@ class Database {
     }
 
     /**
-     *
      * @param {Player} playerObject
      * @return {Promise<Boolean>}
      */
@@ -28,7 +27,6 @@ class Database {
     }
 
     /**
-     *
      * @param {Player} playerObject
      * @return {Promise<Boolean>}
      */
@@ -48,7 +46,6 @@ class Database {
     }
 
     /**
-     *
      * @param {String} playerID
      * @return {Promise<Player>}
      */
@@ -69,7 +66,6 @@ class Database {
     }
 
     /**
-     *
      * @param {String} shortName
      * @param {String} discordID
      * @return {Player}
@@ -91,7 +87,6 @@ class Database {
     }
 
     /**
-     *
      * @param {String} shortName
      * @param {String} discordID
      * @return {Promise<Boolean>}
@@ -116,7 +111,21 @@ class Database {
     }
 
     /**
-     *
+     * @param {Number} raidID
+     * @return {Boolean}
+     */
+    static deleteRaid(raidID) {
+        return db.deleteRaid(raidID)
+            .then((result) => {
+                if(result) {
+                    return true
+                } else {
+                    return false
+                }
+            })
+    }
+
+    /**
      * @param {Number} raidID
      * @return {Number}
      */
