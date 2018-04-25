@@ -2,11 +2,8 @@ const MessageHandler = require('../util/messageHandler')
 
 exports.run = (bot, msg) => {
     try {
-        MessageHandler.clearRaidPlanerChannel(bot)
-            .then(() => {
-                MessageHandler.updatePrintedRaids(bot)
-                msg.reply(`All raids printed again!`)
-            })
+        MessageHandler.updatePrintedRaids(bot)
+        msg.reply(`All raids printed again!`)
     } catch(error) {
         msg.reply(error.message)
     }

@@ -46,7 +46,7 @@ class Database {
     }
 
     /**
-     * @param {String} playerID
+     * @param {Number} playerID
      * @return {Promise<Player>}
      */
     static getPlayerByID(playerID) {
@@ -55,7 +55,7 @@ class Database {
                 if(!result || !result.dataValues) {
                     return null
                 } else {
-                    const newPlayer = PlayerFactory.createPlayerFromDatabaseObject(result)
+                    const newPlayer = PlayerFactory.createPlayerFromDatabaseObject(result.dataValues)
                     if(newPlayer) {
                         return newPlayer
                     } else {
@@ -63,6 +63,30 @@ class Database {
                     }
                 }
             })
+    }
+
+    /**
+     * @param {Array<Integer>} playerIDs
+     * @return {Promise<Player[]>}
+     */
+    static getArrayOfPlayersByID(playerIDs) {
+        let playerArray
+        playerIDs.forEach((playerID) => {
+            Database.getPlayerByID(playerID)
+                .then((playerObject) => {
+                    if(playerObject) {
+                        const newPLayer = PlayerFactory.createPlayerFromDatabaseObject(playerObject)
+                        if(newPLayer) {
+                            playerArray.push(newPLayer)
+                        } else {
+                            throw new Error('Couldn\'t create List of players')
+                        }
+                    } else {
+                        throw new Error('Couldn\'t create List of players')
+                    }
+                })
+        })
+        return playerArray
     }
 
     /**
@@ -141,7 +165,8 @@ class Database {
             .then((result) => {
                 const raidArray = []
                 result.forEach((raidObject) => {
-                    const raid = RaidFactory.recreateRaidFromDatabaseObject(raidObject)
+                    console.log(raidObject)
+                    const raid = RaidFactory.recreateRaidFromDatabaseObject(raidObject.dataValues)
                     if(!raid) {
                         throw new Error('Couldn\'t get raids to print!')
                     }

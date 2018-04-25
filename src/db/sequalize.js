@@ -33,7 +33,7 @@ class SequelizeInteractions {
     }
 
     /**
-     * @param {String} raidID
+     * @param {Number} raidID
      * @return {Promise}
      */
     static getRaidByID(raidID) {
@@ -60,7 +60,7 @@ class SequelizeInteractions {
     }
 
     /**
-     * @param {String} playerID
+     * @param {Number} playerID
      * @return {Promise}
      */
     static getPlayerByID(playerID) {

@@ -1,3 +1,5 @@
+const MessageHandler = require('../util/messageHandler')
+
 exports.run = (bot, msg, args) => {
     if(args.length !== 1) {
         msg.reply('Exactly 1 argument expected. Please check input and try again!')
@@ -8,7 +10,7 @@ exports.run = (bot, msg, args) => {
     bot.database.deleteRaid(raidID)
         .then((result) => {
             if(result) {
-                bot.database.updatePrintedRaids()
+                MessageHandler.updatePrintedRaids(bot)
                 msg.reply('Successfully deleted raid!')
             } else {
                 msg.reply(`Could not delete raid with id ${raidID}. Please check input and try again!`)

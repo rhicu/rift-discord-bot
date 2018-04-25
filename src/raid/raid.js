@@ -2,6 +2,7 @@ const util = require('../util/util')
 const RichEmbed = require('discord.js').RichEmbed
 const config = require('./raidConfig')
 const Time = require('../util/time')
+const db = require('../db/dbInteraction')
 const N = '\n'
 
 /** */
@@ -58,7 +59,7 @@ class Raid {
      */
     _generateRaidOutput() {
         return `${config.raids[this.type].name} - ${Time.dateToDateString(this.start)}${
-            N}AnmeldeID: ${this.planerID}${N}${
+            N}AnmeldeID: ${this.id}${N}${
             N}Raidlead: ${this.raidLead}${N}${
             N}Raidinvite: ${Time.dateToTimeString(this.invite)}${
             N}Raidstart: ${Time.dateToTimeString(this.start)}${
@@ -73,17 +74,23 @@ class Raid {
      */
     generateEmbed() {
         try {
-            let embed = new RichEmbed()
-                .attachFile(config.raids[this.type].imgPath)
-                .setTitle(config.raids[this.type].name)
-                .addField('Daten:', this._generateRaidOutput())
-                .addField('Vorraussetzungen:', this._checkForEmptyStrings(util.multiLineStringFromArray(config.raids[this.type].requirements)))
-                .addField('Angemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.registered)))
-                .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.confirmed)))
-                .addField('Abgemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.deregistered)))
-                .setFooter('Registrierung via RiftDiscordBot')
-                .setColor(config.raids[this.type].embedColor)
-            return embed
+            Promise.all([
+                db.getArrayOfPlayersByID(this.member.registered)
+                db.getArrayOfPlayersByID(this.member.confirmed)
+                db.getArrayOfPlayersByID(this.member.deregistered)
+            ]).then((results) => {
+                let embed = new RichEmbed()
+                    .attachFile(config.raids[this.type].imgPath)
+                    .setTitle(config.raids[this.type].name)
+                    .addField('Daten:', this._generateRaidOutput())
+                    .addField('Vorraussetzungen:', this._checkForEmptyStrings(util.multiLineStringFromArray(config.raids[this.type].requirements)))
+                    .addField('Angemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.registered)))
+                    .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.confirmed)))
+                    .addField('Abgemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.deregistered)))
+                    .setFooter('Registrierung via RiftDiscordBot')
+                    .setColor(config.raids[this.type].embedColor)
+                return embed
+            })
         } catch(error) {
             console.log(`generateEmbed: ${error.stack}`)
         }
@@ -101,6 +108,21 @@ class Raid {
         } else {
             return input
         }
+    }
+
+    /**
+     * @param {Array<Integer>} playerIDs
+     * @return {String}
+     */
+    _getListOfPlayers(playerIDs) {
+        return db.getArrayOfPlayersByID(playerIDs)
+            .then((list) => {
+                if(list) {
+                    return list
+                } else {
+                    throw new Error('Couldn\'t create List of players')
+                }
+            })
     }
 }
 
