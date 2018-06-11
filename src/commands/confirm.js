@@ -14,18 +14,18 @@ exports.run = async (bot, msg, args) => {
             return
         }
 
-        let registerIDsToConfirm
+        let registerIDsToConfirm = []
         for(let index = 1; index < args.length; index++) {
             registerIDsToConfirm.push(parseInt(args[index]))
         }
 
-        registerIDsToConfirm.forEach((element) => {
-            if(raid.member.registered[element]) {
-                const name = raid.member.registered[element]
-                raid.member.registered = raid.member.registered.filter((element) => {
-                    return element !== name
+        registerIDsToConfirm.forEach((index) => {
+            if(raid.member.registered[index-1]) {
+                const player = raid.member.registered[index-1]
+                raid.member.registered = raid.member.registered.filter((registeredPlayer) => {
+                    return registeredPlayer !== player
                 })
-                raid.member.confirmed.push(name)
+                raid.member.confirmed.push(player)
             }
         })
 
@@ -34,7 +34,7 @@ exports.run = async (bot, msg, args) => {
         msg.reply(`Confirmed all valid player for raid ${raid.id}`)
     } catch(error) {
         msg.reply(error.message)
-        console.log(`confirm: ${error}`)
+        console.log(`confirm: ${error.stack}`)
     }
 }
 

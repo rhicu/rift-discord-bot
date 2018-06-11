@@ -1,4 +1,5 @@
 const MessageHandler = require('../util/messageHandler')
+const util = require('../util/util')
 
 exports.run = async (bot, msg, args) => {
     try {
@@ -19,33 +20,44 @@ exports.run = async (bot, msg, args) => {
             return
         }
 
-        const playerNames = raid.member.registered.concat(raid.member.deregistered)
+        const playerNames = util.getPlayerNamesFromJSONArray(raid.member.registered).concat(util.getPlayerNamesFromJSONArray(raid.member.deregistered))
         const player = await bot.database.getPlayerByNameArrayAndDiscordID(playerNames, userID)
         if(!player) {
             msg.reply('Couldn\'t find player. Please check user input and try again!')
             return
         }
 
-        const isDeregistered = raid.member.deregistered.includes(player.ingameName)
-        if(isDeregistered) {
+        const isDeregistered = raid.member.deregistered.filter((member) => {
+            return member.name === player.ingameName
+        })
+        if(isDeregistered.length !== 0) {
             msg.reply('You are already deregistered!')
             return
         }
 
-        const isRegistered = raid.member.registered.includes(player.ingameName)
-        const isConfirmed = raid.member.confirmed.includes(player.ingameName)
-        if(isRegistered) {
+        const isRegistered = raid.member.registered.filter((member) => {
+            return member.name === player.ingameName
+        })
+        if(isRegistered.length !== 0) {
             raid.member.registered = raid.member.registered.filter((element) => {
-                return element !== player.ingameName
-            })
-        }
-        if(isConfirmed) {
-            raid.member.confirmed = raid.member.confirmed.filter((element) => {
-                return element !== player.ingameName
+                return element.name !== player.ingameName
             })
         }
 
-        raid.member.deregistered.push(player.ingameName)
+        const isConfirmed = raid.member.confirmed.filter((member) => {
+            return member.name === player.ingameName
+        })
+        if(isConfirmed.length !== 0) {
+            raid.member.confirmed = raid.member.confirmed.filter((element) => {
+                return element.name !== player.ingameName
+            })
+        }
+
+        const playerData = {
+            name: player.ingameName,
+            data: `${util.makeFirstLetterOfStringUppercase(player.riftClass)} - ${util.formatPlayerName(player.ingameName)} (${util.rolesToString(player.roles)})`
+        }
+        raid.member.deregistered.push(playerData)
 
         await bot.database.addOrUpdateRaid(raid)
         MessageHandler.updatePrintedRaid(bot, raid)

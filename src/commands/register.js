@@ -1,4 +1,5 @@
 const MessageHandler = require('../util/messageHandler')
+const util = require('../util/util')
 
 exports.run = async (bot, msg, args) => {
     try {
@@ -26,19 +27,30 @@ exports.run = async (bot, msg, args) => {
             return
         }
 
-        const isAlreadyRegistered = raid.member.registered.includes(player.ingameName)
-        const isAlreadyConfirmed = raid.member.confirmed.includes(player.ingameName)
-        if(isAlreadyConfirmed || isAlreadyRegistered) {
+        const isAlreadyRegistered = raid.member.registered.filter((member) => {
+            return member.name === player.ingameName
+        })
+        const isAlreadyConfirmed = raid.member.confirmed.filter((member) => {
+            return member.name === player.ingameName
+        })
+
+        if(isAlreadyConfirmed.length !== 0 || isAlreadyRegistered.length !== 0) {
             msg.reply('You are already registered for this raid!')
             return
         }
 
-        raid.member.registered.push(player.ingameName)
+        const playerData = {
+            name: player.ingameName,
+            data: `${util.makeFirstLetterOfStringUppercase(player.riftClass)} - ${util.formatPlayerName(player.ingameName)} (${util.rolesToString(player.roles)})`
+        }
+        raid.member.registered.push(playerData)
 
-        const isAlreadyDeregistered = raid.member.deregistered.includes(player.ingameName)
+        const isAlreadyDeregistered = raid.member.deregistered.filter((member) => {
+            return member.name === player.ingameName
+        })
         if(isAlreadyDeregistered) {
             raid.member.deregistered = raid.member.deregistered.filter((element) => {
-                return element !== player.ingameName
+                return element.name !== player.ingameName
             })
         }
 

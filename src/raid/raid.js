@@ -69,30 +69,26 @@ class Raid {
     }
 
     /**
+     * @param {Database} database
      * @return {RichEmbed}
      */
     generateEmbed() {
         try {
-            // Promise.all([
-            //     bot.database.getArrayOfPlayersByID(this.member.registered)
-            //     bot.database.getArrayOfPlayersByID(this.member.confirmed)
-            //     bot.database.getArrayOfPlayersByID(this.member.deregistered)
-            // ]).then((results) => {
-            const registered = util.editNamesToMakeFirstLetterUppercase(this.member.registered)
-            const deregistered = util.editNamesToMakeFirstLetterUppercase(this.member.deregistered)
-            const confirmed = util.editNamesToMakeFirstLetterUppercase(this.member.confirmed)
+            const registered = util.getPlayerAsStringForRaidOutput(this.member.registered)
+            const deregistered = util.getPlayerAsStringForRaidOutput(this.member.deregistered)
+            const confirmed = util.getPlayerAsStringForRaidOutput(this.member.confirmed)
+
             let embed = new RichEmbed()
                 .setThumbnail(config.raids[this.type].imgPath)
                 .setTitle(config.raids[this.type].name)
                 .addField('Daten:', this._generateRaidOutput())
                 .addField('Vorraussetzungen:', this._checkForEmptyStrings(util.multiLineStringFromArray(config.raids[this.type].requirements)))
-                .addField('Angemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(registered)))
-                .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(confirmed)))
-                .addField('Abgemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(deregistered)))
+                .addField('Angemeldet:', registered)
+                .addField('Bestätigt:', confirmed)
+                .addField('Abgemeldet:', deregistered)
                 .setFooter('Registrierung via RiftDiscordBot')
                 .setColor(config.raids[this.type].embedColor)
             return embed
-            // })
         } catch(error) {
             console.log(`generateEmbed: ${error.stack}`)
         }
@@ -111,21 +107,6 @@ class Raid {
             return input
         }
     }
-
-    // /**
-    //  * @param {Array<Integer>} playerIDs
-    //  * @return {String}
-    //  */
-    // _getListOfPlayers(playerIDs) {
-    //     return db.getArrayOfPlayersByID(playerIDs)
-    //         .then((list) => {
-    //             if(list) {
-    //                 return list
-    //             } else {
-    //                 throw new Error('Couldn\'t create List of players')
-    //             }
-    //         })
-    // }
 }
 
 module.exports = Raid

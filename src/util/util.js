@@ -26,17 +26,49 @@ class Util {
     }
 
     /**
-     * @param {String[]} array
+     * @param {Array<JSON>} playerArray
+     * @return {String}
+     */
+    static getPlayerAsStringForRaidOutput(playerArray) {
+        if(playerArray.length < 1) {
+            return '...'
+        }
+        let outputArray = []
+        playerArray.forEach((player) => {
+            outputArray.push(player.data)
+        })
+        return Util.numberedMultiLineStringFromArray(outputArray)
+    }
+
+    /**
+     * @param {Array<JSON>} array
      * @return {String[]}
      */
-    static editNamesToMakeFirstLetterUppercase(array) {
-        for (let i = 0; i < array.length; i++) {
-            const nameAndShard = array[i].split('@')
-            const name = nameAndShard[0].charAt(0).toUpperCase() + nameAndShard[0].slice(1)
-            const shard = nameAndShard[1].charAt(0).toUpperCase() + nameAndShard[1].slice(1)
-            array[i] = `${name}@${shard}`
-        }
-        return array
+    static getPlayerNamesFromJSONArray(array) {
+        let playerNames = []
+        array.forEach((player) => {
+            playerNames.push(array.name)
+        })
+        return playerNames
+    }
+
+    /**
+     * @param {String} string
+     * @return {String}
+     */
+    static makeFirstLetterOfStringUppercase(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1)
+    }
+
+    /**
+     * @param {String} string
+     * @return {String}
+     */
+    static formatPlayerName(string) {
+        const nameAndShard = string.split('@')
+        const name = Util.makeFirstLetterOfStringUppercase(nameAndShard[0])
+        const shard = Util.makeFirstLetterOfStringUppercase(nameAndShard[1])
+        return `${name}@${shard}`
     }
 
     /**
@@ -84,6 +116,21 @@ class Util {
             .join(',')
             // make string lower case to better work with user inputs
             .toLowerCase()
+    }
+
+    /**
+     * @param {JSON} roles
+     * @return {String}
+     */
+    static rolesToString(roles) {
+        let string = ''
+        if(roles.tank) string += 'Tank, '
+        if(roles.dd) string += 'DD, '
+        if(roles.heal) string += 'Heal, '
+        if(roles.support) string += 'Support, '
+
+        if(string === '') return string
+        else return string.slice(0, -2)
     }
 }
 
