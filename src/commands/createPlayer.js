@@ -43,7 +43,7 @@ exports.conf = {
     enabled: true,
     guildOnly: false,
     aliases: ['create', 'addPlayer'],
-    permLevel: 1
+    permLevel: 0
 }
 
 exports.help = {

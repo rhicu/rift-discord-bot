@@ -80,7 +80,7 @@ exports.conf = {
     enabled: true,
     guildOnly: false,
     aliases: ['update'],
-    permLevel: 2
+    permLevel: 3
 }
 
 exports.help = {

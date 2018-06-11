@@ -25,8 +25,8 @@ class Database {
 
     /** */
     static init() {
-        Raid.sync({force: true})
-        Player.sync({force: true})
+        Raid.sync()
+        Player.sync()
     }
 
     /**
