@@ -7,6 +7,9 @@ exports.run = (bot, msg, args) => {
 
         if(!newRaid) {
             msg.reply('Couldn\'t create raid. Please check input!')
+            if (bot.commands.has('help')) {
+                bot.commands.get('help').run(bot, msg, 'help', 0)
+            }
             return
         }
 

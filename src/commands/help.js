@@ -16,6 +16,11 @@ exports.run = (bot, msg, args, permLevel) => {
             command = bot.commands.get(command)
             msg.channel.send(`= ${command.help.name} = \n${command.help.description}\nusage :: ${command.help.usage}\nalias :: ${command.conf.aliases.toString()}`, {code: 'asciidoc'})
         }
+
+        if (bot.aliases.has(command)) {
+            command = bot.commands.get(bot.aliases.get(command))
+            msg.channel.send(`= ${command.help.name} = \n${command.help.description}\nusage :: ${command.help.usage}\nalias :: ${command.conf.aliases.toString()}`, {code: 'asciidoc'})
+        }
     }
 }
 

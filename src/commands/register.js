@@ -4,6 +4,9 @@ exports.run = async (bot, msg, args) => {
     try {
         if(args.length !== 2) {
             msg.reply('Too few arguments!')
+            if (bot.commands.has('help')) {
+                bot.commands.get('help').run(bot, msg, 'help', 0)
+            }
             return
         }
 

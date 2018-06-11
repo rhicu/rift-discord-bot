@@ -26,6 +26,20 @@ class Util {
     }
 
     /**
+     * @param {String[]} array
+     * @return {String[]}
+     */
+    static editNamesToMakeFirstLetterUppercase(array) {
+        for (let i = 0; i < array.length; i++) {
+            const nameAndShard = array[i].split('@')
+            const name = nameAndShard[0].charAt(0).toUpperCase() + nameAndShard[0].slice(1)
+            const shard = nameAndShard[1].charAt(0).toUpperCase() + nameAndShard[1].slice(1)
+            array[i] = `${name}@${shard}`
+        }
+        return array
+    }
+
+    /**
      * @param {String} string
      * @return {String}
      */

@@ -9,6 +9,9 @@ exports.run = (bot, msg, args) => {
         // check if input was valid
         if(!newPlayer) {
             msg.reply('Something went wrong! Please check your input and try again!')
+            if (bot.commands.has('help')) {
+                bot.commands.get('help').run(bot, msg, 'help', 0)
+            }
             return
         }
 
@@ -49,5 +52,5 @@ exports.conf = {
 exports.help = {
     name: 'createPlayer',
     description: 'Creates a Character.',
-    usage: 'create <Name> <Class> <Roles> <ShortName>'
+    usage: 'createPlayer <Name> <Class> <Roles> <ShortName>'
 }

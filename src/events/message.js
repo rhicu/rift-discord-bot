@@ -8,6 +8,7 @@ module.exports = (msg) => {
 
     if(msg.channel.type !== 'dm') return
     // if (!msg.content.startsWith(config.prefix)) return
+    // if(msg.content.startsWith(config.communicationPrefix)) return
 
     const client = msg.client
     const input = util.beautifyUserInput(msg.content)
@@ -21,11 +22,11 @@ module.exports = (msg) => {
         cmd = client.commands.get(command)
     } else if (client.aliases.has(command)) {
         cmd = client.commands.get(client.aliases.get(command))
+    } else if (client.commands.has('help')) {
+        cmd = client.commands.get('help')
     }
     if (cmd) {
         if (permissionLevel < cmd.conf.permLevel) return
         cmd.run(client, msg, args, permissionLevel)
     }
-
-    // if(msg.content.startsWith(config.communicationPrefix)) return
 }
