@@ -25,9 +25,9 @@ class raid {
         this.type = type;
         this.day = "";
         this.date = "";
-        this.invite = "18:45";
-        this.start = "19:00";
-        this.end = "21:30";
+        this.invite = "19:45";
+        this.start = "20:00";
+        this.end = "22:00";
         this.img = this.config.imgPath;
         this.name = this.config.name;
         this.shortName = this.config.shortName;
