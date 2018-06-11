@@ -23,6 +23,6 @@ exports.conf = {
 
 exports.help = {
     name: 'clearChannel',
-    description: 'Deletes all messages in raidPlanner channel.',
+    description: 'Deletes all messages of a given channel.',
     usage: 'clearChannel'
 }

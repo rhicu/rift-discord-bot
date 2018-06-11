@@ -1,7 +1,7 @@
 const Discord = require('discord.js')
 const fs = require('fs')
 const config = require('./config.json')
-const Database = require('./db/dbInteraction')
+const Database = require('./db/database')
 Database.init()
 
 const bot = new Discord.Client()

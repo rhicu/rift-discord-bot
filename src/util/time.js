@@ -69,6 +69,9 @@ class Time {
         if(dateArray.length !== 3) {
             return null
         }
+        if(parseInt(dateArray[2] > 100)) {
+            dateArray[2] = `20${dateArray[2]}`
+        }
         return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}`
     }
 
@@ -109,6 +112,22 @@ class Time {
      */
     static dateToTimeString(date) {
         return date.toLocaleTimeString()
+    }
+
+    /**
+     * @param {Date} date
+     * @return {String}
+     */
+    static dateToGermanDateString(date) {
+        const dateString = date.toLocaleDateString()
+        const dateArray = dateString.split('-')
+        if(parseInt(dateArray[1]) < 10) {
+            dateArray[1] = `0${dateArray[1]}`
+        }
+        if(parseInt(dateArray[2]) < 10) {
+            dateArray[2] = `0${dateArray[2]}`
+        }
+        return `${dateArray[2]}.${dateArray[1]}.${dateArray[0]}`
     }
 }
 

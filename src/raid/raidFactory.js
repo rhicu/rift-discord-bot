@@ -17,14 +17,14 @@ class RaidFactory {
         const messageID = ''
         const recurring = false
         const recurringMember = {
-            player: {}
+            player: []
         }
         const isMainRaid = false
         const shouldBeDisplayed = true
         const member = {
-            registered: {},
-            confirmed: {},
-            deregistered: {}
+            registered: [],
+            confirmed: [],
+            deregistered: []
         }
 
         const type = RaidFactory._getType(splittedInput[0])

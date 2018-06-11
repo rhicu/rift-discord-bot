@@ -72,12 +72,22 @@ class MessageHandler {
     }
 
     /**
+     * @param {Client} bot
+     * @param {String} messageID
+     * @return {Message}
+     */
+    static _getPrintedRaid(bot, messageID) {
+        const channel = MessageHandler._getRaidPlannerChannel(bot)
+        return channel.fetchMessage(messageID)
+    }
+
+    /**
      * @private
      * @param {Client} bot
      * @return {Mesage[]}
      */
     static _getPrintedRaids(bot) {
-        const channel = MessageHandler._getRaidPlannerChannel()
+        const channel = MessageHandler._getRaidPlannerChannel(bot)
         return channel.fetchMessages()
     }
 
@@ -101,15 +111,24 @@ class MessageHandler {
     }
 
     /**
+     * @param {Client} bot
+     * @param {Raid} raid
+     */
+    static updatePrintedRaid(bot, raid) {
+        this._getPrintedRaid(bot, raid.messageID)
+            .then((message) => {
+                this._updatePrintedRaid(message, raid)
+            })
+    }
+
+    /**
      * @private
      * @param {Message} message
      * @param {Raid} raid
      */
     static _updatePrintedRaid(message, raid) {
-        raid.generateEmbed()
-            .then((embed) => {
-                message.edit({embed})
-            })
+        const embed = raid.generateEmbed()
+        message.edit({embed})
     }
 
     /**

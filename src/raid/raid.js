@@ -46,7 +46,7 @@ class Raid {
      */
     _generateRaidOutput() {
         return `${config.raids[this.type].name} - ${Time.dateToDateString(this.start)}${
-            N}AnmeldeID: ${this.planerID}${N}${
+            N}AnmeldeID: ${this.id}${N}${
             N}Raidlead: ${this.raidLead}${N}${
             N}Raidinvite: ${Time.dateToTimeString(this.invite)}${
             N}Raidstart: ${Time.dateToTimeString(this.start)}${
@@ -62,12 +62,13 @@ class Raid {
     generateEmbed() {
         try {
             let embed = new RichEmbed()
-                .attachFile(config.raids[this.type].imgPath)
+                .setThumbnail(config.raids[this.type].imgPath)
                 .setTitle(config.raids[this.type].name)
                 .addField('Daten:', this._generateRaidOutput())
                 .addField('Vorraussetzungen:', this._checkForEmptyStrings(util.multiLineStringFromArray(config.raids[this.type].requirements)))
                 .addField('Angemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.registered)))
                 .addField('Bestätigt:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.confirmed)))
+                .addField('Abgemeldet:', this._checkForEmptyStrings(util.numberedMultiLineStringFromArray(this.member.deregistered)))
                 .setFooter('Registrierung via RiftDiscordBot')
                 .setColor(config.raids[this.type].embedColor)
             return embed
