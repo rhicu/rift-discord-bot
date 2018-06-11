@@ -34,17 +34,28 @@ class PlayerFactory {
 
     /**
      *
-     * @param {Object} playerObject
+     * @param {Object} dataBaseObject
      * @return {Player}
      */
-    static createPlayerFromDatabaseObject(playerObject) {
-        const discordID = playerObject.discordID
-        const ingameName = playerObject.ingameName
-        const riftClass = playerObject.riftClass
-        const roles = playerObject.roles
-        const shortName = playerObject.shortName
+    static createPlayerFromDatabaseObject(dataBaseObject) {
+        if(!dataBaseObject) {
+            return null
+        }
 
-        return new Player(discordID, ingameName, riftClass, roles, shortName)
+        const discordID = dataBaseObject.discordID
+        const ingameName = dataBaseObject.ingameName
+        const riftClass = dataBaseObject.riftClass
+        const roles = dataBaseObject.roles
+        const shortName = dataBaseObject.shortName
+
+        const newPlayer = new Player(discordID, ingameName, riftClass, roles, shortName)
+
+        if(!newPlayer) {
+            return null
+        }
+
+        newPlayer.id = dataBaseObject.id
+        return newPlayer
     }
 
     /**

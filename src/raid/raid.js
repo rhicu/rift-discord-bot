@@ -25,9 +25,21 @@ class Raid {
         this.end = end
         this.raidLead = raidLead
         this.messageID = messageID
+
+        // member = {
+        //     registered: [],
+        //     confirmed: [],
+        //     deregistered: []
+        // }
         this.member = member
+
         this.recurring = recurring
+
+        // recurringMember = {
+        //     player: []
+        // }
         this.recurringMember = recurringMember
+
         this.isMainRaid = isMainRaid
         this.shouldBeDisplayed = shouldBeDisplayed
 
@@ -61,6 +73,11 @@ class Raid {
      */
     generateEmbed() {
         try {
+            // Promise.all([
+            //     bot.database.getArrayOfPlayersByID(this.member.registered)
+            //     bot.database.getArrayOfPlayersByID(this.member.confirmed)
+            //     bot.database.getArrayOfPlayersByID(this.member.deregistered)
+            // ]).then((results) => {
             let embed = new RichEmbed()
                 .setThumbnail(config.raids[this.type].imgPath)
                 .setTitle(config.raids[this.type].name)
@@ -72,6 +89,7 @@ class Raid {
                 .setFooter('Registrierung via RiftDiscordBot')
                 .setColor(config.raids[this.type].embedColor)
             return embed
+            // })
         } catch(error) {
             console.log(`generateEmbed: ${error.stack}`)
         }
@@ -90,6 +108,21 @@ class Raid {
             return input
         }
     }
+
+    // /**
+    //  * @param {Array<Integer>} playerIDs
+    //  * @return {String}
+    //  */
+    // _getListOfPlayers(playerIDs) {
+    //     return db.getArrayOfPlayersByID(playerIDs)
+    //         .then((list) => {
+    //             if(list) {
+    //                 return list
+    //             } else {
+    //                 throw new Error('Couldn\'t create List of players')
+    //             }
+    //         })
+    // }
 }
 
 module.exports = Raid

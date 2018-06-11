@@ -79,9 +79,12 @@ class RaidFactory {
                 dataBaseObject.recurring,
                 dataBaseObject.recurringMember,
                 dataBaseObject.isMainRaid,
-                dataBaseObject.shouldBeDisplayed)
+                dataBaseObject.shouldBeDisplayed
+            )
 
+            console.log('sollte die id haben: ' + dataBaseObject.id)
             newRaid.id = dataBaseObject.id
+            console.log(newRaid)
             return newRaid
         } else {
             return null

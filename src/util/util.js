@@ -48,7 +48,7 @@ class Util {
      */
     static pushRaidToArraySortedByDate(raidArray, raidObject) {
         let i = 0
-        for (; i < raidArray.length && raidArray[i].prio <= raidObject.prio; i++);
+        for (; i < raidArray.length && raidArray[i].priority() <= raidObject.priority(); i++);
         raidArray.splice(i, 0, raidObject)
     }
 

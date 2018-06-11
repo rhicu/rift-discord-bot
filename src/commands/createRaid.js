@@ -29,12 +29,12 @@ exports.run = (bot, msg, args) => {
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: ['add'],
+    aliases: ['add', 'addRaid'],
     permLevel: 3
 }
 
 exports.help = {
-    name: 'addRaid',
+    name: 'createRaid',
     description: 'Just adding a fucking new raid to planner',
-    usage: 'addRaid <type> <date> <raidlead> [<starting time> <ending time>]'
+    usage: 'createRaid <type> <date> <raidlead> [<starting time> <ending time>]'
 }

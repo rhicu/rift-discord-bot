@@ -229,6 +229,30 @@ class Database {
     }
 
     /**
+     * @param {Array<Integer>} playerIDs
+     * @return {Promise<Player[]>}
+     */
+    static getArrayOfPlayersByID(playerIDs) {
+        let playerArray
+        playerIDs.forEach((playerID) => {
+            Database.getPlayerByID(playerID)
+                .then((playerObject) => {
+                    if(playerObject) {
+                        const newPLayer = PlayerFactory.createPlayerFromDatabaseObject(playerObject)
+                        if(newPLayer) {
+                            playerArray.push(newPLayer)
+                        } else {
+                            throw new Error('Couldn\'t create List of players')
+                        }
+                    } else {
+                        throw new Error('Couldn\'t create List of players')
+                    }
+                })
+        })
+        return playerArray
+    }
+
+    /**
      *
      * @param {String} shortName
      * @param {String} discordID
