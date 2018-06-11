@@ -2,6 +2,8 @@ const Discord = require('discord.js')
 const fs = require('fs')
 const config = require('./config.json')
 const Database = require('./db/database')
+const path = require('path')
+
 Database.init()
 
 const bot = new Discord.Client()
@@ -15,7 +17,9 @@ bot.on('ready', () => {
 bot.database = Database
 bot.commands = new Discord.Collection()
 bot.aliases = new Discord.Collection()
-fs.readdir('./src/commands', (error, files) => {
+
+const commandsFolderPath = path.resolve(__dirname, 'commands')
+fs.readdir(commandsFolderPath, (error, files) => {
     if (error) console.error(error)
     console.log(`${files.length} commands loaded.`)
     files.forEach((f) => {
