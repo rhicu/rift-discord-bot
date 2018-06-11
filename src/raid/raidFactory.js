@@ -10,7 +10,7 @@ class RaidFactory {
      * @return {Raid}
      */
     static createRaidFromUserInput(splittedInput) {
-        if(splittedInput.length < 3) {
+        if(splittedInput.length < 5) {
             return null
         }
 
@@ -33,20 +33,18 @@ class RaidFactory {
             return null
         }
 
+        let raidLead = RaidFactory._getRaidLeadName(splittedInput[2])
 
         let start
         let end
-        let raidLead
         switch(splittedInput.length) {
             case 3:
                 start = Time.getDateFromGermanDateAndTimeString(date, config.defaultStartingTime)
                 end = Time.getDateFromGermanDateAndTimeString(date, config.defaultEndingTime)
-                raidLead = RaidFactory._getRaidLeadName(splittedInput[2])
                 break
             case 5:
-                start = Time.getDateFromGermanDateAndTimeString(date, splittedInput[2])
-                end = Time.getDateFromGermanDateAndTimeString(date, splittedInput[3])
-                raidLead = RaidFactory._getRaidLeadName(splittedInput[4])
+                start = Time.getDateFromGermanDateAndTimeString(date, splittedInput[3])
+                end = Time.getDateFromGermanDateAndTimeString(date, splittedInput[4])
                 break
             default:
                 throw new Error('You have to declare either start and end time or none of them!')
