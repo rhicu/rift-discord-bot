@@ -9,6 +9,7 @@ require('./util/eventLoader')(bot)
 
 bot.on('ready', () => {
     console.log(`Logged in as ${bot.user.tag}!`)
+    bot.commands.get('printraids').run(bot, null)
 })
 
 bot.database = Database

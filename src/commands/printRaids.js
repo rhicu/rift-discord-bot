@@ -3,9 +3,14 @@ const MessageHandler = require('../util/messageHandler')
 exports.run = (bot, msg) => {
     try {
         MessageHandler.updatePrintedRaids(bot)
-        msg.reply(`All raids printed again!`)
+        if(msg) {
+            msg.reply(`All raids printed again!`)
+        }
     } catch(error) {
-        msg.reply(error.message)
+        if(msg) {
+            msg.reply(error.message)
+        }
+        console.log(error.message)
     }
 }
 
