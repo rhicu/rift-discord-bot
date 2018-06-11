@@ -1,0 +1,16 @@
+{
+    "defaultShard": "brutwacht",
+    "riftClasses": {
+        "warrior": ["warrior", "warri", "w", "krieger"],
+        "rogue": ["rogue", "r", "schurke"],
+        "primalist": ["primalist", "prima", "p"],
+        "mage": ["mage", "m", "magier"],
+        "cleric": ["cleric", "c", "kleriker", "kleri"]
+    },
+    "roles": {
+        "dd": ["dd", "damage", "damage dealer", "damagedealer", "schaden", "dps"],
+        "heal": ["heal", "healer", "h", "heiler", "heilung"],
+        "support": ["support", "sup", "supp", "unterstützung", "s"],
+        "tank": ["tank", "t"]
+    }
+}
