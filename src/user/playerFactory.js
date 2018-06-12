@@ -93,7 +93,7 @@ class PlayerFactory {
                 }
             }
         }
-        throw new Error('Can\'t validate class. Please check input!')
+        throw new Error('Die Klasse konnten nicht validiert werden. Überprüfe die Eingabe!')
     }
 
     /**
@@ -123,7 +123,7 @@ class PlayerFactory {
             }
         })
         if(!(verifiedRoles.dd || verifiedRoles.tank || verifiedRoles.heal || verifiedRoles.support)) {
-            throw new Error('Can\'t validate roles. Please check input!')
+            throw new Error('Die Rollen konnten nicht validiert werden. Überprüfe die Eingabe!')
         }
         return verifiedRoles
     }

@@ -1,11 +1,11 @@
 {
     "defaultShard": "brutwacht",
     "riftClasses": {
-        "warrior": ["warrior", "warri", "w", "krieger"],
-        "rogue": ["rogue", "r", "schurke"],
+        "krieger": ["warrior", "warri", "w", "krieger"],
+        "schurke": ["rogue", "r", "schurke", "s"],
         "primalist": ["primalist", "prima", "p"],
-        "mage": ["mage", "m", "magier"],
-        "cleric": ["cleric", "c", "kleriker", "kleri"]
+        "magier": ["mage", "m", "magier"],
+        "kleriker": ["cleric", "cleri", "c", "kleriker", "kleri", "k"]
     },
     "roles": {
         "dd": ["dd", "damage", "damage dealer", "damagedealer", "schaden", "dps"],

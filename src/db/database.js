@@ -35,15 +35,6 @@ class Database {
      */
     static addOrUpdateRaid(raidObject) {
         return Raid.upsert(raidObject)
-            .then((result) => {
-                return result
-            }).catch((error) => {
-                if(error.name === 'SequelizeUniqueConstraintError') {
-                    throw new Error('This character has already been created by another person!')
-                } else {
-                    throw error
-                }
-            })
     }
 
     /**
@@ -52,10 +43,10 @@ class Database {
      * @return {Promise<Boolean>}
      */
     static isEntitledToUpdatePlayer(playerObject) {
-        return this.getPlayerByIngameName(playerObject.ingameName)
+        return Database.getPlayerByIngameName(playerObject.ingameName)
             .then((result) => {
                 if(result) {
-                    if(result.dataValues.discordID === playerObject.discordID) {
+                    if(result.discordID === playerObject.discordID) {
                         return true
                     } else {
                         return false
@@ -131,6 +122,13 @@ class Database {
      */
     static addOrUpdatePlayer(playerObject) {
         return Player.upsert(playerObject)
+            .catch((error) => {
+                if(error.name === 'SequelizeUniqueConstraintError') {
+                    throw new Error('Dieser Charakter wurde bereits von jemand anderem erstellt!')
+                } else {
+                    throw error
+                }
+            })
     }
 
     /**
@@ -242,10 +240,10 @@ class Database {
                         if(newPLayer) {
                             playerArray.push(newPLayer)
                         } else {
-                            throw new Error('Couldn\'t create List of players')
+                            throw new Error('Konnte keine Spielerliste erstellen!')
                         }
                     } else {
-                        throw new Error('Couldn\'t create List of players')
+                        throw new Error('Konnte keine Spielerliste erstellen!')
                     }
                 })
         })

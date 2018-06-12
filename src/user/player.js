@@ -18,14 +18,6 @@ class Player {
         this.roles = roles
         this.shortName = shortName
     }
-
-    /**
-     *
-     * @return {String}
-     */
-    toString() {
-        return `${this.ingameName} - ${this.roles} (${this.riftClass})`
-    }
 }
 
 module.exports = Player

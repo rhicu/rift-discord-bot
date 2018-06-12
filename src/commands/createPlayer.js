@@ -52,5 +52,5 @@ exports.conf = {
 exports.help = {
     name: 'createPlayer',
     description: 'Creates a Character.',
-    usage: 'createPlayer <Name> <Class> <Roles> <ShortName>'
+    usage: 'createPlayer <Name> <Class> <Roles (devided by comma)> <ShortName>'
 }

@@ -47,7 +47,7 @@ class RaidFactory {
                 end = Time.getDateFromGermanDateAndTimeString(date, splittedInput[4])
                 break
             default:
-                throw new Error('You have to declare either start and end time or none of them!')
+                throw new Error('Du musst entweder eine Start und eine Endzeit angeben oder keine von beiden!')
         }
         if(!start || !end) {
             return null

@@ -4,7 +4,7 @@ const Time = require('../util/time')
 exports.run = (bot, msg, args) => {
     try {
         if(args.length !== 3) {
-            msg.reply('Invalid number of arguments!')
+            msg.reply('Falsche Eingabe! Es wurden 3 Argumente Erwartet!')
             return
         }
 
@@ -25,7 +25,8 @@ exports.run = (bot, msg, args) => {
                             if(newDate) {
                                 raid.start = newDate
                             } else {
-                                msg.reply('Could not update date. Invalid user input')
+                                msg.reply('Datum konnte nicht aktualisiert werden. Fehlerhafte Eingabe!')
+                                return
                             }
                             break
                         }
@@ -35,7 +36,8 @@ exports.run = (bot, msg, args) => {
                             if(newDate) {
                                 raid.start = newDate
                             } else {
-                                msg.reply('Could not update start time. Invalid user input')
+                                msg.reply('Startzeit konnte nicht aktualisiert werden. Fehlerhafte Eingabe!')
+                                return
                             }
                             break
                         }
@@ -45,7 +47,8 @@ exports.run = (bot, msg, args) => {
                             if(newDate) {
                                 raid.end = newDate
                             } else {
-                                msg.reply('Could not update end time. Invalid user input')
+                                msg.reply('Endzeit konnte nicht aktualisiert werden. Fehlerhafte Eingabe!')
+                                return
                             }
                             break
                         }
@@ -54,25 +57,25 @@ exports.run = (bot, msg, args) => {
                             break
                         }
                         default: {
-                            msg.reply(`'${option}' is not a property which can be updated!`)
+                            msg.reply(`'${option}' ist keine Eigenschaft, die aktualisiert werden kann!`)
                             return
                         }
                     }
                     bot.database.addOrUpdateRaid(raid)
                         .then(() => {
                             MessageHandler.updatePrintedRaid(bot, raid)
-                            msg.reply(`Raid ${raid.type} on ${Time.dateToDateString(raid.start)} has been updated!`)
+                            msg.reply(`Raid ${raid.type} am ${Time.dateToDateString(raid.start)} wurde aktualisiert!`)
                         }).catch((error) => {
                             console.log(`updateRaid: ${error}`)
-                            msg.reply('something bad happened :(')
+                            msg.reply(error.message)
                         })
                 } else {
-                    msg.reply('Error while trying to update raid! Maybe the raid does not esist?')
+                    msg.reply('Beim aktualisieren ist ein Fehler aufgetreten! Existiert ein Raid mit dieser ID?')
                 }
             })
     } catch(error) {
         console.log(`updateRaid: ${error}`)
-        msg.reply('something bad happened :(')
+        msg.reply(error.message)
     }
 }
 

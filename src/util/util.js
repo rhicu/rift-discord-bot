@@ -47,7 +47,7 @@ class Util {
     static getPlayerNamesFromJSONArray(array) {
         let playerNames = []
         array.forEach((player) => {
-            playerNames.push(array.name)
+            playerNames.push(player.name)
         })
         return playerNames
     }

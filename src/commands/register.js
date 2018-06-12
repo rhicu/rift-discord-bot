@@ -4,7 +4,7 @@ const util = require('../util/util')
 exports.run = async (bot, msg, args) => {
     try {
         if(args.length !== 2) {
-            msg.reply('Too few arguments!')
+            msg.reply('Zu wenige Argumente eingegeben!')
             if (bot.commands.has('help')) {
                 bot.commands.get('help').run(bot, msg, 'help', 0)
             }
@@ -17,13 +17,13 @@ exports.run = async (bot, msg, args) => {
 
         const raid = await bot.database.getRaidByID(raidID)
         if(!raid) {
-            msg.reply('Couldn\'t find raid. Please check user input and try again!')
+            msg.reply('Der Raid konnte nicht gefunden werden. Bitte Eingabe überprüfen und nochmal versuchen!')
             return
         }
 
         const player = await bot.database.getPlayerByShortNameAndDiscordID(shortName, userID)
         if(!player) {
-            msg.reply('Couldn\'t find player. Please check user input and try again!')
+            msg.reply('Spieler konnte nicht gefunden werden. Wurde diser bereits erstellt? Bitte Eingabe überprüfen und nochmal versuchen!')
             return
         }
 
@@ -35,7 +35,7 @@ exports.run = async (bot, msg, args) => {
         })
 
         if(isAlreadyConfirmed.length !== 0 || isAlreadyRegistered.length !== 0) {
-            msg.reply('You are already registered for this raid!')
+            msg.reply('Du bist für diesen Raid bereits registriert!')
             return
         }
 
@@ -56,7 +56,7 @@ exports.run = async (bot, msg, args) => {
 
         await bot.database.addOrUpdateRaid(raid)
         MessageHandler.updatePrintedRaid(bot, raid)
-        msg.reply(`You are now successfully registered to raid ${raid.id}`)
+        msg.reply(`Du bist nun erfolgreich registriert für den Raid ${raid.id}`)
     } catch(error) {
         msg.reply(error.message)
         console.log(`register: ${error}`)

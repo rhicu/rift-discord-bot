@@ -59,7 +59,7 @@ class Raid {
     _generateRaidOutput() {
         return `${config.raids[this.type].name} - ${Time.dateToDateString(this.start)}${
             N}AnmeldeID: ${this.id}${N}${
-            N}Raidlead: ${this.raidLead}${N}${
+            N}Raidlead: ${util.formatPlayerName(this.raidLead)}${N}${
             N}Raidinvite: ${Time.dateToTimeString(this.invite)}${
             N}Raidstart: ${Time.dateToTimeString(this.start)}${
             N}Raidende : ${Time.dateToTimeString(this.end)}${
