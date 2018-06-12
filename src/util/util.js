@@ -66,9 +66,14 @@ class Util {
      */
     static formatPlayerName(string) {
         const nameAndShard = string.split('@')
-        const name = Util.makeFirstLetterOfStringUppercase(nameAndShard[0])
-        const shard = Util.makeFirstLetterOfStringUppercase(nameAndShard[1])
-        return `${name}@${shard}`
+        if(nameAndShard.length === 2) {
+            const name = Util.makeFirstLetterOfStringUppercase(nameAndShard[0])
+            const shard = Util.makeFirstLetterOfStringUppercase(nameAndShard[1])
+            return `${name}@${shard}`
+        } else {
+            const name = Util.makeFirstLetterOfStringUppercase(nameAndShard[0])
+            return `${name}`
+        }
     }
 
     /**
