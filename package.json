@@ -1,5 +1,5 @@
 {
-  "name": "RiftDiscordBot",
+  "name": "rift-discord-bot",
   "version": "1.0.0",
   "description": "To run, you need to install node v 8.xx or higher.\r After it open a terminal, navigate to the bot folder and use the command \"npm init -y\" to initialize node there with default setup.\r Now you have to install the following packages:",
   "main": "src/index.js",
@@ -14,18 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rhicu/RiftDiscordBot.git"
+    "url": "git+https://github.com/rhicu/rift-discord-bot.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rhicu/RiftDiscordBot/issues"
+    "url": "https://github.com/rhicu/rift-discord-bot/issues"
   },
-  "homepage": "https://github.com/rhicu/RiftDiscordBot#readme",
-  "devDependencies": {
-    "@types/jest": "^21.1.2",
-    "eslint": "^4.7.2",
-    "eslint-config-google": "^0.9.1"
-  }
+  "homepage": "https://github.com/rhicu/rift-discord-bot#readme",
+  "devDependencies": {}
 }
