@@ -5,9 +5,9 @@ const util = require('../util/util')
 
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
-const db = new Sequelize(config.mysql.name, config.mysql.username, config.mysql.password, {
-    host: config.mysql.host,
-    dialect: 'mysql',
+const db = new Sequelize(config.database.name, config.database.username, config.database.password, {
+    host: config.database.host,
+    dialect: config.database.dialect,
     pool: {
         max: 5,
         min: 0,
