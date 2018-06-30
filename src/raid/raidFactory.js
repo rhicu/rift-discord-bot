@@ -10,7 +10,7 @@ class RaidFactory {
      * @return {Raid}
      */
     static createRaidFromUserInput(splittedInput) {
-        if(splittedInput.length < 5) {
+        if(splittedInput.length < 3) {
             return null
         }
 

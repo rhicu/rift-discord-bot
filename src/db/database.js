@@ -207,10 +207,15 @@ class Database {
     static getPlayerByNameArrayAndDiscordID(ingameNames, discordID) {
         return Player.findOne({
             where: {
-                discordID: discordID,
-                ingameName: {
-                    [Op.or]: ingameNames
-                }
+                [Op.and]: [
+                    {
+                        discordID: discordID
+                    }, {
+                        ingameName: {
+                            [Op.or]: ingameNames
+                        }
+                    }
+                ]
             }
         }).then((result) => {
             if(!result || !result.dataValues) {

@@ -27,16 +27,13 @@ exports.run = async (bot, msg, args) => {
             return
         }
 
-        const isAlreadyRegistered = raid.member.registered.filter((member) => {
-            return member.name === player.ingameName
-        })
-        const isAlreadyConfirmed = raid.member.confirmed.filter((member) => {
-            return member.name === player.ingameName
-        })
-
-        if(isAlreadyConfirmed.length !== 0 || isAlreadyRegistered.length !== 0) {
-            msg.reply('Du bist für diesen Raid bereits registriert!')
-            return
+        const playerNames = util.getPlayerNamesFromJSONArray(raid.member.registered).concat(util.getPlayerNamesFromJSONArray(raid.member.confirmed))
+        if(playerNames.length) {
+            const registeredPlayer = await bot.database.getPlayerByNameArrayAndDiscordID(playerNames, userID)
+            if(registeredPlayer) {
+                msg.reply('Du bist für diesen Raid bereits registriert!')
+                return
+            }
         }
 
         const playerData = {
