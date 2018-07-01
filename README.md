@@ -33,7 +33,6 @@ Open the file and insert:
 
 token                   - login token you can get by creating a new app here
                           https://discordapp.com/developers/applications/me and generating a token for it
-
 serverID                - ID of your discord server
                           (https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-)
 raidPlannerChannelID    - ID of the text channel, the bot should print raids
