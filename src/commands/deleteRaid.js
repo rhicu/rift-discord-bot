@@ -3,43 +3,36 @@ const MessageHandler = require('../util/messageHandler')
 exports.run = (bot, msg, args) => {
     try {
         if(args.length !== 1) {
-            msg.reply('Invalid Number of Arguments. Please check input and try again!')
+            msg.reply('Bitte nur genau einen Parameter übergeben!')
             return
         }
 
         const raidID = parseInt(args[0])
 
-        // let raid = bot.database.getRaidByID()
-        // if(!raid) {
-        //     msg.reply(`Couldn't find raid with ID ${raidID}`)
-        //     return
-        // }
-
-        // raid.shouldBeDisplayed = false
-
         bot.database.deleteRaid(raidID)
             .then((result) => {
                 if(result) {
-                    msg.reply('Raid successfully deleted!')
+                    msg.reply('Raid erfolgreich gelöscht!')
                     MessageHandler.updatePrintedRaids(bot)
                 } else {
-                    msg.reply('Couldn\'t delete raidID. Is the ID correct?')
+                    msg.reply('Raid konnte nicht gelöscht werden. Stimmt die ID?')
                 }
             })
     } catch(error) {
         msg.reply(error.message)
+        msg.reply(`deleteRaid:\n${error.message}`)
     }
 }
 
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: ['delete'],
+    aliases: ['delete', 'deleteRaid', 'löschen'],
     permLevel: 3
 }
 
 exports.help = {
-    name: 'deleteRaid',
-    description: 'Just deleting a stupid created raid from planner',
-    usage: 'deleteRaid <raidID>'
+    name: 'raidLöschen',
+    description: 'Löscht einen Raid',
+    usage: 'raidLöschen <raidID>'
 }

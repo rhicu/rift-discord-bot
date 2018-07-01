@@ -66,28 +66,28 @@ exports.run = (bot, msg, args) => {
                             MessageHandler.updatePrintedRaid(bot, raid)
                             msg.reply(`Raid ${raid.type} am ${Time.dateToDateString(raid.start)} wurde aktualisiert!`)
                         }).catch((error) => {
-                            console.log(`updateRaid: ${error}`)
                             msg.reply(error.message)
+                            console.log(`updateRaid:\n${error.stack}`)
                         })
                 } else {
                     msg.reply('Beim aktualisieren ist ein Fehler aufgetreten! Existiert ein Raid mit dieser ID?')
                 }
             })
     } catch(error) {
-        console.log(`updateRaid: ${error}`)
         msg.reply(error.message)
+        console.log(`updateRaid:\n${error.stack}`)
     }
 }
 
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: ['update'],
+    aliases: ['update', 'updateRaid'],
     permLevel: 3
 }
 
 exports.help = {
-    name: 'updateRaid',
-    description: 'Just updating a raid, you know',
-    usage: 'updateRaid <raidID> <property> <value>'
+    name: 'raidAktualisieren',
+    description: 'Aktualisiert eien Eigenschaft eines Raids',
+    usage: 'raidAktualisieren <raidID> <Eigenschaft> <Wert>'
 }

@@ -6,7 +6,7 @@ exports.run = (bot, msg, args) => {
         const newRaid = RaidFactory.createRaidFromUserInput(args)
 
         if(!newRaid) {
-            msg.reply('Couldn\'t create raid. Please check input!')
+            msg.reply('Raid konnte nicht erstellt werden. Prüfe deine Eingabe und versuchs nochmal!')
             if (bot.commands.has('help')) {
                 bot.commands.get('help').run(bot, msg, 'help', 0)
             }
@@ -17,27 +17,29 @@ exports.run = (bot, msg, args) => {
             .then((result) => {
                 if(result) {
                     MessageHandler.updatePrintedRaids(bot)
-                    msg.reply(`Successfully created Raid ${newRaid.type} on ${newRaid.start}`)
+                    msg.reply(`Ein ${newRaid.type} Raid am ${newRaid.start} wurde erfolgreich erstellt!`)
                 } else {
-                    msg.reply('Couldn\'t create raid in database. Please try again!')
+                    msg.reply('Konnte den Raid nicht in der Datenbank anlegen. Bitte nochmal versuchen!')
                 }
             }).catch((error) => {
                 msg.reply(error.message)
+                console.log(`createRaid:\n${error.stack}`)
             })
     } catch(error) {
         msg.reply(error.message)
+        console.log(`createRaid:\n${error.stack}`)
     }
 }
 
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: ['add', 'addRaid'],
+    aliases: ['add', 'addRaid', 'createRaid', 'hinzufügen'],
     permLevel: 3
 }
 
 exports.help = {
-    name: 'createRaid',
-    description: 'Just adding a fucking new raid to planner',
-    usage: 'createRaid <type> <date> <raidlead> [<starting time> <ending time>]'
+    name: 'raidErstellen',
+    description: 'Erstellt einen neuen Raid',
+    usage: 'raidErstellen <Typ> <Datum> <Raidlead> [<Startzeit> <Endzeit>]'
 }

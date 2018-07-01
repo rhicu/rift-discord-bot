@@ -2,27 +2,27 @@ const MessageHandler = require('../util/messageHandler')
 
 exports.run = (bot, msg, args) => {
     try {
-        // msg.reply('Couldn\'t clear channel')
         if(args.length !== 1) {
-            msg.reply('Number of Arguments has to equal 1. Please check and try again!')
+            msg.reply('Bitte nur genau einen Parameter übergeben!')
             return
         }
         MessageHandler.clearChannel(bot, args[0])
-        msg.reply(`All messages from channel ${args[0]} deleted`)
+        msg.reply(`All Nachrichten vom Channel "${args[0]}" gelöscht`)
     } catch(error) {
         msg.reply(error.message)
+        console.log(`clearChannel:\n${error.stack}`)
     }
 }
 
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: ['clear'],
+    aliases: ['clear', 'clearChannel'],
     permLevel: 4
 }
 
 exports.help = {
-    name: 'clearChannel',
-    description: 'Deletes all messages of a given channel.',
-    usage: 'clearChannel'
+    name: 'channelAufräumen',
+    description: 'Löscht alle Nachrichten eines Channels',
+    usage: 'channelAufräumen <Channel Name>'
 }

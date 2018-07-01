@@ -3,14 +3,14 @@ const MessageHandler = require('../util/messageHandler')
 exports.run = async (bot, msg, args) => {
     try {
         if(args.length < 2) {
-            msg.reply('Too few arguments!')
+            msg.reply('Zu wenige Argumente übergeben. Es müssen mindestens 2 sein!')
             return
         }
 
         const raidID = parseInt(args[0])
         const raid = await bot.database.getRaidByID(raidID)
         if(!raid) {
-            msg.reply('Couldn\'t find raid. Please check user input and try again!')
+            msg.reply('Konnte den Raid nicht finden. Prüfe die Eingabe und versuchs nochmal!')
             return
         }
 
@@ -31,22 +31,22 @@ exports.run = async (bot, msg, args) => {
 
         await bot.database.addOrUpdateRaid(raid)
         MessageHandler.updatePrintedRaid(bot, raid)
-        msg.reply(`Confirmed all valid player for raid ${raid.id}`)
+        msg.reply(`Alle Spieler, die identifiziert werden konnten, wurden für den Raid ${raid.id} bestätigt`)
     } catch(error) {
         msg.reply(error.message)
-        console.log(`confirm: ${error.stack}`)
+        console.log(`confirm:\n${error.stack}`)
     }
 }
 
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: [],
+    aliases: ['confirm'],
     permLevel: 0
 }
 
 exports.help = {
-    name: 'confirm',
-    description: 'Unregister from raid. What did you expect?',
-    usage: 'confirm <raidID> <register number> <register number> <register number> ...'
+    name: 'bestätigen',
+    description: 'Angemeldete Spieler zum Raid bestätigen',
+    usage: 'bestätigen <raidID> <Nummer> <Nummer> <Nummer> ...'
 }

@@ -90,7 +90,7 @@ class Database {
             result.forEach((raidObject) => {
                 const raid = RaidFactory.recreateRaidFromDatabaseObject(raidObject)
                 if(!raid) {
-                    throw new Error('Couldn\'t get raids to print!')
+                    throw new Error('Konnte auszugebene Raids nicht finden!')
                 }
                 util.pushRaidToArraySortedByDate(raidArray, raid)
             })

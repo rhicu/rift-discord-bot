@@ -8,7 +8,7 @@ exports.run = (bot, msg, args) => {
 
         // check if input was valid
         if(!newPlayer) {
-            msg.reply('Something went wrong! Please check your input and try again!')
+            msg.reply('Spieler konnte nicht erstellt werden. Prüfe deine Eingabe und versuchs nochmal!')
             if (bot.commands.has('help')) {
                 bot.commands.get('help').run(bot, msg, 'help', 0)
             }
@@ -19,15 +19,15 @@ exports.run = (bot, msg, args) => {
         bot.database.isEntitledToUpdatePlayer(newPlayer)
             .then((result) => {
                 if(result === false) {
-                    msg.reply('You are not allowed to update this character!')
+                    msg.reply('Du bist nicht berechtigt diesen Charakter zu aktualisieren!')
                 } else {
                     // check if character already exists
                     bot.database.addOrUpdatePlayer(newPlayer)
                         .then((result) => {
                             if(result === true) {
-                                msg.reply(`New charackter ${newPlayer.ingameName} successfully created!`)
+                                msg.reply(`Neuer Charakter ${newPlayer.ingameName} erfolgreich erstellt!`)
                             } else {
-                                msg.reply(`Charackter ${newPlayer.ingameName} successfully updated!`)
+                                msg.reply(`Charakter ${newPlayer.ingameName} erfolgreich aktualisiert!`)
                             }
                         }).catch((error) => {
                             msg.reply(error.message)
@@ -38,19 +38,19 @@ exports.run = (bot, msg, args) => {
             })
     } catch(error) {
         msg.reply(error.message)
-        console.log(`create: ${error}`)
+        console.log(`createPlayer:\n${error.stack}`)
     }
 }
 
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: ['create', 'addPlayer'],
+    aliases: ['create', 'addPlayer', 'updatePlayer', 'createPlayer', 'spielerAktualisieren'],
     permLevel: 0
 }
 
 exports.help = {
-    name: 'createPlayer',
-    description: 'Creates a Character.',
-    usage: 'createPlayer <Name> <Class> <Roles (devided by comma)> <ShortName>'
+    name: 'spielerErstellen',
+    description: 'Erstellt einen neuen Charakter oder aktualisiert einen bestehenden',
+    usage: 'spielerErstellen <Name> <Klasse> <Rollen (durch Komma getrennt)> <Spitzname / Abkürzung>'
 }

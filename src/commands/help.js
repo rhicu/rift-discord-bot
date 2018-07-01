@@ -2,7 +2,7 @@ exports.run = (bot, msg, args, permLevel) => {
     if (!args[0]) {
         const commandNames = Array.from(bot.commands.keys())
         const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0)
-        msg.channel.send(`= Command List =\n\n[Use help <commandname> for details]\n\n${bot.commands
+        msg.channel.send(`= Liste mit verfügbaren Befehlen =\n\n[Benutz hilfe <Befehl> für Details]\n\n${bot.commands
             .map((c) => {
                 if(c.conf.permLevel <= permLevel) {
                     return `${c.help.name}${' '.repeat(longest - c.help.name.length)} :: ${c.help.description}`
@@ -27,12 +27,12 @@ exports.run = (bot, msg, args, permLevel) => {
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: ['h', 'halp'],
+    aliases: ['h', 'halp', 'help'],
     permLevel: 0
 }
 
 exports.help = {
-    name: 'help',
-    description: 'Displays all the available commands for your permission level.',
-    usage: 'help <command>'
+    name: 'hilfe',
+    description: 'Zeigt alle verfügbaren Befehle für deine Berechtigungstufe',
+    usage: 'hilfe <Befehl>'
 }

@@ -4,7 +4,7 @@ const util = require('../util/util')
 exports.run = async (bot, msg, args) => {
     try {
         if(args.length !== 1) {
-            msg.reply('Too few arguments!')
+            msg.reply('Bitte nur genau einen Parameter übergeben!')
             if (bot.commands.has('help')) {
                 bot.commands.get('help').run(bot, msg, 'help', 0)
             }
@@ -16,14 +16,14 @@ exports.run = async (bot, msg, args) => {
 
         const raid = await bot.database.getRaidByID(raidID)
         if(!raid) {
-            msg.reply('Couldn\'t find raid. Please check user input and try again!')
+            msg.reply('Raid konnte nicht gefunden werden. Prüfe deine Eingabe und versuchs nochmal!')
             return
         }
 
         const playerNames = util.getPlayerNamesFromJSONArray(raid.member.registered).concat(util.getPlayerNamesFromJSONArray(raid.member.deregistered))
         const player = await bot.database.getPlayerByNameArrayAndDiscordID(playerNames, userID)
         if(!player) {
-            msg.reply('Couldn\'t find player. Please check user input and try again!')
+            msg.reply('Spieler konnte nicht gefunden werden. Prüfe deine Eingabe und versuchs nochmal!')
             return
         }
 
@@ -31,7 +31,7 @@ exports.run = async (bot, msg, args) => {
             return member.name === player.ingameName
         })
         if(isDeregistered.length !== 0) {
-            msg.reply('You are already deregistered!')
+            msg.reply('Du bist bereits Abgemeldet!')
             return
         }
 
@@ -61,22 +61,22 @@ exports.run = async (bot, msg, args) => {
 
         await bot.database.addOrUpdateRaid(raid)
         MessageHandler.updatePrintedRaid(bot, raid)
-        msg.reply(`You are now successfully deregistered from raid ${raid.id}`)
+        msg.reply(`Du bist erfolgreich vom Raid ${raid.id} abgemeldet!`)
     } catch(error) {
         msg.reply(error.message)
-        console.log(`deregister: ${error}`)
+        console.log(`deregister:\n${error.stack}`)
     }
 }
 
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: ['unregister'],
+    aliases: ['unregister', 'deregister'],
     permLevel: 0
 }
 
 exports.help = {
-    name: 'deregister',
-    description: 'Deregister from raid. What did you expect?',
-    usage: 'deregister <raidID>'
+    name: 'abmelden',
+    description: 'Von einem Raid abmelden',
+    usage: 'abmelden <raidID>'
 }

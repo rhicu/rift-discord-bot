@@ -34,14 +34,14 @@ class Time {
             } else {
                 const dateArray = dateString.split('.')
                 if (dateArray.length !== 3) {
-                    throw new Error('Given time input has wrong format or type')
+                    throw new Error('Die Eingegebene Zeit hat das falsche Format')
                 } else {
                     let newDate = new Date(`${dateArray[2]}-${dateArray[1]}-${dateArray[0]}`)
                     return newDate.getTime()
                 }
             }
         } catch(error) {
-            console.log(`getTimeInMilliseconds: ${error}`)
+            console.log(`getTimeInMilliseconds:\n${error.stack}`)
             throw error
         }
     }

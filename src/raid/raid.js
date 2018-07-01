@@ -59,10 +59,10 @@ class Raid {
     _generateRaidOutput() {
         return `${config.raids[this.type].name} - ${Time.dateToDateString(this.start)}${
             N}AnmeldeID: ${this.id}${N}${
-            N}Raidlead: ${util.formatPlayerName(this.raidLead)}${N}${
-            N}Raidinvite: ${Time.dateToTimeString(this.invite)}${
-            N}Raidstart: ${Time.dateToTimeString(this.start)}${
-            N}Raidende : ${Time.dateToTimeString(this.end)}${
+            N}Raid Lead: ${util.formatPlayerName(this.raidLead)}${N}${
+            N}Invite: ${Time.dateToTimeString(this.invite)}${
+            N}Beginn: ${Time.dateToTimeString(this.start)}${
+            N}Ende:   ${Time.dateToTimeString(this.end)}${
             N}${
             N}Insgesamt verfügbare Plätze: ${config.raids[this.type].numberPlayer}${
             N}Benötigt: ${config.raids[this.type].numberTank}x Tank, ${config.raids[this.type].numberHeal}x Heal, ${config.raids[this.type].numberSupport}x Supp, ${config.raids[this.type].numberDD}x DD`
@@ -90,7 +90,7 @@ class Raid {
                 .setColor(config.raids[this.type].embedColor)
             return embed
         } catch(error) {
-            console.log(`generateEmbed: ${error.stack}`)
+            console.log(`generateEmbed:\n${error.stack}`)
         }
     }
 

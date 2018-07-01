@@ -2,7 +2,7 @@
 exports.run = (bot, msg, args) => {
     try {
         if(args.length !== 1) {
-            msg.reply('Invalid Number of Arguments. Please check input and try again!')
+            msg.reply('Bitte nur genau einen Parameter übergeben!')
             if (bot.commands.has('help')) {
                 bot.commands.get('help').run(bot, msg, 'help', 0)
             }
@@ -13,33 +13,34 @@ exports.run = (bot, msg, args) => {
         bot.database.getPlayerByShortNameAndDiscordID(args[0], discordID)
             .then((player) => {
                 if(!player) {
-                    msg.reply('Could not delete player. Player does not exist, has another shortName or was not created by you')
+                    msg.reply('Charakter konnte nicht gelöscht werden. Entweder der Charakter existiert nicht, ist falsch geschrieben oder wurde nicht von dir erstellt!')
                     return
                 } else {
                     bot.database.deletePlayer(args[0], discordID)
                         .then((wasDeleted) => {
                             if(wasDeleted) {
-                                msg.reply(`Player successfully deleted!`)
+                                msg.reply(`Charakter erfolgreich gelöscht!`)
                             } else {
-                                msg.reply(`Player could not be deleted!`)
+                                msg.reply(`Charakter konnte nicht gelöscht werden!`)
                             }
                         })
                 }
             })
     } catch(error) {
         msg.reply(error.message)
+        console.log(`deletePlayer:\n${error.stack}`)
     }
 }
 
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: [''],
+    aliases: ['deletePlayer'],
     permLevel: 0
 }
 
 exports.help = {
-    name: 'deletePlayer',
-    description: 'Deleting a self created player',
-    usage: 'deletePlayer <shortName>'
+    name: 'spielerLöschen',
+    description: 'Löscht einen selbst erstellten Charakter',
+    usage: 'spielerLöschen <Spitzname / Abkürzung>'
 }

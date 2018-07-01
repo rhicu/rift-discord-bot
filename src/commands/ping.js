@@ -1,7 +1,7 @@
 exports.run = (bot, msg) => {
     msg.channel.send('Ping?')
         .then((msg) => {
-            msg.edit(`Pong! (took: ${msg.createdTimestamp - msg.createdTimestamp}ms)`)
+            msg.edit(`Pong! (Verzögerung: ${msg.createdTimestamp - msg.createdTimestamp}ms)`)
         })
 }
 
@@ -14,6 +14,6 @@ exports.conf = {
 
 exports.help = {
     name: 'ping',
-    description: 'Ping/Pong command. I wonder what this does? /sarcasm',
+    description: 'Ping/Pong Befehl. I wonder what this does? /sarcasm',
     usage: 'ping'
 }

@@ -4,7 +4,7 @@ const util = require('../util/util')
 exports.run = async (bot, msg, args) => {
     try {
         if(args.length !== 2) {
-            msg.reply('Zu wenige Argumente eingegeben!')
+            msg.reply('Bitte genau zwei Parameter übergeben!')
             if (bot.commands.has('help')) {
                 bot.commands.get('help').run(bot, msg, 'help', 0)
             }
@@ -31,7 +31,7 @@ exports.run = async (bot, msg, args) => {
         if(playerNames.length) {
             const registeredPlayer = await bot.database.getPlayerByNameArrayAndDiscordID(playerNames, userID)
             if(registeredPlayer) {
-                msg.reply('Du bist für diesen Raid bereits registriert!')
+                msg.reply('Du bist für diesen Raid bereits angemeldet!')
                 return
             }
         }
@@ -56,19 +56,19 @@ exports.run = async (bot, msg, args) => {
         msg.reply(`Du bist nun erfolgreich registriert für den Raid ${raid.id}`)
     } catch(error) {
         msg.reply(error.message)
-        console.log(`register: ${error}`)
+        console.log(`register:\n${error.stack}`)
     }
 }
 
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: [],
+    aliases: ['register', 'registrieren'],
     permLevel: 0
 }
 
 exports.help = {
-    name: 'register',
-    description: 'Register to raid. What did you expect?',
-    usage: 'register <raidID> <shortName>'
+    name: 'anmelden',
+    description: 'Zu einem Raid anmelden',
+    usage: 'anmelden <raidID> <Spitzname / Abkürzung>'
 }
