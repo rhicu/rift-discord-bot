@@ -3,8 +3,8 @@ const util = require('../util/util')
 
 exports.run = async (bot, msg, args) => {
     try {
-        if(args.length !== 1) {
-            msg.reply('Bitte nur genau einen Parameter übergeben!')
+        if(args.length < 1) {
+            msg.reply('Bitte mindestens einen Parameter (Raid ID) übergeben!')
             if (bot.commands.has('help')) {
                 bot.commands.get('help').run(bot, msg, 'help', 0)
             }
@@ -21,7 +21,10 @@ exports.run = async (bot, msg, args) => {
         }
 
         const playerNames = util.getPlayerNamesFromJSONArray(raid.member.registered).concat(util.getPlayerNamesFromJSONArray(raid.member.deregistered))
-        const player = await bot.database.getPlayerByNameArrayAndDiscordID(playerNames, userID)
+        let player = await bot.database.getPlayerByNameArrayAndDiscordID(playerNames, userID)
+        if(!player && args.length === 2) {
+            player = await bot.database.getPlayerByShortNameAndDiscordID(args[1], userID)
+        }
         if(!player) {
             msg.reply('Spieler konnte nicht gefunden werden. Prüfe deine Eingabe und versuchs nochmal!')
             return
