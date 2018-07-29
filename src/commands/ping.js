@@ -1,7 +1,7 @@
 exports.run = (bot, msg) => {
     msg.channel.send('Ping?')
-        .then((msg) => {
-            msg.edit(`Pong! (Verzögerung: ${msg.editedTimestamp - msg.createdTimestamp}ms)`)
+        .then((message) => {
+            msg.edit(`Pong! (Verzögerung: ${message.createdTimestamp - msg.createdTimestamp}ms)`)
         })
 }
 
