@@ -14,19 +14,20 @@ exports.run = async (bot, msg, args) => {
             return
         }
 
-        let registerIDsToConfirm = []
+        let registeredPlayerToConfirm = []
         for(let index = 1; index < args.length; index++) {
-            registerIDsToConfirm.push(parseInt(args[index]))
+            const id = parseInt(args[index])
+            if(raid.member.registered[id-1]) {
+                const player = raid.member.registered[index-1]
+                registeredPlayerToConfirm.push(player)
+            }
         }
 
-        registerIDsToConfirm.forEach((index) => {
-            if(raid.member.registered[index-1]) {
-                const player = raid.member.registered[index-1]
-                raid.member.registered = raid.member.registered.filter((registeredPlayer) => {
-                    return registeredPlayer !== player
-                })
-                raid.member.confirmed.push(player)
-            }
+        registeredPlayerToConfirm.forEach((player) => {
+            raid.member.confirmed.push(player)
+            raid.member.registered = raid.member.registered.filter((registeredPlayer) => {
+                return registeredPlayer !== player
+            })
         })
 
         await bot.database.addOrUpdateRaid(raid)
