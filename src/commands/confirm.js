@@ -22,10 +22,16 @@ exports.run = async (bot, msg, args) => {
         registerIDsToConfirm.forEach((index) => {
             if(raid.member.registered[index-1]) {
                 const player = raid.member.registered[index-1]
+                raid.member.confirmed.push(player)
+            }
+        })
+
+        registerIDsToConfirm.forEach((index) => {
+            if(raid.member.registered[index-1]) {
+                const player = raid.member.registered[index-1]
                 raid.member.registered = raid.member.registered.filter((registeredPlayer) => {
                     return registeredPlayer !== player
                 })
-                raid.member.confirmed.push(player)
             }
         })
 
