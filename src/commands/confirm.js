@@ -18,7 +18,7 @@ exports.run = async (bot, msg, args) => {
         for(let index = 1; index < args.length; index++) {
             const id = parseInt(args[index])
             if(raid.member.registered[id-1]) {
-                const player = raid.member.registered[index-1]
+                const player = raid.member.registered[id-1]
                 registeredPlayerToConfirm.push(player)
             }
         }
