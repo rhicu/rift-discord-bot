@@ -7,7 +7,7 @@
             "alias": ["bastion of steel", "stahlbastion"],
             "shortName": "bos",
             "imgPath": "https://images.mmorpg.com/features/12143/images/Rift%201_t.jpg",
-            "requirements": ["1kk dps an der Puppe", "2,4k Hit"],
+            "requirements": ["1kk dps an der Puppe", "2,4k Hit", "Fragmente mindestens auf 12"],
             "numberPlayer": 10,
             "numberTank": 2,
             "numberHeal": 2,
