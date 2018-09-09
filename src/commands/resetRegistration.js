@@ -1,3 +1,5 @@
+const MessageHandler = require('../util/messageHandler')
+
 exports.run = async (bot, msg, args) => {
     try {
         if(args.length < 1) {
@@ -17,6 +19,10 @@ exports.run = async (bot, msg, args) => {
         })
 
         raid.member.confirmed = []
+
+        await bot.database.addOrUpdateRaid(raid)
+        MessageHandler.updatePrintedRaid(bot, raid)
+        msg.reply(`Alle Bestätigungen wurden für den Raid ${raid.id} zurückgesetzt`)
 
     } catch(error) {
         if(msg) {
