@@ -88,6 +88,6 @@ exports.conf = {
 
 exports.help = {
     name: 'raidAktualisieren',
-    description: 'Aktualisiert eien Eigenschaft eines Raids',
+    description: 'Aktualisiert eine Eigenschaft eines Raids',
     usage: 'raidAktualisieren <raidID> <Eigenschaft> <Wert>'
 }
