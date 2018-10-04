@@ -46,7 +46,7 @@ class Database {
         return Database.getPlayerByIngameName(playerObject.ingameName)
             .then((result) => {
                 if(result) {
-                    if(result.discordID === playerObject.discordID) {
+                    if(result.discordID === 'GUEST' || result.discordID === playerObject.discordID) {
                         return true
                     } else {
                         return false
