@@ -12,7 +12,7 @@ class PlayerFactory {
      */
     static createPlayerFromUserInput(input, discordID) {
         try {
-            if(input.length < 4) {
+            if(input.length < 3) {
                 return null
             }
 
