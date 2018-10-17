@@ -1,5 +1,5 @@
-const MessageHandler = require('../util/messageHandler')
-const Time = require('../util/time')
+const MessageHandler = require('../../util/messageHandler')
+const Time = require('../../util/time')
 
 exports.run = (bot, msg, args) => {
     try {

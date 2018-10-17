@@ -1,4 +1,4 @@
-const PlayerFactory = require('../user/playerFactory')
+const PlayerFactory = require('../../user/playerFactory')
 
 exports.run = (bot, msg, args) => {
     try {

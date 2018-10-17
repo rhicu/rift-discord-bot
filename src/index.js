@@ -1,8 +1,8 @@
 const Discord = require('discord.js')
-const fs = require('fs')
 const config = require('./config.json')
 const Database = require('./db/database')
 const path = require('path')
+const CommandHandler = require('./commandHandler')
 
 Database.init()
 
@@ -11,26 +11,15 @@ require('./util/eventLoader')(bot)
 
 bot.on('ready', () => {
     console.log(`Logged in as ${bot.user.tag}!`)
-    bot.commands.get('raidsausgeben').run(bot, null)
+    bot.commands.get('raid raidsausgeben').run(bot, null)
 })
 
 bot.database = Database
-bot.commands = new Discord.Collection()
-bot.aliases = new Discord.Collection()
 
 const commandsFolderPath = path.resolve(__dirname, 'commands')
-fs.readdir(commandsFolderPath, (error, files) => {
-    if (error) console.error(error)
-    console.log(`${files.length} commands loaded.`)
-    files.forEach((f) => {
-        let props = require(`./commands/${f}`)
-        console.log(`Loading Command: ${props.help.name} OK!`)
-        bot.commands.set(props.help.name.toLowerCase(), props)
-        props.conf.aliases.forEach((alias) => {
-            bot.aliases.set(alias.toLowerCase(), props.help.name.toLowerCase())
-        })
-    })
-})
+bot.commandHandler = new CommandHandler(commandsFolderPath)
+bot.commandHandler.loadCommands()
+bot.commandHandler._getCommand('help')
 
 bot.elevation = (msg) => {
 

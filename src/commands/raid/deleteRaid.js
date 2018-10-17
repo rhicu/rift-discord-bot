@@ -1,4 +1,4 @@
-const MessageHandler = require('../util/messageHandler')
+const MessageHandler = require('../../util/messageHandler')
 
 exports.run = (bot, msg, args) => {
     try {

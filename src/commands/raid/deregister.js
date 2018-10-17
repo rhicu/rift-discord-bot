@@ -1,5 +1,5 @@
-const MessageHandler = require('../util/messageHandler')
-const util = require('../util/util')
+const MessageHandler = require('../../util/messageHandler')
+const util = require('../../util/util')
 
 exports.run = async (bot, msg, args) => {
     try {

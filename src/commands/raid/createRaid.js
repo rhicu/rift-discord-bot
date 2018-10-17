@@ -1,5 +1,5 @@
-const RaidFactory = require('../raid/raidFactory')
-const MessageHandler = require('../util/messageHandler')
+const RaidFactory = require('../../raid/raidFactory')
+const MessageHandler = require('../../util/messageHandler')
 
 exports.run = (bot, msg, args) => {
     try {
