@@ -1,6 +1,6 @@
 const fs = require('fs')
 const Discord = require('discord.js')
-const InvalidInputError = require('../util/error')
+const InvalidInputError = require('../../util/error')
 
 /** */
 class CommandHandler {
@@ -12,14 +12,14 @@ class CommandHandler {
         this.commandFolderPath = commandFolderPath
 
         this.commands = new Discord.Collection()
-        this.help = new Discord.Collection()
     }
 
     /**
      * @param {String} commandName
      * @param {Object} command
+     * @param {Discord.Collection} collection
      */
-    _setCommand(commandName, command) {
+    _setCommand(commandName, command, collection = this.commands) {
         this.commands.set(commandName, command)
     }
 
@@ -35,15 +35,6 @@ class CommandHandler {
         if(cmd.conf) return cmd
 
         return this._getCommand(input.slice(1))
-    }
-
-    /**
-     * @param {String} commandName
-     * @param {Object} command
-     * @param {Discord.Collection} collection
-     */
-    _setCommandToCommands(commandName, command, collection = this.commands) {
-        cmd = this._getCommand
     }
 
     /**

@@ -23,5 +23,7 @@
     "url": "https://github.com/rhicu/rift-discord-bot/issues"
   },
   "homepage": "https://github.com/rhicu/rift-discord-bot#readme",
-  "devDependencies": {}
+  "devDependencies": {
+    "jest": "^23.6.0"
+  }
 }
