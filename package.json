@@ -4,9 +4,9 @@
   "description": "To run, you need to install node v 8.xx or higher.\r After it open a terminal, navigate to the bot folder and use the command \"npm init -y\" to initialize node there with default setup.\r Now you have to install the following packages:",
   "main": "src/index.js",
   "dependencies": {
-    "discord.js": "^11.2.1",
-    "mysql2": "^1.5.1",
-    "sequelize": "^4.28.2"
+    "discord.js": "^11.4.2",
+    "mysql2": "^1.6.4",
+    "sequelize": "^4.42.0"
   },
   "scripts": {
     "test": "jest",
@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/rhicu/rift-discord-bot#readme",
   "devDependencies": {
+    "eslint": "^5.12.1",
     "jest": "^23.6.0"
   }
 }

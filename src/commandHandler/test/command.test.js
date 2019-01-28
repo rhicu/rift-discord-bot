@@ -1,9 +1,14 @@
 const Command = require('../src/command')
 
 describe('isCommand', () => {
+
+    let command
+
     beforeEach(() => {
         const commandObject = {
-            run: () => {return true},
+            run: () => {
+                return true
+            },
             help: {
                 name: 'TestCommand',
                 description: 'any description text',
@@ -29,6 +34,6 @@ describe('isCommand', () => {
     })
 
     test('should return false if given name is neither the command name nor any alias name', () => {
-        expect(command.isCommand('WrongCommanName')).toBe(false)
+        expect(command.isCommand('WrongCommandName')).toBe(false)
     })
 })
