@@ -1,0 +1,3 @@
+export abstract class DataHandler {
+
+}

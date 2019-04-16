@@ -1,42 +1,34 @@
-const Discord = require('discord.js')
-const config = require('./config.json')
-const Database = require('./db/database')
+const Commando = require('discord.js-commando')
+const sqlite = require('sqlite')
 const path = require('path')
-const CommandHandler = require('./commandHandler')
 
-Database.init()
+const privateData = require('./private.conf')
+const commandoConfig = require('./commando.conf')
 
-const bot = new Discord.Client()
-require('./util/eventLoader')(bot)
-
-bot.on('ready', () => {
-    console.log(`Logged in as ${bot.user.tag}!`)
-    bot.commands.get('raid raidsausgeben').run(bot, null)
+const client = new Commando.Client({
+    owner: privateData.owner
 })
 
-bot.database = Database
+client.registry
+    // Registers your custom command groups
+    .registerGroups(commandoConfig.groups)
 
-const commandsFolderPath = path.resolve(__dirname, 'commands')
-bot.commandHandler = new CommandHandler(commandsFolderPath)
-bot.commandHandler.loadCommands()
-bot.commandHandler._getCommand('help')
+    // Registers all built-in groups, commands, and argument types
+    .registerDefaults()
 
-bot.elevation = (msg) => {
+    .registerTypesIn(path.join(__dirname, 'types'))
 
-    if(msg.author.bot) return
+    // Registers all of your commands in the ./commands/ directory
+    .registerCommandsIn(path.join(__dirname, 'commands'))
 
-    /**
-     * This function should resolve to an ELEVATION level which
-     * is then sent to the command handler for verification
-     */
-    const guildMember = bot.guilds.find('id', config.serverID).member(msg.author)
-    let permlvl = 0
-    if (guildMember.roles.has(config.roles.friend)) permlvl = 1
-    if (guildMember.roles.has(config.roles.member)) permlvl = 2
-    if (guildMember.roles.has(config.roles.lead)) permlvl = 3
-    if (guildMember.roles.has(config.roles.admin)) permlvl = 4
-    // if (msg.author.id === config.ownerid) permlvl = 5
-    return permlvl
-}
+client.setProvider(
+    sqlite.open(path.join(__dirname, 'settings.sqlite3'))
+        .then((db) => new Commando.SQLiteProvider(db))
+).catch(console.error)
 
-bot.login(`${config.token}`)
+client
+    .on('ready', () => {
+        console.log('Logged in!')
+    })
+
+client.login(privateData.token)

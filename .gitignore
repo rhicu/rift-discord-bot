@@ -44,3 +44,5 @@ node_modules/
 coverage/
 database/
 package-lock.json
+privateData.js
+private.conf.ts
