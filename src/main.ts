@@ -6,6 +6,7 @@ import path from 'path'
 
 const bot = new Bot({prefix: '', responseTime: 30})
 const commandHandler = new CommandHandler(path.resolve(__dirname, 'commands'), bot)
+bot.commandHandler = commandHandler
 
 bot
     .on('ready', () => {

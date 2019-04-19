@@ -1,7 +1,7 @@
 import { Command } from './Command'
 import fs from 'fs'
 import path from 'path'
-import Bot from '../bot/Bot';
+import Bot from '../bot/Bot'
 
 export default class CommandGroup {
 

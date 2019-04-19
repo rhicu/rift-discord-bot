@@ -14,23 +14,21 @@ export default class CommandHandler {
     constructor(root: string, bot: Bot) {
         this.bot = bot
         this.groups = new Map
-        this.defaults = new Map
         this.root = root
         this._initDefaults()
         this.loadCommands()
     }
 
     _initDefaults() {
-        this.defaults.set('help', this.help)
-        this.defaults.set('h', this.help)
-        this.defaults.set('hilfe', this.help)
+        const dirPath = path.join(this.root, 'defaults')
+        this.groups.set('defaults', new CommandGroup(dirPath, 'defaults', this.bot))
     }
 
     loadCommands() {
         this.groups = new Map
         const dirs = fs.readdirSync(this.root)
         dirs.forEach((dir) => {
-            if(dir === 'default') return
+            if(dir === 'defaults') return
             if(this.groups.has(dir)) throw new Error(`There is already a group named "${dir}"`)
 
             const dirPath = path.join(this.root, dir)
@@ -50,11 +48,12 @@ export default class CommandHandler {
                 this.groups.get(groupName)
                     .getCommand(commandName)
                     .run(message, args.slice(2))
-            } else if(this.defaults.has(groupName)) {
-                this.defaults.get(groupName)(message, args, this)
             } else {
-                message.reply(`Command "${args[0]}" could not be found!`)
+                this.groups.get('defaults')
+                    .getCommand(commandName)
+                    .run(message, args.slice(2))
             }
+            message.reply(`Command "${args[0]}" could not be found!`)
         } catch(e) {
             message.reply(e.message)
         }
@@ -72,16 +71,5 @@ export default class CommandHandler {
             .filter((element) => {
                 return (element !== '')
             })
-    }
-
-    help(message: Message, args: String[], handler: CommandHandler) {
-        message.reply(`${}`)
-        handler.groups.forEach((group) => {
-            message.reply(group.name)
-        })
-    }
-
-    _generateHelpOfGroup(group: CommandGroup): String[] {
-        const headline = ``
     }
 }
