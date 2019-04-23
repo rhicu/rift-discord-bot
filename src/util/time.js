@@ -111,7 +111,7 @@ class Time {
      * @return {String}
      */
     static dateToTimeString(date) {
-        return date.toLocaleTimeString('de-DE')
+        return date.toTimeString()
             .split(':')
             .slice(0, 2)
             .join(':')
