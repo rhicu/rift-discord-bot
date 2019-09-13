@@ -16,9 +16,9 @@ export default class Character extends CommandGroup {
             })[0]
 
             const cmd = new command(this.bot)
-            this.setCommand(key.toLowerCase(), cmd)
+            this._setCommand(key.toLowerCase(), cmd)
             cmd.aliases.forEach((alias) => {
-                this.setCommand(alias.toLowerCase(), cmd)
+                this._setCommand(alias.toLowerCase(), cmd)
             })
         })
     }
