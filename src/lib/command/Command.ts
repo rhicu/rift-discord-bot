@@ -14,7 +14,7 @@ export default abstract class Command {
     }
 
     toString() {
-        return `${this.name} [${this.aliases.toString()}]`
+        return `${this.name} [${this.aliases}]`
     }
 
     abstract run(message: Message, args: String[]): void;
