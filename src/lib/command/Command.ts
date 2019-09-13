@@ -5,7 +5,7 @@ import Bot from '../bot/Bot';
 export default abstract class Command {
     protected readonly bot: Bot
     public readonly name: String
-    protected readonly aliases: String[]
+    public readonly aliases: String[]
 
     constructor(bot: Bot, options: CommandOptions) {
         this.bot = bot

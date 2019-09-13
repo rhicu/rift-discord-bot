@@ -15,7 +15,15 @@ export default abstract class CommandGroup {
         this._loadCommands()
     }
 
-    abstract _loadCommands(): void
+    protected abstract _loadCommands(): void
+
+    protected setCommand(name: String, cmd: Command) {
+        if ( this.commands.has(name) ) {
+            throw new Error(`There is already a command with name "${name}"`)
+        }
+
+        this.commands.set(name, cmd)
+    }
 
     getCommand(key: String): Command {
         if(this.commands.has(key)) return this.commands.get(key)

@@ -14,7 +14,14 @@ export default class Character extends CommandGroup {
             const command = Object.values(list).filter((value) => {
                 return value.name === key.toString()
             })[0]
-            this.commands.set(key.toLowerCase(), new command(this.bot))
+
+            const cmd = new command(this.bot)
+            this.setCommand(key.toLowerCase(), cmd)
+            cmd.aliases.forEach((alias) => {
+                this.setCommand(alias.toLowerCase(), cmd)
+            })
         })
     }
+
+
 }
