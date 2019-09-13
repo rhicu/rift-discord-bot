@@ -20,7 +20,7 @@ describe('Command', () => {
     })
 
     describe('toString()', () => {
-        it('correct output', () => {
+        it('should return correct output', () => {
             expect(cmd.toString()).to.equal('Test [t,test]')
         })
     })
