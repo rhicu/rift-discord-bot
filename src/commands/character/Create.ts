@@ -1,4 +1,4 @@
-import { Command } from "../../lib/command/Command";
+import Command from "../../lib/command/Command";
 import { Message } from "discord.js";
 import Bot from '../../lib/bot/Bot';
 

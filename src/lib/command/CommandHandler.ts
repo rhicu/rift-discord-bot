@@ -1,75 +1,47 @@
-import CommandGroup from "./CommandGroup";
-import fs from 'fs'
-import path from 'path'
-import Bot from "../bot/Bot";
-import { Message, RichEmbed } from "discord.js";
+import CommandGroup from './CommandGroup'
+import Bot from '../bot/Bot'
+import { Message } from 'discord.js'
+import CommandMessage from './CommandMessage'
+
+import * as list from '../../commandGroups/_list'
 
 export default class CommandHandler {
 
-    bot: Bot
-    groups: Map<String, CommandGroup>
-    defaults: Map<String, Function>
-    root: string
+    private bot: Bot
+    private commandGroups: Map<String, CommandGroup>
 
-    constructor(root: string, bot: Bot) {
+    constructor(bot: Bot) {
         this.bot = bot
-        this.groups = new Map
-        this.root = root
-        this._initDefaults()
-        this.loadCommands()
+        this.commandGroups = new Map()
+
+        this.loadCommandGroups()
     }
 
-    _initDefaults() {
-        const dirPath = path.join(this.root, 'defaults')
-        this.groups.set('defaults', new CommandGroup(dirPath, 'defaults', this.bot))
-    }
+    private loadCommandGroups() {
+        // this.commandGroups.set('character', new Character(this.bot))
+        this.commandGroups = new Map()
+        console.log(this.commandGroups)
 
-    loadCommands() {
-        this.groups = new Map
-        const dirs = fs.readdirSync(this.root)
-        dirs.forEach((dir) => {
-            if(dir === 'defaults') return
-            if(this.groups.has(dir)) throw new Error(`There is already a group named "${dir}"`)
-
-            const dirPath = path.join(this.root, dir)
-            if(fs.statSync(dirPath).isDirectory()) {
-                this.groups.set(dir, new CommandGroup(dirPath, dir, this.bot))
-            }
+        Object.keys(list).forEach((key) => {
+            const commandGroup = Object.values(list).filter((value) => {
+                return value.name === key.toString()
+            })[0]
+            this.commandGroups.set(key.toLowerCase(), new commandGroup(this.bot))
         })
+
+        console.log(this.commandGroups)
     }
 
     executeCommand(message: Message): void {
-        const args = this._beautifyArgs(message)
-        const groupName = args[0]
-        const commandName = args[1]
-
+        let msg
         try {
-            if(this.groups.has(groupName)) {
-                this.groups.get(groupName)
-                    .getCommand(commandName)
-                    .run(message, args.slice(2))
-            } else {
-                this.groups.get('defaults')
-                    .getCommand(commandName)
-                    .run(message, args.slice(2))
-            }
-            message.reply(`Command "${args[0]}" could not be found!`)
-        } catch(e) {
-            message.reply(e.message)
+            msg = new CommandMessage(message, this.commandGroups)
+        } catch(error) {
+            message.reply(error.message)
         }
-    }
 
-    _beautifyArgs(message: Message): String[] {
-        return message.content
-            // make string lower case to better work with user inputs
-            .toLowerCase()
-            // delete spaces after appearence of a comma
-            .split(', ')
-            .join(',')
-            // delete multiple spaces
-            .split(' ')
-            .filter((element) => {
-                return (element !== '')
-            })
+        this.commandGroups.get(msg.commandGroup)
+            .getCommand(msg.command)
+            .run(message, msg.args)
     }
 }
