@@ -1,3 +1,3 @@
-export abstract class DataHandler {
+export default abstract class DataHandler {
 
 }

@@ -46,3 +46,5 @@ database/
 package-lock.json
 privateData.js
 private.conf.ts
+dist/
+.nyc_output/
