@@ -14,13 +14,11 @@ export default class CommandHandler {
         this.bot = bot
         this.commandGroups = new Map()
 
-        this.loadCommandGroups()
+        this._loadCommandGroups()
     }
 
-    private loadCommandGroups() {
-        // this.commandGroups.set('character', new Character(this.bot))
+    private _loadCommandGroups() {
         this.commandGroups = new Map()
-        console.log(this.commandGroups)
 
         Object.keys(list).forEach((key) => {
             const commandGroup = Object.values(list).filter((value) => {
@@ -28,8 +26,6 @@ export default class CommandHandler {
             })[0]
             this.commandGroups.set(key.toLowerCase(), new commandGroup(this.bot))
         })
-
-        console.log(this.commandGroups)
     }
 
     executeCommand(message: Message): void {
