@@ -32,7 +32,7 @@ fs.readdir(commandsFolderPath, (error, files) => {
     })
 })
 
-bot.elevation = (msg) => {
+bot.elevation = async(msg) => {
 
     if(msg.author.bot) return
 
@@ -40,7 +40,8 @@ bot.elevation = (msg) => {
      * This function should resolve to an ELEVATION level which
      * is then sent to the command handler for verification
      */
-    const guildMember = bot.guilds.find('id', config.serverID).member(msg.author)
+    const guild = await bot.guilds.fetch(config.serverID)
+    const guildMember = await guild.members.fetch(msg.author.id)
     let permlvl = 0
     if (guildMember.roles.has(config.roles.friend)) permlvl = 1
     if (guildMember.roles.has(config.roles.member)) permlvl = 2
