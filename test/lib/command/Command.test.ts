@@ -2,18 +2,12 @@ import { mock } from 'ts-mockito'
 import Bot from '../../../src/lib/bot/Bot'
 import Command from '../../../src/lib/command/Command'
 import { expect } from 'chai'
-
-class TestCommand extends Command {
-    run() {}
-}
+import { TestCommand } from './mocks/Command.mock'
+import { mockedBot } from './mocks/Bot.mock'
 
 describe('Command', () => {
-    let bot: Bot
+    let bot: Bot = mockedBot
     let cmd: Command
-
-    before(() => {
-        bot = mock(Bot)
-    })
 
     beforeEach(() => {
         cmd = new TestCommand(bot, {name: 'Test', aliases: ['t', 'test']})
