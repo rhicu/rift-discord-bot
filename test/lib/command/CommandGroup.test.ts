@@ -8,7 +8,7 @@ class TestGroup extends CommandGroup {
     _loadCommands() {}
 }
 
-describe('Command', () => {
+describe('CommandGroup', () => {
     let bot: Bot
     let cmd: Command
     let group: CommandGroup
