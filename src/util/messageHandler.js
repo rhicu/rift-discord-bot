@@ -49,8 +49,8 @@ class MessageHandler {
      * @param {Client} bot
      * @param {String} channelName
      */
-    static clearChannel(bot, channelName) {
-        const channel = MessageHandler._getChannelByName(bot, channelName)
+    static async clearChannel(bot, channelName) {
+        const channel = await MessageHandler._getChannelByName(bot, channelName)
         channel.fetchMessages()
             .then((messages) => {
                 messages.deleteAll()
@@ -63,8 +63,8 @@ class MessageHandler {
      * @param {String} channelName
      * @return {Promise}
      */
-    static clearRaidPlanerChannel(bot) {
-        const channel = MessageHandler._getRaidPlannerChannel(bot)
+    static async clearRaidPlanerChannel(bot) {
+        const channel = await MessageHandler._getRaidPlannerChannel(bot)
         return channel.fetchMessages()
             .then((messages) => {
                 messages.deleteAll()
@@ -76,8 +76,8 @@ class MessageHandler {
      * @param {String} messageID
      * @return {Message}
      */
-    static _getPrintedRaid(bot, messageID) {
-        const channel = MessageHandler._getRaidPlannerChannel(bot)
+    static async _getPrintedRaid(bot, messageID) {
+        const channel = await MessageHandler._getRaidPlannerChannel(bot)
         return channel.fetchMessage(messageID)
     }
 
@@ -96,8 +96,9 @@ class MessageHandler {
      * @param {Client} bot
      * @return {TextChannel}
      */
-    static _getRaidPlannerChannel(bot) {
-        return bot.guilds.find('id', config.serverID).channels.find('id', config.raidPlannerChannelID)
+    static async _getRaidPlannerChannel(bot) {
+        const guild = await bot.guilds.fetch(config.serverID)
+        return guild.channels.cache.get(config.raidPlannerChannelID)
     }
 
     /**
@@ -106,8 +107,9 @@ class MessageHandler {
      * @param {String} channelName
      * @return {TextChannel}
      */
-    static _getChannelByName(bot, channelName) {
-        return bot.guilds.find('id', config.serverID).channels.find('name', channelName)
+    static async _getChannelByName(bot, channelName) {
+        const guild = await bot.guilds.fetch(config.serverID)
+        return guild.channels.cache.find((channel) => channel.name === channelName)
     }
 
     /**
@@ -136,9 +138,9 @@ class MessageHandler {
      * @param {Client} bot
      * @param {Raid} raid
      */
-    static _printRaid(bot, raid) {
+    static async _printRaid(bot, raid) {
         const embed = raid.generateEmbed()
-        const channel = MessageHandler._getRaidPlannerChannel(bot)
+        const channel = await MessageHandler._getRaidPlannerChannel(bot)
 
         channel.send({embed})
             .then((message) => {

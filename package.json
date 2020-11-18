@@ -4,7 +4,7 @@
   "description": "To run, you need to install node v 8.xx or higher.\r After it open a terminal, navigate to the bot folder and use the command \"npm init -y\" to initialize node there with default setup.\r Now you have to install the following packages:",
   "main": "src/index.js",
   "dependencies": {
-    "discord.js": "^11.2.1",
+    "discord.js": "^12.4.1",
     "mysql2": "^1.5.1",
     "sequelize": "^4.28.2"
   },
