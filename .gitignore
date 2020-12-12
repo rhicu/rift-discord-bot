@@ -43,4 +43,3 @@ config.json
 node_modules/
 coverage/
 database/
-package-lock.json
