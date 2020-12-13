@@ -3,7 +3,7 @@ const util = require('../util/util')
 /**
  * @param {Message} msg
  */
-module.exports = (msg) => {
+module.exports = async (msg) => {
     if (msg.author.bot) return
 
     if(msg.channel.type !== 'dm') return
@@ -15,7 +15,7 @@ module.exports = (msg) => {
 
     const command = input.split(' ')[0]
     const args = input.split(' ').slice(1)
-    const permissionLevel = client.elevation(msg)
+    const permissionLevel = await client.elevation(msg)
 
     let cmd
     if (client.commands.has(command)) {

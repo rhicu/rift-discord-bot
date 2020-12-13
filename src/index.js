@@ -43,10 +43,10 @@ bot.elevation = async(msg) => {
     const guild = await bot.guilds.fetch(config.serverID)
     const guildMember = await guild.members.fetch(msg.author.id)
     let permlvl = 0
-    if (guildMember.roles.has(config.roles.friend)) permlvl = 1
-    if (guildMember.roles.has(config.roles.member)) permlvl = 2
-    if (guildMember.roles.has(config.roles.lead)) permlvl = 3
-    if (guildMember.roles.has(config.roles.admin)) permlvl = 4
+    if (guildMember.roles.cache.has(config.roles.friend)) permlvl = 1
+    if (guildMember.roles.cache.has(config.roles.member)) permlvl = 2
+    if (guildMember.roles.cache.has(config.roles.lead)) permlvl = 3
+    if (guildMember.roles.cache.has(config.roles.admin)) permlvl = 4
     // if (msg.author.id === config.ownerid) permlvl = 5
     return permlvl
 }

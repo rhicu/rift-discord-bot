@@ -1,5 +1,5 @@
 const util = require('../util/util')
-const RichEmbed = require('discord.js').RichEmbed
+const MessageEmbed = require('discord.js').MessageEmbed
 const config = require('./raidConfig')
 const Time = require('../util/time')
 const N = '\n'
@@ -70,7 +70,7 @@ class Raid {
 
     /**
      * @param {Database} database
-     * @return {RichEmbed}
+     * @return {MessageEmbed}
      */
     generateEmbed() {
         try {
@@ -78,7 +78,7 @@ class Raid {
             const deregistered = util.getPlayerAsStringForRaidOutput(this.member.deregistered)
             const confirmed = util.getPlayerAsStringForRaidOutput(this.member.confirmed)
 
-            let embed = new RichEmbed()
+            let embed = new MessageEmbed()
                 .setThumbnail(config.raids[this.type].imgPath)
                 .setTitle(config.raids[this.type].name)
                 .addField('Daten:', this._generateRaidOutput())

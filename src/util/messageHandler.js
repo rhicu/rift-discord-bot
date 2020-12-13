@@ -51,10 +51,8 @@ class MessageHandler {
      */
     static async clearChannel(bot, channelName) {
         const channel = await MessageHandler._getChannelByName(bot, channelName)
-        channel.fetchMessages()
-            .then((messages) => {
-                messages.deleteAll()
-            })
+        if(!channel) return false
+        channel.bulkDelete(100, true)
     }
 
     /**
@@ -65,10 +63,7 @@ class MessageHandler {
      */
     static async clearRaidPlanerChannel(bot) {
         const channel = await MessageHandler._getRaidPlannerChannel(bot)
-        return channel.fetchMessages()
-            .then((messages) => {
-                messages.deleteAll()
-            })
+        return channel.bulkDelete(100, true)
     }
 
     /**
@@ -78,7 +73,7 @@ class MessageHandler {
      */
     static async _getPrintedRaid(bot, messageID) {
         const channel = await MessageHandler._getRaidPlannerChannel(bot)
-        return channel.fetchMessage(messageID)
+        return channel.messages.cache.get(messageID)
     }
 
     /**
@@ -88,7 +83,7 @@ class MessageHandler {
      */
     static _getPrintedRaids(bot) {
         const channel = MessageHandler._getRaidPlannerChannel(bot)
-        return channel.fetchMessages()
+        return channel.messages.fetch()
     }
 
     /**
