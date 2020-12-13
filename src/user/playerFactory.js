@@ -12,14 +12,20 @@ class PlayerFactory {
      */
     static createPlayerFromUserInput(input, discordID) {
         try {
-            if(input.length < 4) {
+            if(input.length < 3) {
                 return null
             }
 
             const ingameName = PlayerFactory.verifyName(input[0])
             const riftClass = PlayerFactory._verifyRiftClass(input[1])
             const roles = PlayerFactory._verifyRoles(input[2])
-            const shortName = input[3]
+
+            let shortName
+            if(input[3]) {
+                shortName = input[3]
+            } else {
+                shortName = ingameName.split('@')[0]
+            }
 
             const newPlayer = new Player(discordID, ingameName, riftClass, roles, shortName)
             if(newPlayer) {
