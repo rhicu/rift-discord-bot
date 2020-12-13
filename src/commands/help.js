@@ -1,8 +1,6 @@
 exports.run = (bot, msg, args, permLevel) => {
     if (!args[0]) {
         const commandNames = Array.from(bot.commands.keys())
-        console.log(commandNames)
-        console.log(permLevel)
         const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0)
         msg.channel.send(`= Liste mit verfügbaren Befehlen =\n\n[Benutz hilfe <Befehl> für Details]\n\n${bot.commands
             .map((c) => {
