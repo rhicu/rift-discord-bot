@@ -44,3 +44,4 @@ node_modules/
 coverage/
 database/
 old/
+dist/

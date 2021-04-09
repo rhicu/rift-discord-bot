@@ -1,9 +1,7 @@
 import { createCharacter } from '@src/db';
 
 async function main() {
-  await createCharacter(1234, 'Gaarren@Brutwacht', 'warrior', ['dd', 'heal'], 'main');
-  await createCharacter(1234, 'Gaarren@Brutwacht', 'warrior', ['dd', 'heal', 'tank'], 'main');
-  await createCharacter(12345, 'Gaarren@Brutwacht', 'warrior', ['dd', 'heal', 'tank'], 'main');
+  console.log(await createCharacter(1234, 'Gaarren@Brutwacht', 'WARRIOR', ['HEAL', 'DAMAGE_DEALER'], 'main'));
 }
 
 main();

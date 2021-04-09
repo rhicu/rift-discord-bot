@@ -7,7 +7,9 @@ class Logger {
     this.logger = pino({
       prettyPrint: {
         colorize: true,
+        translateTime: true,
       },
+      level: 'debug',
     });
   }
 

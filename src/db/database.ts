@@ -1,9 +1,10 @@
 import logger from '@src/logger';
 import { Sequelize } from 'sequelize';
 
-const db = new Sequelize('rift', 'rift', '12345', {
+const db = new Sequelize('riftbot', 'riftbot', '12345', {
   host: 'localhost',
   dialect: 'postgres',
+  logging: (sqlStatement) => logger.debug(sqlStatement),
 });
 
 const testConnection = async () => {

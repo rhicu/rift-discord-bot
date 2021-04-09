@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import { db } from '@src/db/database';
+import logger from '@src/logger';
 
 class Character extends Model {
   public id!: number;
@@ -12,11 +13,26 @@ class Character extends Model {
 
   public riftClass!: string;
 
-  public roles!: string[];
+  public riftRoles!: string[];
 
   public readonly createdAt!: Date;
 
   public readonly updatedAt!: Date;
+}
+
+export enum RiftClass {
+  WARRIOR = 'WARRIOR',
+  CLERIC = 'CLERIC',
+  MAGE = 'MAGE',
+  ROGUE = 'ROGUE',
+  PRIMALIST = 'PRIMALIST',
+}
+
+export enum RiftRoles {
+  HEAL = 'HEAL',
+  TANK = 'TANK',
+  SUPPORT = 'SUPPORT',
+  DAMAGE_DEALER = 'DAMAGE_DEALER',
 }
 
 Character.init(
@@ -34,23 +50,25 @@ Character.init(
       unique: 'compositeKey',
     },
     characterName: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
       unique: true,
     },
     shortName: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
       unique: 'compositeKey',
     },
     riftClass: {
-      type: new DataTypes.ENUM(),
-      values: ['WARRIOR', 'CLERIC', 'MAGE', 'ROGUE', 'PRIMALIST'],
+      type: DataTypes.ENUM({
+        values: Object.keys(RiftClass),
+      }),
       allowNull: true,
     },
-    roles: {
-      type: new DataTypes.ARRAY(DataTypes.ENUM()),
-      values: ['HEAL', 'TANK', 'SUPPORT', 'DAMAGE_DEALER'],
+    riftRoles: {
+      type: DataTypes.ARRAY(DataTypes.ENUM({
+        values: Object.keys(RiftRoles),
+      })),
     },
   },
   {

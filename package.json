@@ -12,11 +12,12 @@
   },
   "scripts": {
     "build": "ttsc",
-    "db:start": "docker-compose -f ops/database/docker-compose.yml up -d",
+    "db:start": "docker-compose -f ops/database/docker-compose.yml up",
     "db:stop": "docker-compose -f ops/database/docker-compose.yml down",
     "db:init": "npm run build && node ./dist/src/db/dbinit/index.js",
     "lint": "eslint .",
-    "start": "node ./dist/src/index.js"
+    "start": "node ./dist/src/index.js",
+    "dev": "npm run build && npm run start"
   },
   "repository": {
     "type": "git",

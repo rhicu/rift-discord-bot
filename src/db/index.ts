@@ -1,22 +1,28 @@
 import { Character } from '@db-models';
 import logger from '@src/logger';
+import { Sequelize } from 'sequelize/types';
 
 async function createCharacter(
-  discordID: number, characterName: string, riftClass: string, roles: string[], shortName: string,
+  discordID: number, characterName: string, riftClass: string, riftRoles: string[], shortName: string,
 ): Promise<boolean> {
-  const [character, success] = await Character.upsert({
-    discordID,
-    characterName,
-    riftClass,
-    roles,
-    shortName,
-  });
+  try {
+    const [character, success] = await Character.upsert({
+      discordID,
+      characterName,
+      riftClass,
+      riftRoles,
+      shortName,
+    });
 
-  if (success) {
-    logger.debug('Created character', character);
+    if (success) {
+      logger.debug('Created character', character);
+    }
+
+    return success || false;
+  } catch (error) {
+    logger.error('An unexpected error occurred while creating character', error);
+    return false;
   }
-
-  return success || false;
 }
 
 export {
