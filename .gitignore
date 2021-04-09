@@ -43,3 +43,4 @@ config.json
 node_modules/
 coverage/
 database/
+old/
