@@ -11,8 +11,12 @@
     "sequelize": "^6.6.2"
   },
   "scripts": {
-    "test": "jest",
-    "start": "echo 'no entry point set yet'"
+    "build": "ttsc",
+    "db:start": "docker-compose -f ops/database/docker-compose.yml up -d",
+    "db:stop": "docker-compose -f ops/database/docker-compose.yml down",
+    "db:init": "npm run build && node ./dist/src/db/dbinit/index.js",
+    "lint": "eslint .",
+    "start": "node ./dist/src/index.js"
   },
   "repository": {
     "type": "git",
@@ -26,9 +30,10 @@
   },
   "homepage": "https://github.com/rhicu/rift-discord-bot#readme",
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.2.5",
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.37",
+    "@types/pino": "^6.3.7",
+    "@types/pino-pretty": "^4.7.0",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
