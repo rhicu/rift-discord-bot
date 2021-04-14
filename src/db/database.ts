@@ -1,4 +1,4 @@
-import logger from '@src/logger';
+import logger from '@lib/logger';
 import { Sequelize } from 'sequelize';
 
 const db = new Sequelize('riftbot', 'riftbot', '12345', {

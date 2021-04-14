@@ -1,4 +1,4 @@
-import logger from '@src/logger';
+import logger from '@lib/logger';
 import { initCharacter } from './character';
 
 Promise.all([

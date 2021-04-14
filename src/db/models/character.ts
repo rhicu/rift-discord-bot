@@ -1,6 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import { db } from '@src/db/database';
-import logger from '@src/logger';
+import logger from '@lib/logger';
 
 class Character extends Model {
   public id!: number;

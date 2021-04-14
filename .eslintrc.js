@@ -6,7 +6,8 @@ module.exports = {
   },
   rules: {
     'jsx-a11y/anchor-is-valid': 0,
-    'import/prefer-default-export': 0
+    'import/prefer-default-export': 0,
+    'class-methods-use-this': 0
   },
   env: {
     node: true,
