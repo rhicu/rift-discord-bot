@@ -7,7 +7,7 @@ class CreatePlayerCommand extends Command {
   }
 
   run(message: Message) {
-    message.reply(message.content + message.author.id);
+    message.reply(`${message.content} ${message.author.id}`);
   }
 }
 
