@@ -47,6 +47,7 @@
     "baseUrl": "./",                             /* Base directory to resolve non-absolute module names. */
     "paths": {
       "@db-models": [ "src/db/models" ],
+      "@commands": [ "src/commands" ],
       "@commands/*": [ "src/commands/*" ],
       "@lib/*": [ "src/lib/*" ],
       "@src/*": [ "src/*" ]

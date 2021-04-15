@@ -24,6 +24,7 @@ export default abstract class Command {
 
   public abstract run(message: Message): void;
 
+  // ToDo: handle aliases
   isValid(message: Message): boolean {
     return message.content.startsWith(this.getTitle());
   }

@@ -1,12 +1,12 @@
 import { Message } from 'discord.js';
-import CreatePlayerCommand from '@commands/CreatePlayerCommand';
+import { CreateCharacter } from '@commands';
 import Command from './Command';
 
 class CommandRepository {
   private commands: Command[] = [];
 
   constructor() {
-    this.addCommand(CreatePlayerCommand);
+    this.addCommand(CreateCharacter);
   }
 
   private addCommand(command: Command) {

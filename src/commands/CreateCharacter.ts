@@ -1,7 +1,7 @@
 import Command from '@lib/command/Command';
 import { Message } from 'discord.js';
 
-class CreatePlayerCommand extends Command {
+class CreatePlayer extends Command {
   constructor() {
     super('spieler', 'erstellen');
   }
@@ -11,4 +11,4 @@ class CreatePlayerCommand extends Command {
   }
 }
 
-export default new CreatePlayerCommand();
+export default new CreatePlayer();
