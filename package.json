@@ -4,6 +4,7 @@
   "main": "src/index.js",
   "dependencies": {
     "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "pino": "^6.11.2",

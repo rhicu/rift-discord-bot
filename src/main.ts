@@ -1,8 +1,8 @@
 import { Client } from 'discord.js';
 import Command from '@lib/command/Command';
 import logger from '@lib/logger';
+import config from '@src/configuration/SystemConfiguration';
 import CommandRespository from './lib/command/CommandRespository';
-import { token } from './config.json';
 
 const client = new Client();
 
@@ -33,4 +33,4 @@ client.on('message', (msg) => {
   }
 });
 
-client.login(token);
+client.login(config.TOKEN);
