@@ -1,9 +1,12 @@
 import { Character } from '@db-models';
-import logger from '@src/logger';
-import { Sequelize } from 'sequelize/types';
+import logger from '@lib/logger';
 
 async function createCharacter(
-  discordID: number, characterName: string, riftClass: string, riftRoles: string[], shortName: string,
+  discordID: number,
+  characterName: string,
+  riftClass: string,
+  riftRoles: string[],
+  shortName: string,
 ): Promise<boolean> {
   try {
     const [character, success] = await Character.upsert({
