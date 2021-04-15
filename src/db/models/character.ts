@@ -20,7 +20,7 @@ class Character extends Model {
   public readonly updatedAt!: Date;
 }
 
-export enum RiftClass {
+enum RiftClass {
   WARRIOR = 'WARRIOR',
   CLERIC = 'CLERIC',
   MAGE = 'MAGE',
@@ -28,7 +28,7 @@ export enum RiftClass {
   PRIMALIST = 'PRIMALIST',
 }
 
-export enum RiftRoles {
+enum RiftRoles {
   HEAL = 'HEAL',
   TANK = 'TANK',
   SUPPORT = 'SUPPORT',
@@ -77,4 +77,8 @@ Character.init(
   },
 );
 
-export { Character };
+export {
+  Character,
+  RiftClass,
+  RiftRoles,
+};
