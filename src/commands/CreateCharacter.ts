@@ -1,16 +1,16 @@
 import Command from '@lib/command/Command';
+import { AppMessage } from '@lib/DiscordjsWrapper';
 import logger from '@lib/logger';
-import { Message } from 'discord.js';
 
 class CreatePlayer extends Command {
   constructor() {
     super('spieler', 'erstellen');
   }
 
-  async run(message: Message) {
+  async run(msg: AppMessage) {
     const questions: string[] = ['Name?', 'Class?', 'Roles?', 'short name?'];
 
-    const answers = await this.askQuestions(questions, message.author);
+    const answers = await msg.getUser().getMessageCollector(300).askQuestions(questions);
 
     logger.info(answers.toString());
   }

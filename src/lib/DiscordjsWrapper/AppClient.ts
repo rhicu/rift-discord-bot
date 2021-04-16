@@ -1,6 +1,6 @@
 import { Client } from 'discord.js';
 
-class Bot extends Client {
+class AppClient extends Client {
   private openConversations: Set<string> = new Set();
 
   public hasOpenConversation(userID: string) {
@@ -24,4 +24,4 @@ class Bot extends Client {
   }
 }
 
-export default new Bot();
+export default new AppClient();

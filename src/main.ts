@@ -1,30 +1,33 @@
 import Command from '@lib/command/Command';
 import logger from '@lib/logger';
 import config from '@src/configuration/SystemConfiguration';
-import Bot from '@lib/bot/Bot';
+import Bot from '@lib/DiscordjsWrapper/AppClient';
+import { Message } from 'discord.js';
+import { AppMessage } from '@lib/DiscordjsWrapper';
 import CommandRespository from './lib/command/CommandRespository';
 
 Bot.on('ready', () => {
   logger.info(`Logged in as ${Bot?.user?.tag}!`);
 });
 
-Bot.on('message', (msg) => {
+Bot.on('message', (message: Message) => {
+  const msg = new AppMessage(message);
   try {
-    if (msg.author.bot) {
+    if (msg.getUser().isBot()) {
       return;
     }
 
-    if (Bot.hasOpenConversation(msg.author.id)) {
+    if (Bot.hasOpenConversation(msg.getUser().getID())) {
       return;
     }
 
-    logger.debug(`Received message: ${msg.content}`);
+    logger.debug(`Received message: ${msg.getContent()}`);
 
     const command: Command|null = CommandRespository.getCommand(msg);
 
     if (!command) {
-      logger.debug(`Command not found: ${msg.content}`);
-      msg.reply('Unknown command!');
+      logger.debug(`Command not found: ${msg.getContent()}`);
+      msg.getUser().send('Unknown command!');
       return;
     }
 

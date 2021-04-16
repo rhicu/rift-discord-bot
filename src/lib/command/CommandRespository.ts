@@ -1,5 +1,5 @@
-import { Message } from 'discord.js';
 import { CreateCharacter } from '@commands';
+import { AppMessage } from '@lib/DiscordjsWrapper';
 import Command from './Command';
 
 class CommandRepository {
@@ -13,7 +13,7 @@ class CommandRepository {
     this.commands.push(command);
   }
 
-  getCommand(message: Message): Command|null {
+  getCommand(message: AppMessage): Command|null {
     this.commands.filter((command) => command.isValid(message));
 
     for (let i = 0; i < this.commands.length; i += 1) {
