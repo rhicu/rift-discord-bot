@@ -1,18 +1,20 @@
-import { Client } from 'discord.js';
 import Command from '@lib/command/Command';
 import logger from '@lib/logger';
 import config from '@src/configuration/SystemConfiguration';
+import Bot from '@lib/bot/Bot';
 import CommandRespository from './lib/command/CommandRespository';
 
-const client = new Client();
-
-client.on('ready', () => {
-  logger.info(`Logged in as ${client?.user?.tag}!`);
+Bot.on('ready', () => {
+  logger.info(`Logged in as ${Bot?.user?.tag}!`);
 });
 
-client.on('message', (msg) => {
+Bot.on('message', (msg) => {
   try {
     if (msg.author.bot) {
+      return;
+    }
+
+    if (Bot.hasOpenConversation(msg.author.id)) {
       return;
     }
 
@@ -33,4 +35,4 @@ client.on('message', (msg) => {
   }
 });
 
-client.login(config.TOKEN);
+Bot.login(config.TOKEN);
