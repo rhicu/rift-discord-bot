@@ -1,11 +1,10 @@
 import { Model, DataTypes } from 'sequelize';
 import { db } from '@src/db/database';
-import logger from '@lib/logger';
 
 class Character extends Model {
   public id!: number;
 
-  public discordID!: number;
+  public discordID!: string;
 
   public characterName!: string;
 
@@ -45,7 +44,7 @@ Character.init(
       primaryKey: true,
     },
     discordID: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(128),
       allowNull: false,
       unique: 'compositeKey',
     },

@@ -40,8 +40,8 @@ export default class AppMessageCollector {
       });
 
       this.discordjsMessageCollector?.on('end', (collected, reason) => {
+        Bot.deregisterConversation(this.user.getID());
         if (reason && reason === 'done') {
-          Bot.deregisterConversation(this.user.getID());
           resolve(answers);
           return;
         }

@@ -1,31 +1,21 @@
 import { Character } from '@db-models';
-import logger from '@lib/logger';
 
 async function createCharacter(
-  discordID: number,
+  discordID: string,
   characterName: string,
   riftClass: string,
   riftRoles: string[],
   shortName: string,
-): Promise<boolean> {
-  try {
-    const [character, success] = await Character.upsert({
-      discordID,
-      characterName,
-      riftClass,
-      riftRoles,
-      shortName,
-    });
+): Promise<object> {
+  const [character] = await Character.upsert({
+    discordID,
+    characterName,
+    riftClass,
+    riftRoles,
+    shortName,
+  });
 
-    if (success) {
-      logger.debug('Created character', character);
-    }
-
-    return success || false;
-  } catch (error) {
-    logger.error('An unexpected error occurred while creating character', error);
-    return false;
-  }
+  return character.toJSON();
 }
 
 export {
