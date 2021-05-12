@@ -3,6 +3,7 @@ import { AppMessage } from '@lib/DiscordjsWrapper';
 import logger from '@lib/logger';
 import { createCharacter } from '@src/db';
 import { RiftClass, RiftRoles } from '@src/db/models/character';
+import CreateCharacterSession from './CreateCharacterSession';
 
 const characterConfig = {
   riftClasses: {
@@ -20,13 +21,19 @@ const characterConfig = {
   },
 };
 
-class CreateCharacter extends Command {
+class CreateCharacter extends Command<CreateCharacterSession> {
   constructor() {
     super('spieler', 'erstellen');
   }
 
+  async continue(msg: AppMessage, session: CreateCharacterSession) {
+    session.nextStep(msg, session);
+  }
+
   async run(msg: AppMessage) {
     try {
+      logger.debug('Run spieler erstellen');
+
       const questions: string[] = ['Name?', 'Class?', 'Roles?', 'short name?'];
 
       const answers = await msg.getUser().getMessageCollector(60).askQuestions(questions);
@@ -128,6 +135,10 @@ class CreateCharacter extends Command {
     }
 
     return riftRoles.length === 0 ? null : riftRoles;
+  }
+
+  public createSession() {
+    return new CreateCharacterSession(this.run);
   }
 }
 

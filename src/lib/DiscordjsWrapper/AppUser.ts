@@ -40,4 +40,8 @@ export default class AppUser {
 
     return new AppMessageCollector(collector, this);
   }
+
+  hasOpenConversation() {
+
+  }
 }

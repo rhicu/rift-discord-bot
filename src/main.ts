@@ -4,6 +4,7 @@ import config from '@src/configuration/SystemConfiguration';
 import Bot from '@lib/DiscordjsWrapper/AppClient';
 import { Message } from 'discord.js';
 import { AppMessage } from '@lib/DiscordjsWrapper';
+import CommandSession from '@lib/command/CommandSession';
 import CommandRespository from './lib/command/CommandRespository';
 
 Bot.on('ready', () => {
@@ -18,12 +19,13 @@ Bot.on('message', (message: Message) => {
     }
 
     if (Bot.hasOpenConversation(msg.getUser().getID())) {
+      Bot.getConversation(msg.getUser().getID())?.continue(msg);
       return;
     }
 
     logger.debug(`Received message: ${msg.getContent()}`);
 
-    const command: Command|null = CommandRespository.getCommand(msg);
+    const command: Command<CommandSession>|null = CommandRespository.getCommand(msg);
 
     if (!command) {
       logger.debug(`Command not found: ${msg.getContent()}`);
@@ -32,7 +34,7 @@ Bot.on('message', (message: Message) => {
     }
 
     logger.info(`Execute Command: ${command.getTitle()}`);
-    command.run(msg);
+    Bot.createConversation(msg.getUser().getID(), command).continue(msg);
   } catch (error) {
     logger.error('Something unexpected happened!', error);
   }
