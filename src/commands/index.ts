@@ -1,1 +1,1 @@
-export { default as CreateCharacter } from './CreateCharacter';
+export { default as CreateCharacter } from './character/create/CreateCharacter';
